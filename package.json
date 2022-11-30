@@ -1,0 +1,20 @@
+{
+  "name": "cs546_final_project_grp19",
+  "version": "1.0.0",
+  "description": "This is a web application for DriveNow car rental - CS546A 2022F",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mohak-Nagaraju/CS546_Final_Project_Grp19.git"
+  },
+  "author": "Group 19 2022F CS 546A",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mohak-Nagaraju/CS546_Final_Project_Grp19/issues"
+  },
+  "homepage": "https://github.com/Mohak-Nagaraju/CS546_Final_Project_Grp19#readme"
+}
