@@ -19,5 +19,7 @@ const getCollectionFn = (collection) => {
 NOTE: YOU WILL NEED TO CHANGE THE CODE BELOW TO HAVE THE COLLECTION(S) REQUIRED BY THE ASSIGNMENT */
 module.exports = {
  // user_collection: getCollectionFn('user_collection'),
+ users: getCollectionFn('users'),
+ cars: getCollectionFn('cars'),
 
 };
