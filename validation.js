@@ -59,6 +59,15 @@ function checkSpace(string) {
     throw `Error: Invalid input, Please enter a valid Password`;
   } 
   }
+  function checkNumber(string)
+  {
+      let regex = /^\d+$/;
+      if(regex.test(string)){
+        return true;
+      } else {
+        return false;
+      }
+  }
   module.exports={
     checkString,
     trimming,
@@ -67,5 +76,6 @@ function checkSpace(string) {
     checkSpecialCharWithNumber,
     checkId,
     checkSpace,
-    passwordValidate
+    passwordValidate,
+    checkNumber
   };

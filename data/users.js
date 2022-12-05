@@ -42,6 +42,10 @@ const createUser = async (
 
       //validating first & last name
       let firstNameFlag = validation.checkSpecialCharWithNumber(firstName);
+      let firstFlag = validation.checkSpace(firstName);
+        if(firstFlag === true){
+          throw `Error: Invalid Input for firstName. It contains spaces`;
+        }
       if(firstName.length < 3)
         {
           throw `Error: firstName must be at least 3 characters`;
@@ -50,6 +54,10 @@ const createUser = async (
         throw `Error: Invalid Input for firstName. It contains Special Charaters / Numbers`;
       }
       let lastNameFlag = validation.checkSpecialCharWithNumber(lastName);
+      let lastFlag = validation.checkSpace(lastName);
+        if(lastFlag === true){
+          throw `Error: Invalid Input for lastName. It contains spaces`;
+        }
       if(lastName.length < 3)
         {
           throw `Error: lastName must be at least 3 characters`;
@@ -86,9 +94,9 @@ const createUser = async (
       if(stateFlag === true){
         throw `Error: Invalid Input for State. It contains Special Charater / Numbers`;
       }
-      if(State.length <= 2 || State.length > 20)
+      if(State.length < 2 || State.length > 20)
         {
-          throw `Error: Invalid Input for State. Please do not enter short forms like NJ / TX etc.`;
+          throw `Error: Invalid Input for State. Please enter short forms like NJ / TX etc. or Complete Name`;
         }
         State = State.toLowerCase();
 
@@ -118,10 +126,13 @@ const createUser = async (
           if(Age === NaN) throw `Error: Age is not a number`;
           if(Age % 1 != 0) throw `Error: Age contains decimal point`;
 
+      Email = Email.toLowerCase();
+      firstName = firstName.toLowerCase();
+      lastName = lastName.toLowerCase();
       const passwordHash = await bcrypt.hash(password, saltRounds);
       const licenceHash = await bcrypt.hash(lincenceNumber, saltRounds);
       const userCollection = await users();
-      const user = await usersCollection.findOne({ Email: Email });
+      const user = await userCollection.findOne({ Email: Email });
       if (user) {
             throw `Error: Email is already present or in use.`;
       }

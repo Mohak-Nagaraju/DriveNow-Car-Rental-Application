@@ -4,6 +4,7 @@
   "description": "This is a web application for DriveNow car rental - CS546A 2022F",
   "main": "app.js",
   "scripts": {
+    "seed": "node ./tasks/seed.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },
