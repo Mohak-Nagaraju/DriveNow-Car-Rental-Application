@@ -13,10 +13,11 @@
 
   <label for="hashPassword">Password</label>
   <input
-    type="hashPassword"
+    type="password"
     placeholder="password - minimum 8 characters"
-    name="hashPassword"
     id="hashPassword"
+    name="hashPassword"
+    minlength="8"
     required
   />
 
@@ -53,7 +54,7 @@
     <option value="transgender">Transgender</option>
     <option value="genderNeutral">Gender Neutral</option>
     <option value="nonBinary">Non Binary</option>
-    <option value="other">Other</option>
+    <option value="other">Prefer not to say</option>
   </select>
 
   <label for="city">City</label>
@@ -62,6 +63,16 @@
   <label for="state">State</label>
   <input placeholder="Enter your state" name="state" id="state" required />
 
+   <label for="lincenceNumber">Lincence Number</label>
+  <input
+    type="password"
+    placeholder="Please enter lincence number"
+    id="lincenceNumber"
+    name="lincenceNumber"
+    minlength="15"
+    required
+  />
+
   <button type="submit">SignUp</button>
   {{#if error}}
     <p class="error">{{error}}</p>
@@ -69,14 +80,3 @@
 
   <p>Already have an account? <a href="/login">Login</a></p>
 </form>
-
-{{! 
-First Name:
-Last Name:
-Email:
-Password:
-Gender:
-City:
-State:
-Age:
- }}

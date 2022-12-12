@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-//let userData = require("../data/users"); - collection from ./data
+let userData = require("../data/users");
 
 //root route - login/registration page
 router.route("/").get(async (req, res) => {
@@ -35,6 +35,7 @@ router
       city,
       state,
       age,
+      lincenceNumber,
     } = req.body;
     if (
       !email ||
@@ -44,12 +45,13 @@ router
       !gender ||
       !city ||
       !state ||
-      !age
+      !age ||
+      !lincenceNumber
     ) {
       // console.log("inside register post method...", usernameInput);
       res.status(400).render("userRegister", {
         title: "SignUp",
-        error: "Please enter all the fields.",
+        error: "All fields must have valid input",
       });
       return;
     }
@@ -98,19 +100,33 @@ router
       return;
     }
 
+    if (
+      typeof lincenceNumber !== "string" ||
+      lincenceNumber.trim().length < 15
+    ) {
+      res.status(400).render("userRegister", {
+        title: "SignUp",
+        error: "Enter a valid lincence number",
+      });
+      return;
+    }
+
     try {
       let result = await userData.createUser(
         firstName,
         lastName,
         email,
-        hashPassword,
         gender,
         city,
-        state.age
+        state,
+        age,
+        hashPassword,
+        lincenceNumber
       );
       //when created succesfully, should return - return { insertedUser: true };
       if (result.insertedUser) {
         res.status(200).redirect("/"); //redirect to login
+        return;
       } else {
         res.status(500).json({ error: "Internal Server Error" });
       }
@@ -127,7 +143,7 @@ router.route("/login").post(async (req, res) => {
   if (!email || !hashPassword) {
     res.status(400).render("userLogin", {
       title: "Enter details to login",
-      error: "Please enter email and password.",
+      error: "Please enter email and password",
     });
     return;
   }
@@ -149,12 +165,13 @@ router.route("/login").post(async (req, res) => {
 
   try {
     //checking if user if available in our db
-    //let result = await userData.checkUser(email, hashPassword);
+    let result = await userData.checkUser(email, hashPassword);
 
     //when email found, should return -  return {authenticatedUser: true};
     if (result.authenticatedUser) {
       req.session.email = email;
       res.status(200).redirect("/welcomePage");
+      return;
     }
   } catch (error) {
     res.status(500).render("userLogin", {
