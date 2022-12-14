@@ -4,6 +4,7 @@ const { ObjectId } = require("mongodb");
 const validation = require("../validation");
 const bcrypt = require("bcryptjs");
 const saltRounds = 16;
+
 const createUser = async (
   firstName,
   lastName,
@@ -145,7 +146,7 @@ const createUser = async (
   const userCollection = await users();
   const user = await userCollection.findOne({ email: email });
   if (user) {
-    throw `Error: email is already present or in use.`;
+    throw `Error: Email is already registered with us. Please use a different email`;
   }
   let newUser = {
     firstName: firstName,
@@ -164,7 +165,7 @@ const createUser = async (
   const insertInfo = await userCollection.insertOne(newUser);
 
   if (!insertInfo.acknowledged || !insertInfo.insertedId) {
-    throw "Could not add User";
+    throw "Could not add User. Contact Admin";
   }
 
   return { insertedUser: true };
