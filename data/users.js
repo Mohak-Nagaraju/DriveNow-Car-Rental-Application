@@ -337,7 +337,7 @@ const updateUser = async (
   }
   const userCollection = await users();
   const updatedInfo = await userCollection.updateOne(
-    { _id: ObjectId(movieId) },
+    { _id: ObjectId(userId) },
     { $set: updatedUser }
   );
   if (updatedInfo.modifiedCount === 0) {
@@ -347,7 +347,7 @@ const updateUser = async (
 
 //get all the users from db
 const getAllUsers = async () => {
-  const userCollection = await movies();
+  const userCollection = await users();
   const userList = await userCollection.find({}).toArray();
   if (!userList) throw "Could not get all users";
   // moviesList._id = moviesList._id.toString();
