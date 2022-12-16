@@ -197,7 +197,7 @@ router.route("/login").post(async (req, res) => {
     //when email found, should return -  return {authenticatedUser: true};
     if (result.authenticatedUser) {
       req.session.email = email;
-      res.status(200).redirect("/welcomePage");
+      res.status(200).redirect("/welcome");
       return;
     }
   } catch (error) {
@@ -218,20 +218,28 @@ router.route("/welcome").get(async (req, res) => {
 });
 
 //if booking successfull - route to payment
-router.route("/payment").get(async (req, res) => {
-  if (req.session.email) {
-    // might have to check if booking is done successfull or not
-    console.log("inside if .. emai -", req.session.email);
-    res.render("paymentPage", {
-      title: "Payment",
-    });
-    return;
-  }
-
-  res.render("userLogin", {
-    title: "Enter details to login",
+router
+  .route("/payment")
+  .get(async (req, res) => {
+    if (req.session.email) {
+      // might have to check if booking is done successfull or not
+      console.log("inside if .. emai -", req.session.email);
+      res.render("paymentPage", {
+        title: "Payment",
+      });
+      return;
+    }
+    // res.status(403).render("forbiddenAccess", {
+    //   title: "Forbidden",
+    // });
+  })
+  .post(async (req, res) => {
+    //store in card details
+    // function to save card details - ?? createCardDetails(a)
+    //waiting for sneha's code
+    //error handling
+    //check for entered card details and call function to update the card details
   });
-});
 
 router.route("/logout").get(async (req, res) => {
   //code here for GET

@@ -63,6 +63,21 @@ div {
   padding: 0 30px;
 }
 
+.register-link-div {
+  color: #0b3c5d;
+  text-align: center;
+}
+
+.login-error-div , .signup-error-div{
+  color: red !important;
+  box-shadow: 5px 5px 15px 5px #1f618d;
+  border-radius: 8px;
+  justify-content: center;
+  padding: 0 30px;
+  height: 6%;
+  margin-bottom: 7%
+}
+
 #login-form input {
   height: 30px;
   border-radius: 5px;
@@ -154,6 +169,21 @@ div {
     color: black;
   } */
 
+.main-content-logout {
+  background: rgb(209, 227, 236);
+  padding: 0 30px;
+  justify-content: center;
+  min-height: 350px;
+  margin-top: 15%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+  box-shadow: 5px 5px 15px 5px #1f618d;
+  border-radius: 8px;
+  width: 100%;
+}
+
 #logout-page p {
   color: #0b3c5d;
   text-align: center;
@@ -173,4 +203,8 @@ div {
   border-radius: 3px;
   margin-bottom: 10%;
   text-align: center;
+}
+
+#payment-form h4{
+  text-align: left;
 }
