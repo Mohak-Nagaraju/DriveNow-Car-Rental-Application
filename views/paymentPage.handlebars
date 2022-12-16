@@ -1,6 +1,6 @@
 <form id="payment-form" class="main-content" method="POST" action="/protected/payment">
 <h2>{{title}}</h2>
-
+<img src="../public/car.png" alt="Renting a car" />
 <div class="container">
    <table style="padding: 15px;">
     <thead>
@@ -71,19 +71,8 @@
                 </td>
             </tr>
               </tbody>
-          <tr>
-                <td colspan="4"><button onclick="myFunction()">Submit</button></td>            
+           <tr>
+                <td colspan="4"><button onclick="Submit">Submit</button></td>            
             </tr>
-        </tbody>
-    </table>
-
-    <script>
-        function myFunction() {
-          alert("Payment Successful!");
-        }
-        </script>
-
-
-  </div>
-        <a href="/logout" style="position: relative;">Click here to Logout</a>
+     <p><a href="="/protected/logout">Click here to logout</a></p>
  </form>

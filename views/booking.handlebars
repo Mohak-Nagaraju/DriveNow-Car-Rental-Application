@@ -19,4 +19,46 @@
                     pattern="/^\d{2}\/\d{2}\/\d{4}$/"><br><br>
                 </td>
             </tr>
+             <tr>
+                <td>
+                  returnDate: 
+                </td>
+                <td>
+                    <input type="date"  name "returnDate" 
+                    pattern="/^\d{2}\/\d{2}\/\d{4}$/"><br><br>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                  pickUpTime: 
+                </td>
+                <td>
+                    <input type="time"  name "pickUpTime" 
+                    pattern="/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/"><br><br>
+                </td>
+            </tr>
+            <tr>
+              <td>
+                  returnTime: 
+                </td>
+                <td>
+                    <input type="time"  name "returnTime" 
+                    pattern="/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/"><br><br>
+                </td>
+            </tr>
+             <tr>
+              <td>
+                  pickUpLocation: 
+                </td>
+                <td>
+                    <input type="text"  name "pickUpLocation" 
+                    placeholder=""><br><br>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4"><button onclick="Submit">Submit</button></td>            
+            </tr>
+            </tbody>
+     <p><a href="="/protected/logout">Click here to logout</a></p>
+     <p><a href="="/protected/welcomePage">Click here to go to dashboard</a></p>
 </form>
