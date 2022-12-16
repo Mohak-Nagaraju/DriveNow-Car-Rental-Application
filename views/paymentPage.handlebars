@@ -1,5 +1,89 @@
-<form id="payment-form" class="main-content" method="POST" action="/payment">
-  {{!-- <h2>{{title}}</h2> --}}
-  <a href="/logout">Click here to Logout</a>
+<form id="payment-form" class="main-content" method="POST" action="/protected/payment">
+<h2>{{title}}</h2>
 
-</form>
+<div class="container">
+   <table style="padding: 15px;">
+    <thead>
+            <tr>
+                <td colspan="4" style="text-align: center;"></td>
+            </tr>
+        </thead>
+   </table>
+            <h3> Enter Card details for Payment</h3>
+              <tbody>
+                 <tr>
+                <td>
+                    Card Number : 
+                </td>
+                <td>
+                    <input type="number"  placeholder="xxxx-xxxx-xxxx-xxxx" 
+                    pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}"><br><br>
+                </td>
+            </tr>
+             <tr>
+                <td>
+                    Name on Card : 
+                </td>
+                 <td>
+                    <input type="text" id="cname" name="cardname" placeholder="Poorvi Raut"><br><br>
+                </td>
+                
+             <tr>
+                <td>
+                    Expiry Date: 
+                </td>
+                <td>
+                    <label>Month</label>
+                    <select placeholder="MM">
+                        <option value="1">01</option>
+                        <option value="2">02</option>
+                        <option value="3">03</option>
+                        <option value="4">04</option>
+                        <option value="5">05</option>
+                        <option value="6">06</option>
+                        <option value="7">07</option>
+                        <option value="8">08</option>
+                        <option value="9">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                      </select>
+                </td>
+                </tr>
+                <td>
+                    <label>Year</label>
+                    <select placeholder="YY">
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                      </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    CVV : 
+                </td>
+                <td>
+                    <input type="password"  placeholder="xxx" 
+                    pattern="[0-9]{3}"><br><br>
+                </td>
+            </tr>
+              </tbody>
+          <tr>
+                <td colspan="4"><button onclick="myFunction()">Submit</button></td>            
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        function myFunction() {
+          alert("Payment Successful!");
+        }
+        </script>
+
+
+  </div>
+        <a href="/logout" style="position: relative;">Click here to Logout</a>
+ </form>

@@ -163,12 +163,12 @@ const createUser = async (
   };
 
   const insertInfo = await userCollection.insertOne(newUser);
-
+ console.log("Inside createUser checking id",insertInfo);
   if (!insertInfo.acknowledged || !insertInfo.insertedId) {
     throw "Could not add User. Contact Admin";
   }
 
-  return { insertedUser: true };
+  return { insertedUser: true,insertedUserId:insertedId };
 
   /* const newId = insertInfo.insertedId.toString();
   const addedMovie = await getMovieById(newId);

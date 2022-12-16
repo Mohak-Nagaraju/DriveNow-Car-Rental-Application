@@ -146,6 +146,7 @@ router
         hashPassword,
         lincenceNumber
       );
+      console.log("checking id",result.insertedUserId);
       //when created succesfully, should return - return { insertedUser: true };
       if (result.insertedUser) {
         res.status(200).redirect("/"); //redirect to login
@@ -196,8 +197,11 @@ router.route("/login").post(async (req, res) => {
 
     //when email found, should return -  return {authenticatedUser: true};
     if (result.authenticatedUser) {
+      //let userById=await userData.get()
+      console.log("Inside checking ",req.session);
       req.session.email = email;
-      res.status(200).redirect("/welcomePage");
+      res.redirect("/welcome");
+      //res.status(200).redirect("welcomePage");
       return;
     }
   } catch (error) {
@@ -210,10 +214,20 @@ router.route("/login").post(async (req, res) => {
 
 router.route("/welcome").get(async (req, res) => {
   //console.log("email in welcome page..", req.session.email);
-  res.render("welcomePage", {
+  if (req.session.email) {
+    console.log("inside welcome route", req.session)
+    res.status(200).render("welcomePage", {
+      title: "Welcome",
+     firstName: req.session.firstName,
+    lastName:req.session.lastName
+    });
+   // res.redirect('welcomePage');
+    return;
+  }
+  //res.redirect("/forbiddenAccess");
+  res.status(500).render("userLogin", {
     title: "Welcome",
-    name: req.session.email,
-    //Poorvi's code should go here
+   // error: error.message ? error.message : error,
   });
 });
 
