@@ -36,7 +36,7 @@ app.set('view engine', 'handlebars');
 app.use('/protected/welcome', (req, res, next) => {
   //console.log(req.session.id);
   if (!req.session.email) {
-      res.status(403).render("forbiddenAccess", {title: "Not logged in" });
+      return res.status(403).render("forbiddenAccess", {title: "Not logged in" });
   } else {
       next();
   }

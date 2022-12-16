@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 let userData = require("../data/users");
-
+let carData = require("../data/cars");
 let validationForm = require("../validation");
 
 //root route - login/registration page
@@ -249,7 +249,7 @@ router
   .route('/protected/booking')
   .get(async (req, res) => {
     if(req.session.email){    
-      return res.render("booking", {title: "Booking", name: req.session.email, cars: cars });
+      return res.render("booking", {title: "Booking", name: req.session.email});
     }
     else{
       return  res.render("forbiddenAccess", {title: "Forbidden Access" });
@@ -263,9 +263,37 @@ router
     let returnDate = req.body.returnDate;
     let pickUpLocation = req.body.pickUpLocation;
 
-    if(req.session.email){  
+    validationForm.checkString(pickUpDate);
+    validationForm.checkString(pickUpTime);
+    validationForm.checkString(returnDate);
+    validationForm.checkString(returnTime);
+    validationForm.checkString(pickUpLocation);
     
-      return res.render("booking", {title: "Booking", name: req.session.email});
+
+    validationForm.trimming(pickUpDate);
+    validationForm.trimming(pickUpTime);
+    validationForm.trimming(returnDate);
+    validationForm.trimming(returnTime);
+    validationForm.trimming(pickUpLocation);
+
+    if(pickUpLocation.length < 2 || pickUpLocation.length > 20)
+        {
+          throw `Error: Invalid Input for location.`;
+        }
+
+
+    //check another way to validate booking page - if user has pressed submit or not
+
+    if(req.session.email){  
+      req.session.pickUpDate = pickUpDate;
+      req.session.pickUpTime = pickUpTime;
+      req.session.returnTime = returnTime;
+      req.session.returnDate = returnDate;
+      req.session.pickUpLocation = pickUpLocation;
+      req.session.booking = "bookingPage";
+    
+      //return res.render("viewCars", {title: "Select Car", name: req.session.email});
+      return res.redirect("/protected/viewCars");
     }
     else{
       return  res.render("forbiddenAccess", {title: "Forbidden Access" });
@@ -275,8 +303,28 @@ router
   }
   );
 
+
+  router
+  .route('/protected/viewCars')
+  .get(async (req, res) => {
+    if(req.session.email){    
+      if(req.session.booking){
+        let cars = await carData.getCarLocation(req.session.pickUpLocation);
+        if(!cars) throw 'Error: No Car with that location';
+        return  res.render("viewCars", {title: "Select Car", car : cars});
+      }
+      else{
+        return  res.render("error", {title: "Error", error: "Cannot access this page until you have entered booking details" });
+      }
+    }
+    else{
+      return  res.render("forbiddenAccess", {title: "Forbidden Access" });
+    }    
+  });
+ 
+
 //if booking successfull - route to payment
-router.route("/payment").get(async (req, res) => {
+router.route("/protected/payment").get(async (req, res) => {
   if (req.session.email) {
     // might have to check if booking is done successfull or not
     console.log("inside if .. emai -", req.session.email);
@@ -291,7 +339,7 @@ router.route("/payment").get(async (req, res) => {
   });
 });
 
-router.route("/logout").get(async (req, res) => {
+router.route("/protected/logout").get(async (req, res) => {
   //code here for GET
   req.session.destroy();
   res.render("logout", {

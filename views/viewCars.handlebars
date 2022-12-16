@@ -1,0 +1,25 @@
+
+<h1>{{ title }}</h1>
+
+<p>The cars based on your entered location is:</p>
+<!--<h2 class="color-primary">{{searchPersonName}}</h2>-->
+ {{#if people}}
+ <div class="main-block">
+    <ul>
+        {{#each car}}
+
+        <li>
+            <a class="link" target="_blank" href="/protected/payment">{{this.car}}</a>
+        </li>
+        {{/each}}
+    </ul>
+    
+    {{/if}}
+ </div>
+   
+<br>
+
+
+
+
+
