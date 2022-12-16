@@ -1,0 +1,176 @@
+body {
+  padding: 0 40%;
+  background: #709ebc;
+  font-family: "Lato", sans-serif;
+}
+
+h2 {
+  color: #1f618d;
+  text-align: center;
+  margin-top: 5%;
+  margin-bottom: auto;
+}
+
+h4 {
+  color: #1f618d;
+  text-align: center;
+  margin-bottom: auto;
+}
+
+main {
+  width: 300px;
+}
+
+.main-content {
+  background: rgb(209, 227, 236);
+  padding: 0 30px;
+  justify-content: center;
+  min-height: 350px;
+  margin-top: 15%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+  box-shadow: 5px 5px 15px 5px #1f618d;
+  border-radius: 8px;
+  width: 100%;
+}
+
+div {
+  height: 30px;
+}
+#forbidden h3 {
+  color: #1f618d;
+  text-align: center;
+  margin-top: 15%;
+  margin-bottom: auto;
+}
+#forbidden img {
+  margin-top: 1%;
+  margin-bottom: auto;
+}
+
+#forbidden a {
+  text-align: center;
+  margin-bottom: auto;
+}
+
+.error {
+  color: red !important;
+  box-shadow: 5px 5px 15px 5px #1f618d;
+  border-radius: 8px;
+  justify-content: center;
+  padding: 0 30px;
+}
+
+#login-form input {
+  height: 30px;
+  border-radius: 5px;
+  border: 2px solid #5499c7;
+  padding-left: 5px;
+}
+
+#signup-form input {
+  height: 30px;
+  border-radius: 5px;
+  border: 2px solid #5499c7;
+  padding-left: 5px;
+}
+
+#signup-form select {
+  height: 30px;
+  border-radius: 5px;
+  border: 2px solid #5499c7;
+  padding-left: 5px;
+}
+
+#login-form p {
+  color: #0b3c5d;
+  text-align: center;
+}
+
+#login-form label {
+  color: #0b3c5d;
+}
+
+#signup-form p {
+  color: #0b3c5d;
+  text-align: center;
+}
+
+#signup-form label {
+  color: #0b3c5d;
+}
+
+/* #signup-form  option > #default {
+    text-align: center; 
+    color: gray !important;
+}*/
+
+#signup-form img {
+  object-fit: contain;
+  align-items: center;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 10px;
+  margin-top: -5px;
+  width: 200px;
+}
+
+#signup-form button,
+#login-form button {
+  background: #1f618d;
+  height: 30px;
+  cursor: pointer;
+  border: none;
+  color: white;
+  outline: none;
+  border-radius: 7px;
+}
+
+/* The alert message box */
+/* .alert {
+    padding: 20px;
+    background-color: #f44336; 
+    color: white;
+    margin-bottom: 15px;
+  } */
+
+/* The close button */
+/* .closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+  } */
+
+/* When moving the mouse over the close button */
+/* .closebtn:hover {
+    color: black;
+  } */
+
+#logout-page p {
+  color: #0b3c5d;
+  text-align: center;
+}
+
+#logout-page h2 {
+  margin-top: 10% !important;
+  margin-bottom: auto;
+}
+
+#logout-page a {
+  background: #1f618d;
+  height: 70%;
+  cursor: pointer;
+  border: none;
+  color: white;
+  border-radius: 3px;
+  margin-bottom: 10%;
+  text-align: center;
+}
