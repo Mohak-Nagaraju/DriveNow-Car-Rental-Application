@@ -1,43 +1,44 @@
-<form id="login-form" class="main-content" method="POST" action="/login">
-  <h2>DriveNow Car Rental</h2>
-  <img src="../public/car.png" alt="Renting a car" />
+<div id="login-div">
+  <div id="login-form-div">
+    <form id="login-form" class="main-content" method="POST" action="/login">
+      <h2>DriveNow Car Rental</h2>
+      <img src="../public/car.png" alt="Renting a car" />
 
-  <h4>{{title}}</h4>
+      <h4>{{title}}</h4>
 
-  <label for="email">Email ID</label>
-  <input
-    placeholder="Enter your email"
-    id="email"
-    name="email"
-    required
-    pattern="[^ @]*@[^ @]*"
-  />
+      <label for="email">Email ID</label>
+      <input
+        placeholder="Enter your email"
+        id="email"
+        name="email"
+        required
+        pattern="[^ @]*@[^ @]*"
+      />
 
-  <label for="hashPassword">Password</label>
-  <input
-    type="password"
-    placeholder="Enter your password"
-    id="hashPassword"
-    name="hashPassword"
-    required
-  />
+      <label for="hashPassword">Password</label>
+      <input
+        type="password"
+        placeholder="Enter your password"
+        id="hashPassword"
+        name="hashPassword"
+        required
+      />
 
-  <button type="submit">Login</button>
+      <button type="submit">Login</button>
 
-  {{#if error}}
-    <p class="error">{{error}}</p>
-  {{/if}}
+      <p>Don't have an account? <a href="/register">SignUp</a> </p>
+      
+      <div class="login-error-div"></div>
 
-  {{!-- {{#if registrationTrue}}
-    <div class="alert">
-      <span
-        class="closebtn"
-        onclick="this.parentElement.style.display='none';"
-      >&times;</span>
-      Registration is successfull. Please login to book a car.
-    </div>
-  {{/if}} --}}
+      {{#if error}}
+        <p class="error">{{{error}}}</p>
+      {{/if}}
 
-  <p>Don't have an account? <a href="/register">SignUp</a> </p>
+    </form>
+  </div>
 
-</form>
+  {{! <div class="login-error-div hidden">
+    <p>Either the email or password is invalid</p>
+  </div> }}
+
+</div>
