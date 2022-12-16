@@ -383,7 +383,8 @@ const checkUser = async (email, password) => {
     throw `Error: Password must be at least 8 characters`;
   }
   const usersCollection = await users();
-  const user = await usersCollection.findOne({ email: email });
+  let email1 = email.toLowerCase();
+  const user = await usersCollection.findOne({ email: email1 });
   if (!user) {
     throw `Email '${email}' is not registered with us.`;
   }

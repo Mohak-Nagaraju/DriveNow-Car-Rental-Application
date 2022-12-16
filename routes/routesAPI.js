@@ -8,13 +8,17 @@ let validationForm = require("../validation");
 router.route("/").get(async (req, res) => {
   if (req.session.email) {
     //console.log("inside / get..", req.session.email);
-    res.redirect("/welcome");
-    return;
+    return res.redirect("/protected/welcome");
+    //res.redirect("/welcome");
+    
   }
-  res.render("userLogin", {
-    title: "Enter details to login",
-    // registrationTrue: "Registered succesfully!"
-  });
+  else{
+   return res.render("userLogin", {
+      title: "Enter details to login",
+      // registrationTrue: "Registered succesfully!"
+    });
+  }
+  
 });
 
 router
@@ -22,12 +26,16 @@ router
   .get(async (req, res) => {
     if (req.session.email) {
       //res.redirect("/welcome");
-      res.status(200).redirect("/welcome");
-      return;
+      //return res.status(200).redirect("/welcome");
+      return res.status(200).redirect("/protected/welcome");
+      
     }
-    res.render("userRegister", {
-      title: "SignUp",
-    });
+    else{
+     return res.render("userRegister", {
+        title: "SignUp",
+      });
+    }
+    
   })
   .post(async (req, res) => {
     const {
@@ -41,6 +49,9 @@ router
       age,
       lincenceNumber,
     } = req.body;
+    if (req.session.email){
+      return res.redirect("/protected/welcome");
+    } 
     if (
       !email ||
       !hashPassword ||
@@ -52,11 +63,11 @@ router
       !age ||
       !lincenceNumber
     ) {
-      res.status(400).render("userRegister", {
+      return res.status(400).render("userRegister", {
         title: "SignUp",
         error: "All fields must have valid input",
       });
-      return;
+      
     }
     //email validation
     let emailFlag = validationForm.validateEmail(email);
@@ -151,10 +162,10 @@ router
         res.status(200).redirect("/"); //redirect to login
         return;
       } else {
-        res.status(500).json({ error: "Internal Server Error" });
+        return res.status(500).json({ error: "Internal Server Error" });
       }
     } catch (error) {
-      res.status(500).render("userRegister", {
+      return res.status(500).render("userRegister", {
         title: "SignUp",
         error: error.message ? error.message : error,
       });
@@ -162,13 +173,16 @@ router
   });
 
 router.route("/login").post(async (req, res) => {
+  if (req.session.email){
+    return res.redirect("/protected/welcome");
+  }
   const { email, hashPassword } = req.body;
   if (!email || !hashPassword) {
-    res.status(400).render("userLogin", {
+    return res.status(400).render("userLogin", {
       title: "Enter details to login",
       error: "Please enter email and password",
     });
-    return;
+    
   }
   //email validation
   let emailFlag = validationForm.validateEmail(email);
@@ -197,25 +211,69 @@ router.route("/login").post(async (req, res) => {
     //when email found, should return -  return {authenticatedUser: true};
     if (result.authenticatedUser) {
       req.session.email = email;
-      res.status(200).redirect("/welcomePage");
+      req.session.name = "AuthCookie";
+      res.status(200).redirect("/protected/welcome");
       return;
     }
   } catch (error) {
-    res.status(500).render("userLogin", {
+    return res.status(400).render("userLogin", {
       title: "Enter details to login",
       error: error.message ? error.message : error,
     });
   }
 });
+router
+  .route('/protected/welcome')
+  .get(async (req, res) => {
+    if(req.session.email){     
+      return res.render("welcomePage", {title: "Welcome", name: req.session.email});
+    }
+    else{
+      return  res.render("forbiddenAccess", {title: "Forbidden Access" });
+    }
 
-router.route("/welcome").get(async (req, res) => {
+    
+  });
+
+// Mohak:- I don't think we need this anymore, refer line 225-232
+
+/* router.route("/welcome").get(async (req, res) => {
   //console.log("email in welcome page..", req.session.email);
   res.render("welcomePage", {
     title: "Welcome",
     name: req.session.email,
     //Poorvi's code should go here
   });
-});
+}); */
+router
+  .route('/protected/booking')
+  .get(async (req, res) => {
+    if(req.session.email){    
+      return res.render("booking", {title: "Booking", name: req.session.email, cars: cars });
+    }
+    else{
+      return  res.render("forbiddenAccess", {title: "Forbidden Access" });
+    }    
+  })
+  .post(async (req, res) => {
+    //let amountPaid = req.body.amountPaid;    
+    let pickUpDate = req.body.pickUpDate;
+    let pickUpTime = req.body.pickUpTime;
+    let returnTime = req.body.returnTime;
+    let returnDate = req.body.returnDate;
+    let pickUpLocation = req.body.pickUpLocation;
+
+    if(req.session.email){  
+    
+      return res.render("booking", {title: "Booking", name: req.session.email});
+    }
+    else{
+      return  res.render("forbiddenAccess", {title: "Forbidden Access" });
+    } 
+
+
+  }
+  );
 
 //if booking successfull - route to payment
 router.route("/payment").get(async (req, res) => {
