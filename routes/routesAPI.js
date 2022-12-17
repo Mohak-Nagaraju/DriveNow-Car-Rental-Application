@@ -211,10 +211,12 @@ router.route("/login").post(async (req, res) => {
 
     //when email found, should return -  return {authenticatedUser: true};
     if (result.authenticatedUser) {
-      //let userById=await userData.get()
-      console.log("Inside checking ",req.session);
       req.session.email = email;
+      req.session.name = "AuthCookie";
       res.status(200).redirect("/protected/welcome");
+
+    
+
       return;
     }
   } catch (error) {
@@ -228,7 +230,7 @@ router
   .route('/protected/welcome')
   .get(async (req, res) => {
     if(req.session.email){     
-      return res.render("welcomePage", {title: "Welcome", name: req.session.email});
+      return res.render("welcomePage", {title: "Welcome", firstName: req.session.firstName, lastName: req.session.lastName});
     }
     else{
       return  res.render("forbiddenAccess", {title: "Forbidden Access" });
@@ -288,10 +290,25 @@ router
     validationForm.trimming(returnTime);
     validationForm.trimming(pickUpLocation);
 
-    if(pickUpLocation.length < 2 || pickUpLocation.length > 20)
-        {
-          throw `Error: Invalid Input for location.`;
-        }
+    //let s = "2021-12-16"
+    split = pickUpDate.split("-");
+    const today = new Date();
+    const year = today.getFullYear();
+    let month = today.getMonth() + 1; 
+    let day = today.getDate();
+if(split[2] < day || split[1] < month || split[0] < year){
+    return res.render("error",{error: "Error: cannot select pickUp Date in the past"});
+}
+
+split2 = returnDate.split("-");
+if(split2[2] < split[2] || split2[1] < split[1] || split2[0] < split[0]){
+  return res.render("error",{error: "Error: cannot select return Date before pick up date"});
+}
+
+if(pickUpLocation.length < 2 || pickUpLocation.length > 20)
+{
+  return res.render("error",{error: "Error: Invalid Input for location."});
+}
 
 
     //check another way to validate booking page - if user has pressed submit or not
@@ -336,20 +353,50 @@ router
  
 
 //if booking successfull - route to payment
-router.route("/protected/payment").get(async (req, res) => {
-  if (req.session.email) {
-    // might have to check if booking is done successfull or not
-    console.log("inside if .. emai -", req.session.email);
-    res.render("paymentPage", {
-      title: "Payment",
-    });
-    return;
+router
+  .route('/protected/payment')
+  .get(async (req, res) => {
+    if (req.session.email) {
+      // might have to check if booking is done successfull or not
+      console.log("inside if .. emai -", req.session.email);
+      res.render("paymentPage", { title: "Payment"});
+      return;
+    }
+    return res.render("userLogin", {
+      title: "Enter details to login"});
+  })
+  .post(async (req, res) => {
+    //store in card details
+    // function to save card details - ?? createCardDetails(a)
+    //waiting for sneha's code
+    //error handling
+    //check for entered card details and call function to update the card details
   }
+  );
+  router
+  .route('/protected/welcome')
+  .get(async (req, res) => {
+    if(req.session.email){     
+      return res.render("welcomePage", {title: "Welcome", firstName: req.session.firstName, lastName: req.session.lastName});
+    }
+    else{
+      return  res.render("forbiddenAccess", {title: "Forbidden Access" });
+    }
 
-  res.render("userLogin", {
-    title: "Enter details to login",
+    
   });
-});
+
+// Mohak:- I don't think we need this anymore, refer line 225-232
+
+/* router.route("/welcome").get(async (req, res) => {
+  //console.log("email in welcome page..", req.session.email);
+  res.render("welcomePage", {
+    title: "Welcome",
+    name: req.session.email,
+    //Poorvi's code should go here
+  });
+}); */
+
 
 router.route("/protected/logout").get(async (req, res) => {
   //code here for GET
