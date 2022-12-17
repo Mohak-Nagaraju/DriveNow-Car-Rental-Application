@@ -226,7 +226,7 @@ router.route("/login").post(async (req, res) => {
     });
   }
 });
-router
+/*router
   .route('/protected/welcome')
   .get(async (req, res) => {
     if(req.session.email){     
@@ -237,25 +237,29 @@ router
     }
 
     
-  });
+  });*/
 
-// Mohak:- I don't think we need this anymore, refer line 225-232
 
-/* router.route("/welcome").get(async (req, res) => {
+
+ router.route("/welcome").get(async (req, res) => {
   //console.log("email in welcome page..", req.session.email);
   if (req.session.email) {
-    console.log("inside welcome route", req.session)
+   // console.log("inside welcome route", req.session)
     res.status(200).render("welcomePage", {
       title: "Welcome",
      firstName: req.session.firstName,
     lastName:req.session.lastName
     });
+    }
+    else
+    {
+      return  res.render("forbiddenAccess", {title: "Forbidden Access" });
+    }
    // res.redirect('welcomePage');
-    return;
-  }
+  });
   //res.redirect("/forbiddenAccess");
-  res.status(500).render("userLogin", {
-    title: "Welcome",
+ /* res.status(500).render("userLogin", {
+    title: "Welcome",firstName: req.session.firstName, lastName: req.session.lastName
    // error: error.message ? error.message : error,
   });
 }); */

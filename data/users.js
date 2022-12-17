@@ -166,12 +166,12 @@ const createUser = async (
   };
 
   const insertInfo = await userCollection.insertOne(newUser);
- console.log("Inside createUser checking id");
+
   if (!insertInfo.acknowledged || !insertInfo.insertedId) {
     throw "Could not add User. Contact Admin";
   }
 
-  return { insertedUser: true,insertedUserId:insertInfo.insertedId };
+  return { insertedUser: true };
 
   /* const newId = insertInfo.insertedId.toString();
   const addedMovie = await getMovieById(newId);
@@ -412,14 +412,13 @@ console.log(users);
   if (!users) {
     throw `Email ${email} is not registered with us.`;
   }
-
   let comparePassword = false;
   comparePassword = await bcrypt.compare(password, users.password);
   if (comparePassword) {
-    return { authenticatedUser: true };
+    return { authenticatedUser: true, firstName: users.firstName, lastName: users.lastName};
   } else {
     throw `Error: Please enter correct password for email - ${email}`;
-  } 
+  } */
 };
 
 module.exports = {
