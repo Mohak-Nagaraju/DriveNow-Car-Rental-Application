@@ -4,6 +4,7 @@ const { ObjectId } = require("mongodb");
 const validation = require("../validation");
 const bcrypt = require("bcryptjs");
 const saltRounds = 16;
+
 const createUser = async (
   firstName,
   lastName,
@@ -75,16 +76,18 @@ const createUser = async (
   }
 
   //validating gender
+  //console.log("gender endterd is  in createUser...",gender);
   gender = gender.toLowerCase();
   if (
     gender != "female" &&
     gender != "male" &&
     gender != "transgender" &&
-    gender != "gender neutral" &&
-    gender !== "non-binary" &&
-    gender !== "prefer not to say"
+    gender != "genderneutral" &&
+    gender !== "nonbinary" &&
+    gender !== "other"
   ) {
-    throw `Error: Invalid Input for gender. Please enter valid input like [female, male, transgender, gender neutral, non-binary, prefer not to say]`;
+    //console.log("gender was..",gender)
+    throw `Error: Please select valid input for Gender (female, male, transgender, gender neutral, non-binary, other - from create user)`;
   }
 
   //validating email
@@ -137,15 +140,16 @@ const createUser = async (
   if (age === NaN) throw `Error: age is not a number`;
   if (age % 1 != 0) throw `Error: age contains decimal point`;
 
-  email = email.toLowerCase();
+  let dbEmail = email.toLowerCase();
+  //email.toLowerCase();
   firstName = firstName.toLowerCase();
   lastName = lastName.toLowerCase();
   const passwordHash = await bcrypt.hash(password, saltRounds);
   const licenceHash = await bcrypt.hash(lincenceNumber, saltRounds);
   const userCollection = await users();
-  const user = await userCollection.findOne({ email: email });
+  const user = await userCollection.findOne({ email: dbEmail });
   if (user) {
-    throw `Error: email is already present or in use.`;
+    throw `Error: Email ${email} is already registered with us. Please use a different email`;
   }
   let newUser = {
     firstName: firstName,
@@ -164,7 +168,7 @@ const createUser = async (
   const insertInfo = await userCollection.insertOne(newUser);
 
   if (!insertInfo.acknowledged || !insertInfo.insertedId) {
-    throw "Could not add User";
+    throw "Could not add User. Contact Admin";
   }
 
   return { insertedUser: true };
@@ -275,11 +279,11 @@ const updateUser = async (
     gender != "female" &&
     gender != "male" &&
     gender != "transgender" &&
-    gender != "gender neutral" &&
-    gender !== "non-binary" &&
-    gender !== "prefer not to say"
+    gender != "genderneutral" &&
+    gender !== "nonbinary" &&
+    gender !== "other"
   ) {
-    throw `Error: Invalid Input for gender. Please enter valid input like [female, male, transgender, gender neutral, non-binary, prefer not to say]`;
+    throw `Error: Please select valid input for Gender (female, male, transgender, gender neutral, non-binary, other)`;
   }
 
   //validating city
@@ -301,7 +305,7 @@ const updateUser = async (
     throw `Error: Invalid Input for state. Please do not enter short forms like NJ / TX etc.`;
   }
   // state = state.toLowerCase();
-  age = parseFloat(age);
+  age = parseFloat(age); //TO-DO : check for 10.0 input for age??
   if (age === NaN) throw `Error: age is not a number`;
   if (age % 1 != 0) throw `Error: age contains decimal point`;
 
@@ -331,7 +335,7 @@ const updateUser = async (
   if (state.toLowerCase() === particularUser.state.toLowerCase()) {
     throw `Error: newState same as the value stored in the Database`;
   }
-  if (age.toLowerCase() === particularUser.age.toLowerCase()) {
+  if (age === particularUser.age) { // age is a number - no need to change in lowerCase
     throw `Error: newAge same as the value stored in the Database`;
   }
   const userCollection = await users();
@@ -359,7 +363,7 @@ const getAllUsers = async () => {
 //check whether email is present in db or not
 const checkUser = async (email, password) => {
   if (!email || !password) {
-    throw "All fields must have valid input - coming from checkuser";
+    throw "All fields must have valid input";
   }
   validation.checkString(email, "The Email");
   validation.checkString(password, "The Password");
@@ -382,9 +386,13 @@ const checkUser = async (email, password) => {
     throw `Error: Password must be at least 8 characters`;
   }
   const usersCollection = await users();
-  const user = await usersCollection.findOne({ email: email });
+  let dbFormatEmail = email.toLowerCase();
+  //email = email.toLowerCase();
+
+  console.log('email in users after changing case..', dbFormatEmail)
+  const user = await usersCollection.findOne({ email: dbFormatEmail });
   if (!user) {
-    throw `Email '${email}' is not registered with us.`;
+    throw `Email ${email} is not registered with us.`;
   }
 
   let comparePassword = false;
