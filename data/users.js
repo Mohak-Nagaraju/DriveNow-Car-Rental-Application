@@ -392,7 +392,7 @@ const checkUser = async (email, password) => {
   let comparePassword = false;
   comparePassword = await bcrypt.compare(password, user.password);
   if (comparePassword) {
-    return { authenticatedUser: true };
+    return { authenticatedUser: true, firstName: user.firstName, lastName: user.lastName};
   } else {
     throw `Error: Please enter correct password for email - ${email}`;
   }

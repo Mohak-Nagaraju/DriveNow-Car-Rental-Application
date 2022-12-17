@@ -210,8 +210,11 @@ router.route("/login").post(async (req, res) => {
 
     //when email found, should return -  return {authenticatedUser: true};
     if (result.authenticatedUser) {
+      req.session.firstName = result.firstName;
+      req.session.lastName = result.lastName;
       req.session.email = email;
       req.session.name = "AuthCookie";
+
       res.status(200).redirect("/protected/welcome");
       return;
     }
@@ -226,7 +229,7 @@ router
   .route('/protected/welcome')
   .get(async (req, res) => {
     if(req.session.email){     
-      return res.render("welcomePage", {title: "Welcome", name: req.session.email});
+      return res.render("welcomePage", {title: "Welcome", firstName: req.session.firstName, lastName: req.session.lastName});
     }
     else{
       return  res.render("forbiddenAccess", {title: "Forbidden Access" });
@@ -276,10 +279,25 @@ router
     validationForm.trimming(returnTime);
     validationForm.trimming(pickUpLocation);
 
-    if(pickUpLocation.length < 2 || pickUpLocation.length > 20)
-        {
-          throw `Error: Invalid Input for location.`;
-        }
+    //let s = "2021-12-16"
+    split = pickUpDate.split("-");
+    const today = new Date();
+    const year = today.getFullYear();
+    let month = today.getMonth() + 1; 
+    let day = today.getDate();
+if(split[2] < day || split[1] < month || split[0] < year){
+    return res.render("error",{error: "Error: cannot select pickUp Date in the past"});
+}
+
+split2 = returnDate.split("-");
+if(split2[2] < split[2] || split2[1] < split[1] || split2[0] < split[0]){
+  return res.render("error",{error: "Error: cannot select return Date before pick up date"});
+}
+
+if(pickUpLocation.length < 2 || pickUpLocation.length > 20)
+{
+  return res.render("error",{error: "Error: Invalid Input for location."});
+}
 
 
     //check another way to validate booking page - if user has pressed submit or not
