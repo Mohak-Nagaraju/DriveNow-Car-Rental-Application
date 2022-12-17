@@ -23,5 +23,6 @@ module.exports = {
  cars: getCollectionFn('cars'),
  cards: getCollectionFn('cards'),
  payment: getCollectionFn('payment'),
- booking: getCollectionFn('booking')
+ booking: getCollectionFn('booking'),
+ wallet: getCollectionFn('wallet'),
 };

@@ -56,23 +56,24 @@ const createBooking = async (amountPaid, pickUpDate, pickUpTime, returnTime, ret
     
 //}
 //calenderDateSelected();
-
-
 let date = new Date();
 let cDay = date.getDate();
 let cMonth = date.getMonth() + 1;
 let cYear = date.getFullYear();
-pickUpDate = cDay + "/" + cMonth + "/" + cYear 
+pickUpDate = cYear + "-" + cMonth + "-" + cDay
 
 //validating pickupTime
-//pickUpTime = currentD.getHours() + ":" + currentD.getMinutes() + ":" + currentD.getSeconds();
+pickUpTime = date.getUTCHours() + ":" + date.getUTCMinutes() + ":" + date.getUTCSeconds() + date.getTimezoneOffset();
+
+//validating pickupTime
+returnTime = date.getUTCHours() + ":" + date.getUTCMinutes() + ":" + date.getUTCSeconds() + date.getTimezoneOffset();
 
 //validating returnDate
 let returnD = new Date();
 let rDay = returnD.getDate();
 let rMonth = returnD.getMonth() + 1;
 let rYear = returnD.getFullYear();
-returnD = rDay + "/" + rMonth + "/" + rYear 
+returnD = rYear + "/" + rMonth + "/" + rDay
 
 
      const bookingCollection = await bookings();
@@ -99,7 +100,7 @@ let newBooking = {
     
 }
 const getBookingById = async (bookingId) => {
-    userId = userId.trim();
+    bookingId = bookingId.trim();
    validation.checkId(bookingd);
     const bookingCollection = await bookings();
     const particularBooking = await bookingCollection.findOne({_id: ObjectId(bookingId)});

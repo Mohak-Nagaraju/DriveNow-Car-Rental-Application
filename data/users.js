@@ -168,7 +168,7 @@ const createUser = async (
     throw "Could not add User. Contact Admin";
   }
 
-  return { insertedUser: true };
+  return { insertedUser: true,  insertedUserId:insertInfo.insertedId};
 
   /* const newId = insertInfo.insertedId.toString();
   const addedMovie = await getMovieById(newId);
@@ -180,10 +180,11 @@ const getUserById = async (userId) => {
   userId = userId.trim();
   validation.checkId(userId);
   const userCollection = await users();
+  console.log(userCollection);
   const particularUser = await userCollection.findOne({
     _id: ObjectId(userId),
   });
-  if (particularUser === null) throw "Error: No user with that id";
+  if (particularUser === null) throw "Error: No user with that id coming from a1";
   //particularMovie._id = particularMovie._id.toString();
   return particularUser;
 };
@@ -316,7 +317,7 @@ const updateUser = async (
   };
 
   const particularUser = await getUserById(userId);
-  if (particularUser === null) throw "Error: No User with that id";
+  if (particularUser === null) throw "Error: No User with that id a2";
   if (firstName.toLowerCase() === particularUser.firstName.toLowerCase()) {
     throw `Error: newFirstName same as the value stored in the Database`;
   }

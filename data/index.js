@@ -4,6 +4,7 @@ const carsData = require('./cars');
 const cardsData = require('./cards');
 const paymentData = require('./payment');
 const bookingsdata = require('./booking');
+const walletdata = require('./wallet')
 
 module.exports = {
   users: usersData,
@@ -11,4 +12,5 @@ module.exports = {
   cards: cardsData,
   payment: paymentData,
   booking: bookingsdata,
+  wallet: walletdata,
 };
