@@ -361,6 +361,7 @@ if(pickUpLocation.length < 2 || pickUpLocation.length > 20)
  
 
 //if booking successfull - route to payment
+
 router.route("/protected/payment").get(async (req, res) => {
   if (req.session.email) {
     // might have to check if booking is done successfull or not
@@ -373,8 +374,31 @@ router.route("/protected/payment").get(async (req, res) => {
 
   res.render("userLogin", {
     title: "Enter details to login",
+    // res.status(403).render("forbiddenAccess", {
+    //   title: "Forbidden",
+    // });
+  })
+})
+  .post(async (req, res) => {
+    //store in card details
+    // function to save card details - ?? createCardDetails(a)
+    //waiting for sneha's code
+    //error handling
+    //check for entered card details and call function to update the card details
+
   });
-});
+
+// Mohak:- I don't think we need this anymore, refer line 225-232
+
+/* router.route("/welcome").get(async (req, res) => {
+  //console.log("email in welcome page..", req.session.email);
+  res.render("welcomePage", {
+    title: "Welcome",
+    name: req.session.email,
+    //Poorvi's code should go here
+  });
+}); */
+
 
 router.route("/protected/logout").get(async (req, res) => {
   //code here for GET
