@@ -39,20 +39,28 @@ main {
 div {
   height: 30px;
 }
-#forbidden h3 {
+#forbidden-page h3 {
   color: #1f618d;
   text-align: center;
   margin-top: 15%;
   margin-bottom: auto;
 }
-#forbidden img {
+#forbidden-page img {
   margin-top: 1%;
   margin-bottom: auto;
 }
 
-#forbidden a {
+#forbidden-page a {
+  /* text-align: center;
+  margin-bottom: auto; */
+  background: #1f618d;
+  height: 70%;
+  cursor: pointer;
+  border: none;
+  color: white;
+  border-radius: 3px;
+  margin-bottom: 10%;
   text-align: center;
-  margin-bottom: auto;
 }
 
 .error {
