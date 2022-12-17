@@ -26,6 +26,7 @@ const main = async () => {
   //const parul = await users.createUser('Parul     ', 'Mahajan', 'parul123@aol.com', 'OthEr','Hoboken','NJ','25','Test123@', 'ABC123456789123');
 
 
+ //const check = await cars.getCarLocation('Hoboken');
  
   const cards1 = await cards.createCardInfo('639dfc15195383a3dc5bb48d','1111222233334444', '345', 'Mohak Nagaraju', '11', '2025');
 

@@ -381,7 +381,6 @@ router
       req.session.returnDate = returnDate;
       req.session.pickUpLocation = pickUpLocation;
       req.session.booking = "true";
-
       //return res.render("viewCars", {title: "Select Car", name: req.session.email});
       return res.redirect("/protected/viewCars");
     } else {
