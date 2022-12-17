@@ -33,7 +33,23 @@ app.set('view engine', 'handlebars');
 //         next();
 //     }
 // })
-
+app.use('/protected/welcome', (req, res, next) => {
+  //console.log(req.session.id);
+  if (!req.session.email) {
+      return res.status(403).render("forbiddenAccess", {title: "Not logged in" });
+  } else {
+      next();
+  }
+});
+app.use('/login', (req, res, next) => {
+  if (req.session.email) {
+    return res.redirect('/protected/welcome');
+  } else {
+    //here I',m just manually setting the req.method to post since it's usually coming from a form
+    req.method = 'POST';
+    next();
+  }
+});
 
 
 app.use((req,res,next) => {

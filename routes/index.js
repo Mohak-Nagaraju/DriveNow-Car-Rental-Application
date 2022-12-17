@@ -6,7 +6,7 @@ const constructorMethod = (app) => {
   app.use('/', routes); 
 
   app.use('*', (req, res) => {
-    res.redirect('/');
+    res.status(404).json({error: "Page Not Found"});
   });
 };
 
