@@ -335,7 +335,8 @@ const updateUser = async (
   if (state.toLowerCase() === particularUser.state.toLowerCase()) {
     throw `Error: newState same as the value stored in the Database`;
   }
-  if (age === particularUser.age) { // age is a number - no need to change in lowerCase
+  if (age === particularUser.age) {
+    // age is a number - no need to change in lowerCase
     throw `Error: newAge same as the value stored in the Database`;
   }
   const userCollection = await users();
@@ -389,7 +390,7 @@ const checkUser = async (email, password) => {
   let dbFormatEmail = email.toLowerCase();
   //email = email.toLowerCase();
 
-  console.log('email in users after changing case..', dbFormatEmail)
+  console.log("email in users after changing case..", dbFormatEmail);
   const user = await usersCollection.findOne({ email: dbFormatEmail });
   if (!user) {
     throw `Email ${email} is not registered with us.`;

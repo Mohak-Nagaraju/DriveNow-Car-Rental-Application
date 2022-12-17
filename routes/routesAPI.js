@@ -148,7 +148,9 @@ router
       );
       //when created succesfully, should return - return { insertedUser: true };
       if (result.insertedUser) {
-        res.status(200).redirect("/"); //redirect to login
+        //req.session.email = result.email;
+        // res.status(200).redirect("/"); //redirect to login
+        res.status(200).redirect("/sendEmail");  //it is actually /send route
         return;
       } else {
         res.status(500).json({ error: "Internal Server Error" });
@@ -160,6 +162,23 @@ router
       });
     }
   });
+
+
+  router
+  .route("/sendEmail")
+  .get(async (req, res) => {
+    //if (req.session.email) {
+      // might have to check if booking is done successfull or not
+      console.log("inside if .. emai -", req.session.email);
+      res.render("sendEmailPage", {
+        title: "Email Communication",
+      });
+      return;
+    //}
+    // res.status(403).render("forbiddenAccess", {
+    //   title: "Forbidden",
+    // });
+  })
 
 router.route("/login").post(async (req, res) => {
   const { email, hashPassword } = req.body;
@@ -221,19 +240,20 @@ router.route("/welcome").get(async (req, res) => {
 router
   .route("/payment")
   .get(async (req, res) => {
-    if (req.session.email) {
+    //if (req.session.email) {
       // might have to check if booking is done successfull or not
       console.log("inside if .. emai -", req.session.email);
       res.render("paymentPage", {
         title: "Payment",
       });
       return;
-    }
+    //}
     // res.status(403).render("forbiddenAccess", {
     //   title: "Forbidden",
     // });
   })
   .post(async (req, res) => {
+    //
     //store in card details
     // function to save card details - ?? createCardDetails(a)
     //waiting for sneha's code
