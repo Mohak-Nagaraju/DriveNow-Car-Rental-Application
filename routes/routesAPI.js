@@ -213,9 +213,13 @@ router.route("/login").post(async (req, res) => {
       req.session.firstName = result.firstName;
       req.session.lastName = result.lastName;
       req.session.email = email;
+
       req.session.name = "AuthCookie";
 
       res.status(200).redirect("/protected/welcome");
+
+    
+
       return;
     }
   } catch (error) {
@@ -342,6 +346,7 @@ if(pickUpLocation.length < 2 || pickUpLocation.length > 20)
  
 
 //if booking successfull - route to payment
+
 router.route("/protected/payment").get(async (req, res) => {
   if (req.session.email) {
     // might have to check if booking is done successfull or not
@@ -354,8 +359,20 @@ router.route("/protected/payment").get(async (req, res) => {
 
   res.render("userLogin", {
     title: "Enter details to login",
+
+
+    // res.status(403).render("forbiddenAccess", {
+    //   title: "Forbidden",
+    // });
+  })
+  .post(async (req, res) => {
+    //store in card details
+    // function to save card details - ?? createCardDetails(a)
+    //waiting for sneha's code
+    //error handling
+    //check for entered card details and call function to update the card details
+
   });
-});
 
 router.route("/protected/logout").get(async (req, res) => {
   //code here for GET
