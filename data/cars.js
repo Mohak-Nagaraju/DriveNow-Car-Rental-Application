@@ -115,9 +115,39 @@ if(availability != "yes" && availability != "no"){
     return particularUser;
   
   };
+  const getAllCars = async () => {
+ 
+  
+    const carCollection = await cars();
+    const particularUser = await carCollection.find({}).toArray();
+    if (!particularUser) throw "Could not get all cars";
+  // moviesList._id = moviesList._id.toString();
+  for (let i in particularUser) {
+    particularUser[i]._id = particularUser[i]._id.toString();
+  }
+  return particularUser;
+  
+  };
+  const getCarLocation = async (location) => {
+    location = location.trim();
+   validation.checkString(location);
+   if(location.length < 2 || location.length > 20)
+        {
+          throw `Error: Invalid Input for location.`;
+        }
+    const carCollection = await cars();
+    const particularUser = await carCollection.find({currentLocation: {$eq:location}});
+    //console.log(particularUser);
+    if (particularUser === null) throw 'Error: No Car with that location';
+    //particularMovie._id = particularMovie._id.toString();
+    return particularUser;
+  
+  };
 
   module.exports = {
     createCar,
-    getCarById
+    getCarById,
+    getAllCars,
+    getCarLocation
     
   };

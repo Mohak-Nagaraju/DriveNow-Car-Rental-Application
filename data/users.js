@@ -340,7 +340,7 @@ const updateUser = async (
   }
   const userCollection = await users();
   const updatedInfo = await userCollection.updateOne(
-    { _id: ObjectId(movieId) },
+    { _id: ObjectId(userId) },
     { $set: updatedUser }
   );
   if (updatedInfo.modifiedCount === 0) {
@@ -350,7 +350,7 @@ const updateUser = async (
 
 //get all the users from db
 const getAllUsers = async () => {
-  const userCollection = await movies();
+  const userCollection = await users();
   const userList = await userCollection.find({}).toArray();
   if (!userList) throw "Could not get all users";
   // moviesList._id = moviesList._id.toString();
@@ -386,11 +386,15 @@ const checkUser = async (email, password) => {
     throw `Error: Password must be at least 8 characters`;
   }
   const usersCollection = await users();
+
+  
+
   let dbFormatEmail = email.toLowerCase();
   //email = email.toLowerCase();
 
-  console.log('email in users after changing case..', dbFormatEmail)
+
   const user = await usersCollection.findOne({ email: dbFormatEmail });
+
   if (!user) {
     throw `Email ${email} is not registered with us.`;
   }
@@ -398,7 +402,7 @@ const checkUser = async (email, password) => {
   let comparePassword = false;
   comparePassword = await bcrypt.compare(password, user.password);
   if (comparePassword) {
-    return { authenticatedUser: true };
+    return { authenticatedUser: true, firstName: user.firstName, lastName: user.lastName};
   } else {
     throw `Error: Please enter correct password for email - ${email}`;
   }
