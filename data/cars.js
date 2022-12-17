@@ -135,8 +135,9 @@ if(availability != "yes" && availability != "no"){
         {
           throw `Error: Invalid Input for location.`;
         }
+    location = location.toLowerCase();
     const carCollection = await cars();
-    const particularUser = await carCollection.find({currentLocation: {$eq:location}});
+    const particularUser = await carCollection.find({currentLocation: {$eq:location}}).toArray();
     //console.log(particularUser);
     if (particularUser === null) throw 'Error: No Car with that location';
     //particularMovie._id = particularMovie._id.toString();

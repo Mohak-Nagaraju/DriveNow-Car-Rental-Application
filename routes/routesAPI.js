@@ -319,7 +319,7 @@ if(pickUpLocation.length < 2 || pickUpLocation.length > 20)
       req.session.returnTime = returnTime;
       req.session.returnDate = returnDate;
       req.session.pickUpLocation = pickUpLocation;
-      req.session.booking = "bookingPage";
+      req.session.booking = "true";
     
       //return res.render("viewCars", {title: "Select Car", name: req.session.email});
       return res.redirect("/protected/viewCars");
@@ -337,9 +337,10 @@ if(pickUpLocation.length < 2 || pickUpLocation.length > 20)
   .route('/protected/viewCars')
   .get(async (req, res) => {
     if(req.session.email){    
-      if(req.session.booking){
+      if(req.session.booking === "true"){
         let cars = await carData.getCarLocation(req.session.pickUpLocation);
         if(!cars) throw 'Error: No Car with that location';
+        req.session.booking = "false";
         return  res.render("viewCars", {title: "Select Car", car : cars});
       }
       else{

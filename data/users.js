@@ -385,11 +385,32 @@ const checkUser = async (email, password) => {
   if (password.length < 8) {
     throw `Error: Password must be at least 8 characters`;
   }
-  const usersCollection = await users();
-  let email1 = email.toLowerCase();
-  const user = await usersCollection.findOne({ email: email1 });
-  if (!user) {
-    throw `Email '${email}' is not registered with us.`;
+  console.log("before await users");
+  //const userCollection = await users();  
+let email1 = email.toLowerCase();
+
+const usersCollection = await users();
+console.log("after await users");
+const user = await usersCollection.findOne({ email: email1 });
+console.log(user);
+if (!user) { 
+  throw `Error: Either the username or password is invalid`;
+}
+let comparePassword = false;
+comparePassword = await bcrypt.compare(password, user.password);
+  if (comparePassword) {
+    return { authenticatedUser: true, firstName: user.firstName, lastName: user.lastName};
+  } else {
+    throw `Error: Either the username or password is invalid`;
+  }
+
+  //let dbFormatEmail = email.toLowerCase();
+  //email = email.toLowerCase();
+ /*  console.log("before finding");
+  const users = await userCollection.findOne({ email: email1 });
+console.log(users);
+  if (!users) {
+    throw `Email ${email} is not registered with us.`;
   }
 
   let comparePassword = false;
