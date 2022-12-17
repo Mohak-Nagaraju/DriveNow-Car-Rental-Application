@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 const saltRounds = 16;
 const validation = require('../validation');
 //const { users } = require('.');
+
 const createCardInfo = async (userId, cardNumber, cvv, name, expiryMonth, expiryYear) => {
   
   if (!userId) {
@@ -99,48 +100,34 @@ const createCardInfo = async (userId, cardNumber, cvv, name, expiryMonth, expiry
           if(expiryYear === NaN) throw `Error: expiryYear is not a number`;
           if(expiryYear % 1 != 0) throw `Error: expiryYear contains decimal point`;
 
-      //if (card) {
-        //    throw `Error: card is already present or in use.`;
-      //}
-      const userData = await users.getUserById(userId);
-      const userCollection = await users();
+      
+      //const userData = await users.getUserById(userId);
+      //const userCollection = await users();
 
-      //const cardOfUser = await users.getUserById(cardId);
-      //const userCollection = await movies();
+
+     const cardCollection = await cards();
+     const userWhoHasThisCard = await users.getUserById(userId)
      
     
       let newCard = {
-        _id: ObjectId().toString(),
+        user: {
+          id: ObjectId(userId),
+          cardDetails: userWhoHasThisCard.cardDetails
+        },
         cardNumber: cardNumberHash,
         cvv: cvvHash,
         name: name,
         expiryMonth: expiryMonth,
         expiryYear: expiryYear,
-        //card: {
-          //id: ObjectId(cardId),
-          //name: cardOfUser.name
+        
         }
       
-        //userData.cardDetails.push(newCard);
-      //const cardCollection = await cards();
-
-     // const insertInfo = await cardsCollection.insertOne(newCard);
-     //cardsData.cardDetails.push(cardDetails);
-      /*const updatedInfo = await cardsCollection.updateOne(
-        {_id: ObjectId(cardId)},
-        {
-          $push: { cardDetails: newCard  },
-         $set: { cardDetails: newCard }, 
-        }
-      ); */
     
-      //users.cardDetails = await cardCollection.insertOne(cardDetails);
-      //users.cardDetails.push(cardDetails);
-          //if (!insertInfo.acknowledged || !insertInfo.insertedId){
-            //throw 'Could not add card';
-          //}
-
-          const updatedInfo = await userCollection.updateOne(
+        const newInsertInformation = await cardCollection.insertOne(newCard);
+        const newId = newInsertInformation.insertedId;
+        return await users.getUserById(newId.toString());
+      };
+          /*const updatedInfo = await userCollection.updateOne(
             {_id: ObjectId(userId)},
             {
               $push: { cardDetails: newCard },
@@ -152,14 +139,8 @@ const createCardInfo = async (userId, cardNumber, cvv, name, expiryMonth, expiry
             throw 'could not add card successfully';
           }
           return await users.getUserById(userId);
-          //if (updatedInfo.modifiedCount === 0) {
-           // throw 'could not add Review successfully';
-          //}
-          //return await this.getcardById(newId.toString()); ------------
-          //const newId = insertInfo.insertedId;
-          //const newCardInfo = await this.getCardById(insertInfo.insertedId.toString());
-          //return await this.getCardById(newId.toString());
-        };
+          
+        };*/
 
 
 const getCardById = async (cardId) => {
