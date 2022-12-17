@@ -1,0 +1,16 @@
+{{! ask for sending confirmation email ??}}
+<h3> Details about sending email - click below to send a conformation email</h3>
+<form id="email-send-form" method="Post" action="send">
+  {{!-- {{msg}} --}}
+  <p>enter email for further communications:</p>
+  <label for="email">Email</label>
+  <input
+    placeholder="name@example.com"
+    name="email"
+    id="email"
+    required
+    pattern="[^ @]*@[^ @]*"
+  />
+  <button type="submit">Submit</button>
+
+</form>

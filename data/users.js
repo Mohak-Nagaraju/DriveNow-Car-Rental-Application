@@ -335,7 +335,8 @@ const updateUser = async (
   if (state.toLowerCase() === particularUser.state.toLowerCase()) {
     throw `Error: newState same as the value stored in the Database`;
   }
-  if (age === particularUser.age) { // age is a number - no need to change in lowerCase
+  if (age === particularUser.age) {
+    // age is a number - no need to change in lowerCase
     throw `Error: newAge same as the value stored in the Database`;
   }
   const userCollection = await users();
