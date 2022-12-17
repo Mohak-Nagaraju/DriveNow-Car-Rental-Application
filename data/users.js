@@ -385,14 +385,14 @@ const checkUser = async (email, password) => {
   if (password.length < 8) {
     throw `Error: Password must be at least 8 characters`;
   }
-  console.log("before await users");
+  
   //const userCollection = await users();  
 let email1 = email.toLowerCase();
 
 const usersCollection = await users();
-console.log("after await users");
+
 const user = await usersCollection.findOne({ email: email1 });
-console.log(user);
+
 if (!user) { 
   throw `Error: Either the username or password is invalid`;
 }
