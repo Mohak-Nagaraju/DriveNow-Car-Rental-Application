@@ -214,7 +214,7 @@ router.route("/login").post(async (req, res) => {
       //let userById=await userData.get()
       console.log("Inside checking ",req.session);
       req.session.email = email;
-      res.status(200).redirect("/welcomePage");
+      res.status(200).redirect("/protected/welcome");
       return;
     }
   } catch (error) {
