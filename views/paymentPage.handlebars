@@ -9,11 +9,28 @@
             </tr>
         </thead>
    </table>
-            <h3> Enter Card details for Payment</h3>
+               <h3> Enter Card details for Payment</h3> 
               <tbody>
-                 <tr>
+                <tr>
+                    <td>
+                         <label>Wallet/Card</label>
+                    <select placeholder="MM">
+                        <option value="1">CreditCard</option>
+                        <option value="2">Wallet</option>
+                    </td>
+                </tr>
+                <tr>
+                 <div class="container">
+                  <p><a href="/protected/Success">Click here to logout
+            <tr>
+                <td colspan="4"><button onclick="Submit">Submit</button></td>            
+            </tr>
+        </a>
+        </p>
+              <h3>Credit Card details</h3>
+          <tr>
                 <td>
-                    Card Number : 
+             Card Number : 
                 </td>
                 <td>
                     <input type="number"  placeholder="xxxx-xxxx-xxxx-xxxx" 
@@ -22,19 +39,19 @@
             </tr>
              <tr>
                 <td>
-                    Name on Card : 
+         Name on Card : 
                 </td>
                  <td>
                     <input type="text" id="cname" name="cardname" placeholder="Poorvi Raut"><br><br>
                 </td>
                 
              <tr>
-                <td>
-                    Expiry Date: 
+             <td>
+         Expiry Date: 
                 </td>
                 <td>
-                    <label>Month</label>
-                    <select placeholder="MM">
+                 <label>Month</label>
+                  <select placeholder="MM">
                         <option value="1">01</option>
                         <option value="2">02</option>
                         <option value="3">03</option>
@@ -51,7 +68,7 @@
                 </td>
                 </tr>
                 <td>
-                    <label>Year</label>
+                 <label>Year</label>
                     <select placeholder="YY">
                         <option value="2021">2021</option>
                         <option value="2022">2022</option>
@@ -63,7 +80,7 @@
             </tr>
             <tr>
                 <td>
-                    CVV : 
+            CVV : 
                 </td>
                 <td>
                     <input type="password"  placeholder="xxx" 

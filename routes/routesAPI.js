@@ -242,9 +242,9 @@ router.route("/login").post(async (req, res) => {
 
 
  router.route("/welcome").get(async (req, res) => {
-  //console.log("email in welcome page..", req.session.email);
+  console.log("email in welcome page..", req.session.email);
   if (req.session.email) {
-   // console.log("inside welcome route", req.session)
+   console.log("inside welcome route", req.session)
     res.status(200).render("welcomePage", {
       title: "Welcome",
      firstName: req.session.firstName,
@@ -340,12 +340,19 @@ if(pickUpLocation.length < 2 || pickUpLocation.length > 20)
   router
   .route('/protected/viewCars')
   .get(async (req, res) => {
+  
     if(req.session.email){    
       if(req.session.booking === "true"){
         let cars = await carData.getCarLocation(req.session.pickUpLocation);
         if(!cars) throw 'Error: No Car with that location';
         req.session.booking = "false";
+        
+        cars.push({ src: "public/images/suv.jpg", name: "Suv" });
+        cars.push({ src: "public/images/sedan.jpg", name: "Sedan" });
+        cars.push({ src: "public/images/bmw.jpg", name: "bmv" });
         return  res.render("viewCars", {title: "Select Car", car : cars});
+       
+
       }
       else{
         return  res.render("error", {title: "Error", error: "Cannot access this page until you have entered booking details" });

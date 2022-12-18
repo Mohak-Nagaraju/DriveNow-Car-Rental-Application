@@ -158,6 +158,39 @@ function checkLincenceNumber(lincenceNumber, valName) {
 
 
   //booking validtions 
+
   //payemnt validation - card validation
+
+  /*function checkCardNumber(cardNumber)
+  {
+    if (typeof email != "Number") throw `Error: ${cardNumber} must be a Number`;
+  if (!cardNumber) throw `Please enter the valid card number`;
+  if (cardNumber.length === 0 || cardNumber.trim().length === 0)
+    throw `Error: card Number can not be just empty spaces`;
+
+    const CardCorrectPattern = "[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}";
+  if (!CardCorrectPattern.test(cardNumber))
+    throw "Error: Invalid card Pattern";
+
+  return cardNumber;
+  }
+  (function ($) {
+    $(".paymentPage-error-div").hide();
+    const PaymentForm= $("#login-form");
+  $(PaymentForm).submit(function (event) {
+    event.preventDefault();
+    var cardNumber = $("#cardNumber").val();
+    try {
+      email = checkEmail(email);
+      $(this).unbind();
+      $(this).submit();
+    }catch (e) {
+      console.log("error inside client validation..", e);
+      $(".paymentPage-error-div").text(e);
+      $(".paymentPage-error-div").show();
+      $("#paymentPage-form").trigger("reset");
+      $("#cardNumber").trigger("focus");
+    }
+  });*/
 
 })(window.jQuery);

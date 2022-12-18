@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.engine('handlebars', exphbs.engine({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
-
+app.use(express.static("./public/images"));
 //forbid the user to go to any route if not authenticated
 // app.use('/protected', (req,res,next) => {
 //     if(!req.session.email) {

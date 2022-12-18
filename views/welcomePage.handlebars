@@ -1,12 +1,16 @@
 
- <div class="main-content">
-    <h2> {{title}} , {{firstname}} {{lastname}}!</h2>
-
+<form id="payment-form" class="main-content" method="POST" action="/protected/welcome">
+<h2> {{title}} , {{firstname}} {{lastname}}!</h2>
+<img src="../public/car.png" alt="Welcome Page" />
+<div class="main-block">
+  <p><a  href="/protected/payment"> Click here for payment</a></p>
+  <p> <a href="/protected/logout">Click here to Logout</a></p>
+   <p><a href="/protected/booking">Click here to book a car</a></p>
+    <p><a href="/protected/viewCars">Click here to view cars</a></p>
+</div>
+</form>
+    
            
-           <p><a  href="/protected/payment"> Click here for payment</a></p>
-           <p> <a href="/protected/logout">Click here to Logout</a></p>
-           <p><a href="/protected/booking">Click here to book a car</a></p>
-    </div>
 
 
 
