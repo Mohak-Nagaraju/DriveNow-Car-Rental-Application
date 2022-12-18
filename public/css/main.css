@@ -39,20 +39,28 @@ main {
 div {
   height: 30px;
 }
-#forbidden h3 {
+#forbidden-page h3 {
   color: #1f618d;
   text-align: center;
   margin-top: 15%;
   margin-bottom: auto;
 }
-#forbidden img {
+#forbidden-page img {
   margin-top: 1%;
   margin-bottom: auto;
 }
 
-#forbidden a {
+#forbidden-page a {
+  /* text-align: center;
+  margin-bottom: auto; */
+  background: #1f618d;
+  height: 70%;
+  cursor: pointer;
+  border: none;
+  color: white;
+  border-radius: 3px;
+  margin-bottom: 10%;
   text-align: center;
-  margin-bottom: auto;
 }
 
 .error {
@@ -61,6 +69,21 @@ div {
   border-radius: 8px;
   justify-content: center;
   padding: 0 30px;
+}
+
+.register-link-div {
+  color: #0b3c5d;
+  text-align: center;
+}
+
+.login-error-div , .signup-error-div{
+  color: red !important;
+  box-shadow: 5px 5px 15px 5px #1f618d;
+  border-radius: 8px;
+  justify-content: center;
+  padding: 0 30px;
+  height: 6%;
+  margin-bottom: 7%
 }
 
 #login-form input {
@@ -154,6 +177,21 @@ div {
     color: black;
   } */
 
+.main-content-logout {
+  background: rgb(209, 227, 236);
+  padding: 0 30px;
+  justify-content: center;
+  min-height: 350px;
+  margin-top: 15%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+  box-shadow: 5px 5px 15px 5px #1f618d;
+  border-radius: 8px;
+  width: 100%;
+}
+
 #logout-page p {
   color: #0b3c5d;
   text-align: center;
@@ -173,4 +211,8 @@ div {
   border-radius: 3px;
   margin-bottom: 10%;
   text-align: center;
+}
+
+#payment-form h4{
+  text-align: left;
 }
