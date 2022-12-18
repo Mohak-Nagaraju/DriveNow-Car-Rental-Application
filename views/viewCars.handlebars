@@ -1,14 +1,26 @@
+<div id="viewCar-div">
+  <div id="viewCar-form-div" class="main-content">
+    <h2>{{title}}</h2>
+    <p>
+      Below options display the car details, please select the car and the
+      payment type.
+    </p>
+    <p>Available 'Yes' or 'No' shows wether the car is available in the location
+      or not</p>
+    <p>Select the car</p>
+    {{#if car}}
+      <form id="viewCar-form" method="POST" action="/protected/viewCars">
 
 <h1>{{ title }}</h1>
 
 <p>The cars based on your entered location is:</p>
 <!--<h2 class="color-primary">{{searchPersonName}}</h2>-->
- {{#if car}}
+ {{#if people}}
  <div class="main-block">
     <ul>
         {{#each car}}
-        
-        <div class="col-md-4">
+
+<div class="col-md-4">
       <div class="text-success" style="font-size: large;
             font-weight: 700;">{{this.name}}</div>
          <img src="{{this.src}}">

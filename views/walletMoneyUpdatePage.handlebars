@@ -1,0 +1,67 @@
+<form
+  id="walletAddMoney-form"
+  class="main-content"
+  method="POST"
+  action="/protected/walletMoneyUpdate"
+>
+  <h2>{{title}}</h2>
+
+  <p>Current Wallet Amount is: {{availableWalletMoney}}</p>
+
+  <h4>Add money to wallet</h4>
+  <label for="cardNumber">Card Number</label>
+  <input
+    placeholder="Enter your card number"
+    id="cardNumber"
+    name="cardNumber"
+    required
+    type="tel"
+    pattern="\d*"
+    maxlength="16"
+  />
+
+  <label for="cardName">Name</label>
+  <input
+    placeholder="Enter name on the card"
+    id="cardName"
+    name="cardName"
+    required
+  />
+
+  <label for="cardCvv">CVV</label>
+  <input
+    class="cc-cvc"
+    type="password"
+    placeholder="Enter 3 digit CVV"
+    id="cardCvv"
+    name="cardCvv"
+    required
+  />
+
+  <label for="cardExpiry">Expiry</label>
+  <input
+    class="cc-expires"
+    placeholder="Enter the expiry"
+    id="cardExpiry"
+    name="cardExpiry"
+    required
+  />
+
+  <label for="moneyAdded">Enter Amount</label>
+  <input
+    placeholder="Enter Amount"
+    id="moneyAdded"
+    name="moneyAdded"
+    required
+  />
+
+  <button type="submit">Submit</button>
+
+  {{#if error}}
+    <p class="error">{{error}}</p>
+  {{/if}}
+
+  <a href="/protected/logout">Click here to Logout</a>
+  <a href="/protected/welcome">Go back to Dashboard</a>
+
+</form>

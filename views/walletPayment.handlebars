@@ -1,0 +1,23 @@
+<div id="walletPayment-div">
+  <form
+    id="wallet-form"
+    class="main-content"
+    method="POST"
+    action="/protected/payment"
+  >
+    <h2>{{title}}</h2>
+
+    <p> Available Wallet balance: {{walletBalance}}</p>
+    <p>Total Calculated cost :</p>
+    <p> Click here to make the payment</p>
+
+    <button type="submit">Submit</button>
+
+    {{#if error}}
+      <p class="error">{{error}}</p>
+    {{/if}}
+
+    <a href="/logout">Click here to Logout</a>
+
+  </form>
+</div>

@@ -1,54 +1,9 @@
+<div>
+  <h2>Welcome {{firstName}} {{lastName}}!</h2>
 
-<form id="payment-form" class="main-content" method="POST" action="/protected/welcome">
-<h2> {{title}} , {{firstname}} {{lastname}}!</h2>
-<img src="../public/car.png" alt="Welcome Page" />
-<div class="main-block">
-  <p><a  href="/protected/payment"> Click here for payment</a></p>
-  <p> <a href="/protected/logout">Click here to Logout</a></p>
-   <p><a href="/protected/booking">Click here to book a car</a></p>
-    <p><a href="/protected/viewCars">Click here to view cars</a></p> 
+  <a href="/protected/payment">Click here for payment</a>
 
+  <a href="/protected/logout">Click here to Logout</a>
 
-
-
-
-
+  <a href="/protected/booking">Click here to book car</a>
 </div>
-</form>
-
-
-    {{!--<h1>{{ title }}</h1>
-
-<p>The cars based on your entered location is:</p>
-<!--<h2 class="color-primary">{{searchPersonName}}</h2>-->
- {{#if car}}
- <div class="main-block">
-    <ul>
-        {{#each car}}
-        
-        <div class="col-md-4">
-      <div class="text-success" style="font-size: large;
-            font-weight: 700;">{{this.name}}</div>
-         <img src="{{this.src}}">
-     
-      
-        <li>
-            <!-- Mohak:- see which anchor tag works between the 2 below-->
-         <!-- <a class="link" target="_blank" href="/protected/payment/{{this.id}}">Car Type: {{this.carType}}  Car brand: {{this.brand}} Car Model: {{this.model}} Car location: {{this.currentLocation}} Car rating: {{this.rating}} cost per hour: {{this.costPerHour}} availability: {{this.availability}}</a>-->
-           <a class="link" target="_blank" href="/protected/payment">Car Type: {{this.carType}}  Car brand: {{this.brand}} Car Model: {{this.model}} Car location: {{this.currentLocation}} Car rating: {{this.rating}} cost per hour: {{this.costPerHour}} availability: {{this.availability}}</a>
-        </li>
-        </div>
-        {{/each}}
-    </ul>
-    
-     {{/if}}
- </div>
-   
-<br>
-
-
-     --}}      
-
-
-
-  

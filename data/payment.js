@@ -1,12 +1,10 @@
 const mongoCollections = require('../config/mongoCollections');
-const payment = mongoCollections.payment;
+
+const payments = mongoCollections.payment;
 const {ObjectId} = require('mongodb');
 const validation = require('../validation');
-//const bookings = require('./booking');
-//const data = require('../data');
-const  cards = require('./cards');
-const wallet = require('./wallet');
-const users  = require('./users');
+const bookings = require('./booking')
+
 const createPayment = async (bookingID, userID, paymentType) => {
     if (!bookingID){
         throw "you must provide an booking ID";
@@ -32,31 +30,17 @@ const createPayment = async (bookingID, userID, paymentType) => {
         throw "Incorrect input";
     }
 
-
     //bookingID paymentType
-    let typeFlag = validation.checkSpecialCharWithNumber(paymentType);
-    let paymentTypeFlag = validation.checkSpace(paymentType);
-      if(paymentTypeFlag === true){
-        throw `Error: Invalid Input for paymentType. It contains spaces`;
-      }
-    if(paymentType.length < 3)
-      {
-        throw `Error: paymentType must be at least 3 characters`;
-      }
-    if(typeFlag === true){
-      throw `Error: Invalid Input for paymentType. It contains Special Charaters / Numbers`;
-    }
-    paymentType = paymentType.toLowerCase();
-let cardPay;
-    if (paymentType == cardPay){
-        cards.createCardInfo();       
-    }
-    else {
-        wallet.createWallet();
-    }
-    
-    const paymentCollection = await payment();
-
+   //if (paymentType = card){
+     
+   //s}
+    const paymentCollection = await payments();
+    /* const bookingCollection = await bookings();
+    const payment = await bookingCollection.findOne({ bookingID: bookingID });
+      if (payment) {
+            throw `Error: Payment is already done.`;
+      } */
+      
     let paymentDetails = {
         bookingID: bookingID,
         userID: userID,
@@ -67,25 +51,21 @@ let cardPay;
           if (!insertInfo.acknowledged || !insertInfo.insertedId){
             throw 'Could not add payment method';
           }
+
+
+          /*const getPaymentById = async (paymentId) => {
+            paymentId = paymentId.trim();
+           validation.checkId(paymentId);
+            const paymentCollection = await payment();
+            const specificPayment = await paymentCollection.findOne({_id: ObjectId(paymentId)});
+            if (specificPayment === null) throw 'Error: No payment method with that id';
+            return specificPayment;
           
-        };   
+          };*/
+}
 
-
-
-const getPaymentById = async (userId) => {
-    userId = userId.trim();
-    validation.checkId(userId);
-    const userCollection = await users();
-    const particularUser = await userCollection.findOne({
-      _id: ObjectId(userId),
-    });
-    if (particularUser === null) throw "Error: No boookings with that id";
-    //particularMovie._id = particularMovie._id.toString();
-    return particularUser;
-  };
-
- 
 module.exports = {
     createPayment,
-    getPaymentById,
+    //getPaymentById,   
+
   };

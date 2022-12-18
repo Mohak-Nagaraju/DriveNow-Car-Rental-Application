@@ -1,65 +1,8 @@
-<form id="payment-form" class="main-content" method="POST" action="/protected/booking">
-<h2>{{title}}</h2>
-<img src="../public/car.png" alt="Booking a car" />
-<div class="main-block">
-   <table style="padding: 15px;">
-    <thead>
-            <tr>
-                <td colspan="4" style="text-align: center;"></td>
-            </tr>
-        </thead>
-   </table>
-            <h3> Enter Booking details</h3>
-              <tbody>
-                 <tr>
-                <td>
-                  pickUpDate: 
-                </td>
-                <td>
-                    <input type="date"  name "pickUpDate" 
-                   ><br><br>
-                </td>
-            </tr>
-             <tr>
-                <td>
-                  returnDate: 
-                </td>
-                <td>
-                    <input type="date"  name "returnDate" 
-                   ><br><br>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                  pickUpTime: 
-                </td>
-                <td>
-                    <input type="time"  name "pickUpTime" 
-                    ><br><br>
-                </td>
-            </tr>
-            <tr>
-              <td>
-                  returnTime: 
-                </td>
-                <td>
-                    <input type="time"  name "returnTime" 
-                    ><br><br>
-                </td>
-            </tr>
-             <tr>
-              <td>
-                  pickUpLocation: 
-                </td>
-                <td>
-                    <input type="text"  name "pickUpLocation" 
-                    placeholder=""><br><br>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="4"><button onclick="Submit">Submit</button></td>            
-            </tr>
-            </tbody>
-     <p><a href="/protected/logout">Click here to logout</a></p>
-     <p><a href="/protected/welcome">Click here to go to dashboard</a></p>
+<form method="POST" action="/protected/booking">
+<input type="date" name="pickUpDate">pickupdate
+<input type="time" name="pickUpTime">pickuptime
+<input type="date" name="returnDate">returndate
+<input type="time" name="returnTime">returntime
+<input type="text" name="pickUpLocation">location
+<input type="submit">submit
 </form>

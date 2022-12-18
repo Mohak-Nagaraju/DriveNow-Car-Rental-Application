@@ -1,0 +1,36 @@
+<div id="success-div" class="main-content">
+  <h2>{{title}}</h2>
+
+  {{! <a href="/protected/payment">Click here for payment</a> }}
+  <h3>Congratulations!! Booking has been successfully made</h3>
+
+  <p>Booking Details:</p>
+  <li>
+    Pickup Date :
+    {{pickUpDate}}
+  </li>
+  <li>
+    Pickup Time :
+    {{pickUpTime}}
+  </li>
+  <li>
+    Return Date :
+    {{returnDate}}
+  </li>
+  <li>
+    Return Time :
+    {{returnTime}}
+  </li>
+  <li>
+    Pickup Location :
+    {{pickUpLocation}}
+  </li>
+
+  <a href="/protected/welcome">Click here to go to dashboard</a>
+  <a href="/protected/logout">Click here to Logout</a>
+
+  {{#if success}}
+    <p class="error">{{success}}</p>
+  {{/if}}
+
+</div>
