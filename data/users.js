@@ -192,6 +192,18 @@ const getUserById = async (userId) => {
   return particularUser;
 };
 
+const getUserByEmail = async (email) => {
+  email = email.trim();
+  validation.validateEmail(email);
+  const userCollection = await users();
+  const particularUser = await userCollection.findOne({
+    email:email
+  });
+  if (particularUser === null) throw `Error: No user with email : ${email}.`;
+  //particularMovie._id = particularMovie._id.toString();
+  return particularUser;
+};
+
 //delete the user with given ID form db
 const deleteUser = async (userId) => {
   userId = userId.trim();
@@ -386,23 +398,23 @@ const checkUser = async (email, password) => {
   if (password.length < 8) {
     throw `Error: Password must be at least 8 characters`;
   }
-  console.log("before await users");
+  //console.log("before await users");
   //const userCollection = await users();  
 let email1 = email.toLowerCase();
 
 const usersCollection = await users();
-console.log("after await users");
+//console.log("after await users");
 const user = await usersCollection.findOne({ email: email1 });
 console.log(user);
 if (!user) { 
-  throw `Error: Either the username or password is invalid`;
+  throw `Email ${email} is not registered with us.`;
 }
 let comparePassword = false;
 comparePassword = await bcrypt.compare(password, user.password);
   if (comparePassword) {
     return { authenticatedUser: true, firstName: user.firstName, lastName: user.lastName};
   } else {
-    throw `Error: Either the username or password is invalid`;
+    throw `Error: Please enter correct password for email - ${email}`;
   }
 
   //let dbFormatEmail = email.toLowerCase();
@@ -423,6 +435,52 @@ console.log(users);
   } */
 };
 
+const updateUserWallet = async (
+  userId, walletAmount
+) => {
+//console.log("walletAmount -1..",walletAmount)
+  userId = userId.toString().trim();
+  validation.checkId(userId);
+  if (
+    !walletAmount || !userId
+  ) {
+    throw "All fields need to have valid values";
+  }
+  validation.checkString(walletAmount, "The wallet");
+  
+
+  //trimming the values
+  walletAmount = validation.trimming(walletAmount);
+  //no negative amount validation  -- TODO
+
+  const particularUser = await getUserById(userId);
+  if (particularUser === null) throw "Error: No User with that id";
+ 
+  let pastWalletAmount = particularUser.walletAmount;
+  pastWalletAmount = parseFloat(pastWalletAmount);
+  walletAmount = parseFloat(walletAmount);
+let totalWalletAmount = pastWalletAmount + walletAmount;
+console.log('walletAmount..2',totalWalletAmount.toString())
+
+  const updatedUser = {
+    walletAmount: totalWalletAmount.toString(),
+  };
+
+  
+  const userCollection = await users();
+  const updatedInfo = await userCollection.updateOne(
+    { _id: ObjectId(userId) },
+    { $set: updatedUser }
+  );
+  if (updatedInfo.modifiedCount === 0) {
+    throw "could not update user successfully";
+  }
+  return {updatedWallet: true}
+};
+
+
+
+
 module.exports = {
   createUser,
   getAllUsers,
@@ -430,4 +488,6 @@ module.exports = {
   deleteUser,
   updateUser,
   checkUser,
+  getUserByEmail,
+  updateUserWallet
 };

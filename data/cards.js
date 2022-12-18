@@ -1,5 +1,14 @@
 const mongoCollections = require('../config/mongoCollections');
 const cards = mongoCollections.cards;
+
+const users = require('./users');
+const {ObjectId} = require('mongodb');
+const bcrypt = require('bcryptjs');
+const saltRounds = 16;
+const validation = require('../validation');
+const createCardInfo = async ( cardNumber, cvv, name, expiryMonth, expiryYear) => {
+  
+
 //const users = mongoCollections.users;
 const {ObjectId} = require('mongodb');
 const users = require('./users');
@@ -13,6 +22,7 @@ const createCardInfo = async (userId, cardNumber, cvv, name, expiryMonth, expiry
   if (!userId) {
     throw "Please enter credit card number";
 }
+
     if (!cardNumber) {
         throw "Please enter credit card number";
     }
@@ -31,6 +41,7 @@ const createCardInfo = async (userId, cardNumber, cvv, name, expiryMonth, expiry
   console.log(userId.toString()
 );
     userId = validation.trimming(userId.toString());
+
      validation.checkString(cardNumber, 'The CardNumber');
      validation.checkString(cvv, 'The CVV Number');
      validation.checkString(name, 'The card holder name');
@@ -100,6 +111,17 @@ const createCardInfo = async (userId, cardNumber, cvv, name, expiryMonth, expiry
           if(expiryYear === NaN) throw `Error: expiryYear is not a number`;
           if(expiryYear % 1 != 0) throw `Error: expiryYear contains decimal point`;
 
+
+      //if (card) {
+        //    throw `Error: card is already present or in use.`;
+      //}
+      const cardsCollection = await cards();
+
+      //const cardOfUser = await users.getUserById(cardId);
+      //const userCollection = await movies();
+     
+    
+      let newCard = {
       
       //const userData = await users.getUserById(userId);
       //const userCollection = await users();
@@ -114,11 +136,51 @@ const createCardInfo = async (userId, cardNumber, cvv, name, expiryMonth, expiry
           id: ObjectId(userId),
           cardDetails: userWhoHasThisCard.cardDetails
         },
+
         cardNumber: cardNumberHash,
         cvv: cvvHash,
         name: name,
         expiryMonth: expiryMonth,
         expiryYear: expiryYear,
+
+        //card: {
+          //id: ObjectId(cardId),
+          //name: cardOfUser.name
+        }
+      
+      //const cardCollection = await cards();
+
+      const insertInfo = await cardsCollection.insertOne(newCard);
+     //cardsData.cardDetails.push(cardDetails);
+      /*const updatedInfo = await cardsCollection.updateOne(
+        {_id: ObjectId(cardId)},
+        {
+          $push: { cardDetails: newCard  },
+         $set: { cardDetails: newCard }, 
+        }
+      ); */
+    
+      //users.cardDetails = await cardCollection.insertOne(cardDetails);
+      //users.cardDetails.push(cardDetails);
+          if (!insertInfo.acknowledged || !insertInfo.insertedId){
+            throw 'Could not add card';
+          }
+          //if (updatedInfo.modifiedCount === 0) {
+           // throw 'could not add Review successfully';
+          //}
+          //return await this.getcardById(newId.toString()); ------------
+          //const newId = insertInfo.insertedId;
+          //const newCardInfo = await this.getCardById(insertInfo.insertedId.toString());
+          //return await this.getCardById(newId.toString());
+        };
+
+
+const getCardById = async (cardId) => {
+  cardId = cardId.trim();
+ validation.checkId(cardId);
+  const cardsCollection = await cards();
+  const specificCard = await cardsCollection.findOne({_id: ObjectId(cardId)});
+
         
         }
       
@@ -148,6 +210,7 @@ const getCardById = async (cardId) => {
  validation.checkId(cardId);
   const cardCollection = await cards();
   const specificCard = await cardCollection.findOne({_id: ObjectId(cardId)});
+
   if (specificCard === null) throw 'Error: No card with that id';
   return specificCard;
 
@@ -167,7 +230,9 @@ if (deletionInfo.deletedCount === 0) {
 return `${particularUser.cardNumber} has been successfully deleted!`;
 };
 
+
 const updateCardInfo = async (userId, cardNumber, cvv, name, expiryMonth, expiryYear) => {
+
   cardId = cardId.trim();
     validation.checkId(cardId);
   if (!cardNumber) {   

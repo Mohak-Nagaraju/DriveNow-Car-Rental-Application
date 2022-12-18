@@ -1,25 +1,51 @@
+<div id="viewCar-div">
+  <div id="viewCar-form-div" class="main-content">
+    <h2>{{title}}</h2>
+    <p>
+      Below options display the car details, please select the car and the
+      payment type.
+    </p>
+    <p>Available 'Yes' or 'No' shows wether the car is available in the location
+      or not</p>
+    <p>Select the car</p>
+    {{#if car}}
+      <form id="viewCar-form" method="POST" action="/protected/viewCars">
 
-<h1>{{ title }}</h1>
+        <label for="carSelect"></label>
+        <select name="carSelect" id="carSelect">
+          <option value="default">Please select the car</option>
+          {{#each car}}
+            <option value={{this._id}}>
+              Car Type:
+              {{this.carType}}
+              , Car brand:
+              {{this.brand}}, Car Model:
+              {{this.model}}, Car Rating:
+              {{this.rating}}, Cost per Hour:
+              {{this.costPerHour}}, Availability of car:
+              {{this.availability}}
 
-<p>The cars based on your entered location is:</p>
-<!--<h2 class="color-primary">{{searchPersonName}}</h2>-->
- {{#if people}}
- <div class="main-block">
-    <ul>
-        {{#each car}}
+            </option>
 
-        <li>
-            <a class="link" target="_blank" href="/protected/payment">{{this.car}}</a>
-        </li>
-        {{/each}}
-    </ul>
-    
+          {{/each}}
+
+        </select>
+        <p> Please select payemnt type:</p>
+        <select name="paymentSelect" id="paymentSelect">
+          <option value="default"> Please select</option>
+          <option value="creditCard"> Card Card</option>
+          <option value="wallet">Wallet</option>
+
+        </select>
+        {{!-- <a class="link" target="_blank" href="/protected/payment">{{this.carType}}</a> --}}
+
+        <button type="submit">SignUp</button>`
+      </form>
     {{/if}}
- </div>
-   
-<br>
 
+    {{#if error}}
+      <p class="error">{{error}}</p>
+    {{/if}}
 
-
-
-
+  </div>
+</div>

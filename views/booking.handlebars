@@ -1,8 +1,41 @@
-<form method="POST" action="/protected/booking">
-<input type="date" name="pickUpDate">pickupdate
-<input type="time" name="pickUpTime">pickuptime
-<input type="date" name="returnDate">returndate
-<input type="time" name="returnTime">returntime
-<input type="text" name="pickUpLocation">location
-<input type="submit">submit
-</form>
+<div id="booking-div">
+  <div id="booking-form-div">
+
+    <form
+      id="booking-form"
+      class="main-content"
+      method="POST"
+      action="/protected/booking"
+    >
+      <img src="../public/car.png" alt="Renting a car" />
+
+      <h4>{{title}}</h4>
+
+      <label for="pickUpDate">Pick-Up Date</label>
+      <input type="date" name="pickUpDate" id="pickUpDate" />
+
+      <label for="pickUpTime">Pick-Up Time</label>
+      <input type="time" name="pickUpTime" id="pickUpTime" />
+
+      <label for="returnDate">Return Date</label>
+      <input type="date" name="returnDate" id="returnDate" />
+
+      <label for="returnTime">Return Time</label>
+      <input type="time" name="returnTime" id="returnTime" />
+
+      <label for="pickUpLocation">Location</label>
+      <input type="text" name="pickUpLocation" id="pickUpLocation" />
+
+      <button type="submit">Submit</button>
+
+      <a href="/protected/welcome">Click here to go to dashboard</a>
+        <a href="/protected/logout">Click here to Logout</a>
+
+
+      {{#if error}}
+        <p class="error">{{{error}}}</p>
+      {{/if}}
+    </form>
+
+  </div>
+</div>
