@@ -76,15 +76,14 @@ div {
   text-align: center;
 }
 
-.login-error-div,
-.signup-error-div {
+.login-error-div , .signup-error-div{
   color: red !important;
   box-shadow: 5px 5px 15px 5px #1f618d;
   border-radius: 8px;
   justify-content: center;
   padding: 0 30px;
   height: 6%;
-  margin-bottom: 7%;
+  margin-bottom: 7%
 }
 
 #login-form input {
@@ -223,3 +222,4 @@ div {
 #payment-form h4 {
   text-align: left;
 }
+

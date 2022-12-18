@@ -232,9 +232,13 @@ router.route("/login").post(async (req, res) => {
       req.session.firstName = result.firstName;
       req.session.lastName = result.lastName;
       req.session.email = email;
+
       req.session.name = "AuthCookie";
 
       res.status(200).redirect("/protected/welcome");
+
+    
+
       return;
     }
   } catch (error) {
@@ -361,31 +365,37 @@ if(pickUpLocation.length < 2 || pickUpLocation.length > 20)
  
 
 //if booking successfull - route to payment
-
-router.route("/protected/payment").get(async (req, res) => {
-  if (req.session.email) {
-    // might have to check if booking is done successfull or not
-    console.log("inside if .. emai -", req.session.email);
-    res.render("paymentPage", {
-      title: "Payment",
-    });
-    return;
-  }
-
-  res.render("userLogin", {
-    title: "Enter details to login",
-    // res.status(403).render("forbiddenAccess", {
-    //   title: "Forbidden",
-    // });
+router
+  .route('/protected/payment')
+  .get(async (req, res) => {
+    if (req.session.email) {
+      // might have to check if booking is done successfull or not
+      console.log("inside if .. emai -", req.session.email);
+      res.render("paymentPage", { title: "Payment"});
+      return;
+    }
+    return res.render("userLogin", {
+      title: "Enter details to login"});
   })
-})
   .post(async (req, res) => {
     //store in card details
     // function to save card details - ?? createCardDetails(a)
     //waiting for sneha's code
     //error handling
     //check for entered card details and call function to update the card details
+  }
+  );
+  router
+  .route('/protected/welcome')
+  .get(async (req, res) => {
+    if(req.session.email){     
+      return res.render("welcomePage", {title: "Welcome", firstName: req.session.firstName, lastName: req.session.lastName});
+    }
+    else{
+      return  res.render("forbiddenAccess", {title: "Forbidden Access" });
+    }
 
+    
   });
 
 // Mohak:- I don't think we need this anymore, refer line 225-232

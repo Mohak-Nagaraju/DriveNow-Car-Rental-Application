@@ -335,8 +335,7 @@ const updateUser = async (
   if (state.toLowerCase() === particularUser.state.toLowerCase()) {
     throw `Error: newState same as the value stored in the Database`;
   }
-  if (age === particularUser.age) {
-    // age is a number - no need to change in lowerCase
+  if (age === particularUser.age) { // age is a number - no need to change in lowerCase
     throw `Error: newAge same as the value stored in the Database`;
   }
   const userCollection = await users();
@@ -395,14 +394,14 @@ console.log("after await users");
 const user = await usersCollection.findOne({ email: email1 });
 console.log(user);
 if (!user) { 
-  throw `Email ${email} is not registered with us.`;
+  throw `Error: Either the username or password is invalid`;
 }
 let comparePassword = false;
 comparePassword = await bcrypt.compare(password, user.password);
   if (comparePassword) {
     return { authenticatedUser: true, firstName: user.firstName, lastName: user.lastName};
   } else {
-    throw `Error: Please enter correct password for email - ${email}`;
+    throw `Error: Either the username or password is invalid`;
   }
 
   //let dbFormatEmail = email.toLowerCase();
