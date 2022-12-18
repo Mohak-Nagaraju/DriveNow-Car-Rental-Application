@@ -67,10 +67,8 @@ app.post("/send", (req, res) => {
   const output = `
     <p>You have  a new email</p>
     <h3>Email details:</h3>
-    <ul>
-    <li>Name: </li>
-    <h3>Msg</h3>
-    <p>This has to be set later on</p>
+    <p>Thank you for using DriveNow Car Rental. </p>
+    <p>To check your booking or update the booking, login into DriveNow web application.</p>
     </ul>
     `;
 
