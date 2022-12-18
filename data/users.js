@@ -162,7 +162,7 @@ const createUser = async (
     password: passwordHash,
     lincenceNumber: licenceHash,
     cardDetails: [],
-    walletAmount: 0,
+    walletAmount: [],
   };
 
   const insertInfo = await userCollection.insertOne(newUser);

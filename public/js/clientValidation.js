@@ -94,6 +94,54 @@ function checkLincenceNumber(lincenceNumber, valName) {
   return lincenceNumber;
 }
 
+function checkDate(value, valName) {
+  value = checkString(value, valName);
+  if (!value) throw 'Error: Please select date';
+  if((value.getMonth()+1!=month)||(value.getDate()!=day)||(value.getFullYear()!=year)) throw `Error: date invalid`;
+  return value;
+}
+
+function checkTime(value, valName) {
+  value = checkString(value, valName);
+  if (!value) throw 'Error: Please select Time';
+  if((value.getUTCHours() != hours)||(value.getUTCMinutes()!= day)||(value.getUTCSeconds()!= year)) throw `Error: Time invalid`;
+  return value;
+}
+
+function checkCardNumber(cardNumber, valName) {
+  lincenceNumber = checkString(lincenceNumber, valName);
+  console.log("cardNumber.length..",cardNumber.length)
+  if(cardNumber.length !== 12) throw `Error: card Number should be 12 char long`;
+  if (/\s/g.test(lincenceNumber))
+    throw `Error: card Number must not contain space`;
+  return cardNumber;
+
+}
+
+function checkCvv(cvv, valName) {
+  cvv = checkString(cvv, valName);
+  if (!cvv) throw 'Error: Please enter cvv';
+  console.log("cvv.length..",cvv.length)
+  if(cvv.length !== 12) throw `Error: cvv should be 3 char long`;
+  if (/\s/g.test(cvv))
+    throw `Error: cvv must not contain space`;
+  return cvv;
+}
+
+function checkExpiry(cardExpiry, valName) {
+  cardExpiry = checkString(cardExpiry, valName);
+  if (!cardExpiry) throw 'Error: Please enter cardExpiry';
+  return cardExpiry;
+}
+
+function checkAmount(moneyAdded, valName) {
+  moneyAdded = checkString(moneyAdded, valName);
+  if (!moneyAdded) throw 'Error: Please enter amount to add in wallet';
+  if (typeof moneyAdded != 'number') throw 'Error: Please enter amount in number format';
+  if (moneyAdded < 10) throw 'Error: amount to add in wallet should be greate than 10';
+  return moneyAdded;
+}
+
 (function ($) {
   $(".login-error-div").hide();
   $(".signup-error-div").hide();
@@ -158,6 +206,87 @@ function checkLincenceNumber(lincenceNumber, valName) {
 
 
   //booking validtions 
+  $(bookingForm).submit(function (event) {
+    event.preventDefault();
+    var pickUpDate = $("#pickUpDate").val();
+    var pickUpTime = $("#pickUpTime").val();
+    var returnDate = $("#returnDate").val();
+    var returnTime = $("#returnTime").val();
+    var pickUpLocation = $("#pickUpLocation").val();
+    
+
+    try {
+      pickUpDate = checkDate(pickUpDate, "PickUp Date");
+      pickUpTime = checkTime(pickUpTime, "PickUp Time");
+      returnTime = checkTime(returnTime, "return Time");
+      returnDate = checkString(returnDate, "return Date");
+      pickUpLocation = checkString(pickUpLocation, "pickUpLocation");
+  
+      $(this).unbind();
+      $(this).submit();
+      //alert('Booking successfull'); // To-DO
+    } catch (e) {
+      console.log(e);
+      $(".booking-error-div").text(e);
+      $(".booking-error-div").show();
+      //$("#booking-form").trigger("reset");
+    }
+  });
+  
   //payemnt validation - card validation
+  $(paymentForm).submit(function (event) {
+    event.preventDefault();
+    var cardNumber = $("#cardNumber").val();
+    var cardName = $("#cardName").val();
+    var cardCvv = $("#cardCvv").val();
+    var cardExpiry = $("#cardExpiry").val();
+    
+
+    try {
+      cardNumber = checkCardNumber(cardNumber, "card Number");
+      cardName = checkString(cardName, "card Name");
+      cardCvv = checkCvv(cardCvv, "card Cvv");
+      cardExpiry = checkExpiry(cardExpiry, "card Expiry");
+    
+      $(this).unbind();
+      $(this).submit();
+      //alert('payment successfull'); // To-DO
+    } catch (e) {
+      console.log(e);
+      $(".payment-error-div").text(e);
+      $(".payment-error-div").show();
+      //$("#payment-form").trigger("reset");
+    }
+ 
+  });
+
+  //wallet validation
+  $(walletForm).submit(function (event) {
+    event.preventDefault();
+    var cardNumber = $("#cardNumber").val();
+    var cardName = $("#cardName").val();
+    var cardCvv = $("#cardCvv").val();
+    var cardExpiry = $("#cardExpiry").val();
+    var moneyAdded = $('#moneyAdded').val();
+    
+
+    try {
+      cardNumber = checkCardNumber(cardNumber, "card Number");
+      cardName = checkString(cardName, "card Name");
+      cardCvv = checkCvv(cardCvv, "card Cvv");
+      cardExpiry = checkExpiry(cardExpiry, "card Expiry");
+      moneyAdded = checkAmount(moneyAdded, "money Added");
+    
+      $(this).unbind();
+      $(this).submit();
+      //alert('wallet update action successfull'); // To-DO
+    } catch (e) {
+      console.log(e);
+      $(".walletAmount-error-div").text(e);
+      $(".walletAmount-error-div").show();
+      //$("#wallet-form").trigger("reset");
+    }
+ 
+  });
 
 })(window.jQuery);

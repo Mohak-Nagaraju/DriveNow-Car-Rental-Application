@@ -2,32 +2,30 @@ const mongoCollections = require('../config/mongoCollections');
 const payment = mongoCollections.payment;
 const {ObjectId} = require('mongodb');
 const validation = require('../validation');
-//const bookings = require('./booking');
-//const data = require('../data');
-const  cards = require('./cards');
-const wallet = require('./wallet');
-const users  = require('./users');
-const createPayment = async (bookingID, userID, paymentType) => {
-    if (!bookingID){
+const uBookingData = require('./booking');
+
+
+const createPayment = async (bookingId, userId, paymentType) => {
+    if (!bookingId){
         throw "you must provide an booking ID";
     }
-    if (!userID){
+    if (!userId){
         throw "you must provide an User ID";
     }
     if (!paymentType){
         throw "you must provide an payment type";
     }
-    if (!ObjectId.isValid(bookingID)) {
+    if (!ObjectId.isValid(bookingId)) {
         throw 'invalid booking ID';
     }
-    if (!ObjectId.isValid(userID)){ 
+    if (!ObjectId.isValid(userId)){ 
         throw 'invalid user ID';
     }
-    validation.checkString(bookingID, 'bookingID');
-    validation.checkString(userID, 'userID');
+    validation.checkString(bookingId, 'bookingId');
+    validation.checkString(userId, 'userId');
     validation.checkString(paymentType, 'paymentType');
 
-    if (bookingID.trim().length == 0 || userID.trim().length == 0 || paymentType.trim().length == 0)
+    if (bookingId.trim().length == 0 || userId.trim().length == 0 || paymentType.trim().length == 0)
     {
         throw "Incorrect input";
     }
@@ -47,20 +45,23 @@ const createPayment = async (bookingID, userID, paymentType) => {
       throw `Error: Invalid Input for paymentType. It contains Special Charaters / Numbers`;
     }
     paymentType = paymentType.toLowerCase();
-let cardPay;
-    if (paymentType == cardPay){
-        cards.createCardInfo();       
+    if (
+      paymentType != "wallet" &&
+      paymentType != "card" 
+    ) {
+      throw `Error: Please select valid input for paymentType (wallet, card)`;
     }
-    else {
-        wallet.createWallet();
-    }
+
     
+
+//const userBookData = await uBookingData.getBookingById(bookingId);
     const paymentCollection = await payment();
 
     let paymentDetails = {
-        bookingID: bookingID,
-        userID: userID,
-        paymentType: paymentType,
+      _id: ObjectId().toString(),
+      bookingId: bookingId,
+      userId: userId,
+      paymentType: paymentType,
     }
     
       const insertInfo = await paymentCollection.insertOne(paymentDetails);
@@ -72,20 +73,16 @@ let cardPay;
 
 
 
-const getPaymentById = async (userId) => {
-    userId = userId.trim();
-    validation.checkId(userId);
-    const userCollection = await users();
-    const particularUser = await userCollection.findOne({
-      _id: ObjectId(userId),
-    });
-    if (particularUser === null) throw "Error: No boookings with that id";
-    //particularMovie._id = particularMovie._id.toString();
-    return particularUser;
+const getPaymentById = async (bookingId) => {
+    bookingId = bookingId.trim();
+    validation.checkId(bookingId);
+    const bookingDataa = await uBookingData.getBookingById(bookingId);
+   if(bookingDataa.length === 0) throw `Error: No payment for the booking with ID: ${bookingId}`;
+   return bookingDataa.amountPaid;
   };
 
  
 module.exports = {
     createPayment,
-    getPaymentById,
+    getPaymentById
   };

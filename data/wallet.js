@@ -1,127 +1,136 @@
 const mongoCollections = require('../config/mongoCollections');
-const wallet = mongoCollections.wallet;
-//const users = mongoCollections.users;
-const validation = require('../validation');
+const users = mongoCollections.users;
 const {ObjectId} = require('mongodb');
-const users = require('./users');
-const bcrypt = require('bcryptjs');
-const saltRounds = 16;
+const userWData = require('./users');
+const validation = require('../validation');
+//const bcrypt = require('bcryptjs');
+//const saltRounds = 16;
 
 
-const createWallet = async (userId, amount, cardNumber, cvv, name, expiryMonth, expiryYear) =>{
+const createWallet = async (userId, walletAmount) =>{
     if (!userId) {
         throw "Please enter userId";
     }
-    if (!amount) {
-        throw "Please enter amount";
+    if (!walletAmount) {
+        throw "Please enter amount to add in wallet";
     }
-        if (!cardNumber) {
-            throw "Please enter credit card number";
-        }
-        if (!cvv){
-            throw "please enter CVV";
-        }
-        if (!name){
-            throw "Enter cardholder on the card";
-        }
-        if (!expiryMonth){
-            throw "Enter expiry month for the credit card";
-        }
-        if (!expiryYear){
-          throw "Enter expiry year for the credit card";
-      }
       
-        validation.checkString(amount,'walllet amount'),
-         validation.checkString(cardNumber, 'The CardNumber');
-         validation.checkString(cvv, 'The CVV Number');
-         validation.checkString(name, 'The card holder name');
-         validation.checkString(expiryMonth, 'Card expiryMonth');
-         validation.checkString(expiryYear, 'Card expiryYear');
+        validation.checkString(walletAmount,'walllet amount');
 
-    name = name.toLowerCase();
-    name = validation.trimming(name);
-    let splitName = name.split(" ");
-    console.log(splitName);
-    if(splitName.length > 2){
-      throw `Error: Enter FirstName LastName like abc bcd`;
-  }
-   
-    let nameSpecChar = validation.checkSpecialCharWithNumber(name);
-    let nameSpaceCheck = validation.checkSpace(splitName);
-    if(nameSpaceCheck === true){
-      throw `Error: Invalid Input for name. It contains spaces`;
-      }
-      if(nameSpecChar === true){
-        throw `Error: Invalid Input for name. It contains Special Charater / Numbers`;
-      }
-
-      if(name.length < 3)
-        {
-          throw `Error: Name must be at least 3 characters`;
-      }
+    // validation of walletAmount
+    walletAmount = parseInt(walletAmount);
+    if (walletAmount === NaN) throw `Error: wallet Amount to be added is not a number`;
+    
+    if (walletAmount.length < 2)
+    {
+        throw 'Error: walletAmount must be atleast 2 digits';
+    }
+    if (walletAmount < 10){
+      throw 'Error: walletAmount must be atleast $10'
+    }
       
-
-    // validation of cvv
-    let regex = new RegExp(/^[0-9]{3,4}$/);
-    const cvvHash = await bcrypt.hash(cvv, saltRounds);
-    cvv = validation.trimming(cvv);
-    if (cvv.length < 3)
-    {
-        throw 'Error: cvv must be at least 3 digits';
-    }
-    if (regex.test(cvv) !== true)
-    {
-        throw 'Error: invalid cvv';
-    }
-    // validation of cardNumber
-    const cardNumberHash = await bcrypt.hash(cardNumber, saltRounds);
-    cardNumber = validation.trimming(cardNumber);
-    if (cardNumber.length < 12)
-    {
-        throw 'Error: cardNumber must be atleast 12 digits';
-    }
-   
-
-    // validation of expiryMonth
-    expiryMonth = validation.trimming(expiryMonth);
-    expiryMonth = parseFloat(expiryMonth); 
-          if(expiryMonth === NaN) throw `Error: expiryMonth is not a number`;
-          if(expiryMonth % 1 != 0) throw `Error: expiryMonth contains decimal point`;
-
-    // validation of expiryYear
-    expiryYear = validation.trimming(expiryYear);
-    expiryYear = parseFloat(expiryYear); 
-          if(expiryYear === NaN) throw `Error: expiryYear is not a number`;
-          if(expiryYear % 1 != 0) throw `Error: expiryYear contains decimal point`;
           
-const userData = await users.getUserById(userId);
-const walletCollection = await wallet();
-let walletAmount = {
-    amount: amount,
-    cardNumber: cardNumberHash,
-    cvv: cvvHash,
-    name: name,
-    expiryMonth: expiryMonth,
-    expiryYear: expiryYear,
+    const userData = await userWData.getUserById(userId);
+    
+    const userCollection = await users();
+
+    let newWallet = {
+      _id: ObjectId().toString(),
+      walletAmount: walletAmount
+    };
+   
+    userData.walletAmount.push(newWallet);
+ 
+    
+    const updatedInfo = await userCollection.updateOne(
+      {_id: ObjectId(userId)},
+      {
+        $push: { walletAmount: newWallet },
+    }
+    );
+    if (updatedInfo.modifiedCount === 0) {
+      throw 'could not add wallet successfully';
+    }
+  
+    return await userWData.getUserById(userId);
+    
+};
+const getAllWallet = async (userId) => {
+  userId = validation.trimming(userId);
+  validation.checkId(userId);
+  const userDataa = await userWData.getUserById(userId);
+  if(userDataa.walletAmount.length === 0) throw `Error: No wallet Amount for the user with ID: ${userId}`;
+  return userDataa.walletAmount;
+};
+
+const getWalletAmountById = async (walletId) => {
+  walletId = validation.trimming(walletId);
+  validation.checkId(walletId);
+ 
+  
+  const userCollection = await users();
+ 
+  const particularWallet = await userCollection.findOne({
+    "walletAmount._id": walletId,
+},
+{
+    projection: {
+        _id: 0,
+        "walletAmount.$": 1,
+    },
 }
+);  
+   if (particularWallet === null) throw 'Error: No wallet with that id'; 
+  
+  
+  particularWallet.walletAmount[0]._id = particularWallet.walletAmount[0]._id.toString();
+ 
 
-      const insertInfo = await walletCollection.insertOne(walletAmount);
-          if (!insertInfo.acknowledged || !insertInfo.insertedId){
-            throw 'Could not add walletamount';
-          }
-          userData.wallet.push(walletAmount.amount);
+  return particularWallet.walletAmount[0];
+ 
+};
 
-          const updatedInfo = await walletCollection.updateOne(
-            {_id: ObjectId(userId)},
-            {
-              $push: { wallet: walletAmount },
-          }
-          );
-          if (updatedInfo.modifiedCount === 0) {
-            throw 'could not add wallet successfully';
-          }
-          return await users.getUserById(userId);
-  };
+const removeWallet = async (walletId) => {
+  walletId = validation.trimming(walletId);
+  validation.checkId(walletId);
+  const userCollection = await users();
+  let allWallet = await userWData.getAllUsers();
+  for(let i in allWallet){
+    for(let j in allWallet[i].walletAmount){
+      if(allWallet[i].walletAmount[j]._id === walletId){
+        var uWalletId = allWallet[i]._id;
+      }
+    }
+    
+  }
+  const foundWallet = await userCollection.findOne({
+      "walletAmount._id": walletId
+  });
+
+  if (!foundWallet) {
+      throw `Error: No wallet with that id.`;
+  }
+
+
+  const updatedInfo = await userCollection.updateOne(
+      { _id: foundWallet._id },
+      {
+          $pull: { walletAmount: { _id: walletId } },
+      }
+  );
+
+  if (updatedInfo.modifiedCount === 0) {
+    throw 'could not delete wallet successfully';
+  }
+
+  return await userWData.getUserById(uWalletId);
+};
+
+
+
   module.exports = {
-    createWallet
+    createWallet,
+    getAllWallet,
+    getWalletAmountById,
+    removeWallet
   };
