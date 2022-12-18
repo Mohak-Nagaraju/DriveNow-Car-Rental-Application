@@ -21,5 +21,8 @@ module.exports = {
  // user_collection: getCollectionFn('user_collection'),
  users: getCollectionFn('users'),
  cars: getCollectionFn('cars'),
-
+ cards: getCollectionFn('cards'),
+ payment: getCollectionFn('payment'),
+ booking: getCollectionFn('booking'),
+ wallet: getCollectionFn('wallet'),
 };
