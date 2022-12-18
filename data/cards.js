@@ -1,5 +1,6 @@
 const mongoCollections = require('../config/mongoCollections');
 const cards = mongoCollections.cards;
+
 const users = require('./users');
 const {ObjectId} = require('mongodb');
 const bcrypt = require('bcryptjs');
@@ -7,6 +8,20 @@ const saltRounds = 16;
 const validation = require('../validation');
 const createCardInfo = async ( cardNumber, cvv, name, expiryMonth, expiryYear) => {
   
+
+//const users = mongoCollections.users;
+const {ObjectId} = require('mongodb');
+const users = require('./users');
+const bcrypt = require('bcryptjs');
+const saltRounds = 16;
+const validation = require('../validation');
+//const { users } = require('.');
+
+const createCardInfo = async (userId, cardNumber, cvv, name, expiryMonth, expiryYear) => {
+  
+  if (!userId) {
+    throw "Please enter credit card number";
+}
 
     if (!cardNumber) {
         throw "Please enter credit card number";
@@ -23,7 +38,10 @@ const createCardInfo = async ( cardNumber, cvv, name, expiryMonth, expiryYear) =
     if (!expiryYear){
       throw "Enter expiry year for the credit card";
   }
-  
+  console.log(userId.toString()
+);
+    userId = validation.trimming(userId.toString());
+
      validation.checkString(cardNumber, 'The CardNumber');
      validation.checkString(cvv, 'The CVV Number');
      validation.checkString(name, 'The card holder name');
@@ -93,6 +111,7 @@ const createCardInfo = async ( cardNumber, cvv, name, expiryMonth, expiryYear) =
           if(expiryYear === NaN) throw `Error: expiryYear is not a number`;
           if(expiryYear % 1 != 0) throw `Error: expiryYear contains decimal point`;
 
+
       //if (card) {
         //    throw `Error: card is already present or in use.`;
       //}
@@ -103,11 +122,27 @@ const createCardInfo = async ( cardNumber, cvv, name, expiryMonth, expiryYear) =
      
     
       let newCard = {
+      
+      //const userData = await users.getUserById(userId);
+      //const userCollection = await users();
+
+
+     const cardCollection = await cards();
+     const userWhoHasThisCard = await users.getUserById(userId)
+     
+    
+      let newCard = {
+        user: {
+          id: ObjectId(userId),
+          cardDetails: userWhoHasThisCard.cardDetails
+        },
+
         cardNumber: cardNumberHash,
         cvv: cvvHash,
         name: name,
         expiryMonth: expiryMonth,
         expiryYear: expiryYear,
+
         //card: {
           //id: ObjectId(cardId),
           //name: cardOfUser.name
@@ -145,6 +180,37 @@ const getCardById = async (cardId) => {
  validation.checkId(cardId);
   const cardsCollection = await cards();
   const specificCard = await cardsCollection.findOne({_id: ObjectId(cardId)});
+
+        
+        }
+      
+    
+        const newInsertInformation = await cardCollection.insertOne(newCard);
+        const newId = newInsertInformation.insertedId;
+        return await users.getUserById(newId.toString());
+      };
+          /*const updatedInfo = await userCollection.updateOne(
+            {_id: ObjectId(userId)},
+            {
+              $push: { cardDetails: newCard },
+          }
+          );
+          console.log(updatedInfo);
+          
+          if (updatedInfo.modifiedCount === 0) {
+            throw 'could not add card successfully';
+          }
+          return await users.getUserById(userId);
+          
+        };*/
+
+
+const getCardById = async (cardId) => {
+ cardId = cardId.trim();
+ validation.checkId(cardId);
+  const cardCollection = await cards();
+  const specificCard = await cardCollection.findOne({_id: ObjectId(cardId)});
+
   if (specificCard === null) throw 'Error: No card with that id';
   return specificCard;
 
@@ -164,7 +230,9 @@ if (deletionInfo.deletedCount === 0) {
 return `${particularUser.cardNumber} has been successfully deleted!`;
 };
 
-const updateCardInfo = async (cardId, cardNumber, cvv, name, expiryMonth, expiryYear) => {
+
+const updateCardInfo = async (userId, cardNumber, cvv, name, expiryMonth, expiryYear) => {
+
   cardId = cardId.trim();
     validation.checkId(cardId);
   if (!cardNumber) {   

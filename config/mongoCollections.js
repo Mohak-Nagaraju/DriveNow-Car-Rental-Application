@@ -24,4 +24,6 @@ module.exports = {
  cards: getCollectionFn('cards'),
  payment: getCollectionFn('payment'),
  booking: getCollectionFn('booking')
+
+
 };

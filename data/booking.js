@@ -7,6 +7,7 @@ const validation = require('../validation');
 //const currentD = $.current-date;
 //daysTag = require(".days");
 
+
 const createBooking = async (carSelectedId,amountPaid, pickUpDate, pickUpTime, returnTime, returnDate, location) => {
   //console.log("inside create booking - 1")
 
@@ -58,23 +59,6 @@ const createBooking = async (carSelectedId,amountPaid, pickUpDate, pickUpTime, r
 //calenderDateSelected();
 
 
-let date = new Date();
-let cDay = date.getDate();
-let cMonth = date.getMonth() + 1;
-let cYear = date.getFullYear();
-pickUpDate = cDay + "/" + cMonth + "/" + cYear 
-
-//validating pickupTime
-//pickUpTime = currentD.getHours() + ":" + currentD.getMinutes() + ":" + currentD.getSeconds();
-
-//validating returnDate
-let returnD = new Date();
-let rDay = returnD.getDate();
-let rMonth = returnD.getMonth() + 1;
-let rYear = returnD.getFullYear();
-returnD = rDay + "/" + rMonth + "/" + rYear 
-
-
      const bookingCollection = await bookings();
    //  const booking = await bookingCollection.findOne({ amountPaid: amountPaid });
 
@@ -86,7 +70,9 @@ returnD = rDay + "/" + rMonth + "/" + rYear
       let carSelectedDetails =  await cars.getCarById(carSelectedId) ;
       carSelectedDetails.availability = 'no';
       //console.log("carSelectedDetails..",carSelectedDetails);
+
 let newBooking = {
+   
     amountPaid: amountPaid,
     pickUpDate: pickUpDate,
     pickUpTime: pickUpTime,
@@ -95,8 +81,7 @@ let newBooking = {
     location: location,
     carDetails: [carSelectedDetails] // get the card details
     };
-  
-   // console.log("inside create booking - 3")
+ 
     const insertInfo = await bookingCollection.insertOne(newBooking);
           if (!insertInfo.acknowledged || !insertInfo.insertedId){
             throw 'Could not add booking details';
@@ -105,8 +90,9 @@ let newBooking = {
  return {insertedCar: true};
     
 }
+
 const getBookingById = async (bookingId) => {
-    userId = userId.trim();
+    bookingId = bookingId.trim();
    validation.checkId(bookingd);
     const bookingCollection = await bookings();
     const particularBooking = await bookingCollection.findOne({_id: ObjectId(bookingId)});

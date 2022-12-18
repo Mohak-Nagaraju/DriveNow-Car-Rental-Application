@@ -1,8 +1,10 @@
 const mongoCollections = require('../config/mongoCollections');
+
 const payments = mongoCollections.payment;
 const {ObjectId} = require('mongodb');
 const validation = require('../validation');
 const bookings = require('./booking')
+
 const createPayment = async (bookingID, userID, paymentType) => {
     if (!bookingID){
         throw "you must provide an booking ID";
@@ -38,7 +40,7 @@ const createPayment = async (bookingID, userID, paymentType) => {
       if (payment) {
             throw `Error: Payment is already done.`;
       } */
-
+      
     let paymentDetails = {
         bookingID: bookingID,
         userID: userID,
@@ -49,6 +51,7 @@ const createPayment = async (bookingID, userID, paymentType) => {
           if (!insertInfo.acknowledged || !insertInfo.insertedId){
             throw 'Could not add payment method';
           }
+
 
           /*const getPaymentById = async (paymentId) => {
             paymentId = paymentId.trim();
@@ -63,5 +66,6 @@ const createPayment = async (bookingID, userID, paymentType) => {
 
 module.exports = {
     createPayment,
-    //getPaymentById,
+    //getPaymentById,   
+
   };
