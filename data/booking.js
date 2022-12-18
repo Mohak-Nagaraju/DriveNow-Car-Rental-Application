@@ -7,8 +7,8 @@ const validation = require('../validation');
 //const currentD = $.current-date;
 //daysTag = require(".days");
 
-const createBooking = async (amountPaid, pickUpDate, pickUpTime, returnTime, returnDate, location) => {
-  
+const createBooking = async (carSelectedId,amountPaid, pickUpDate, pickUpTime, returnTime, returnDate, location) => {
+  //console.log("inside create booking - 1")
 
     if (!amountPaid) {
         throw "Please enter credit card number";
@@ -76,26 +76,33 @@ returnD = rDay + "/" + rMonth + "/" + rYear
 
 
      const bookingCollection = await bookings();
-     const booking = await bookingCollection.findOne({ amountPaid: amountPaid });
-      if (booking) {
-            throw `Error: Email is already present or in use.`;
-      }
+   //  const booking = await bookingCollection.findOne({ amountPaid: amountPaid });
+
+     //console.log("inside create booking - 2")
+      // if (booking) {
+      //       throw `Error: Email is already present or in use.`;
+      // }
       
+      let carSelectedDetails =  await cars.getCarById(carSelectedId) ;
+      carSelectedDetails.availability = 'no';
+      //console.log("carSelectedDetails..",carSelectedDetails);
 let newBooking = {
-    
     amountPaid: amountPaid,
     pickUpDate: pickUpDate,
     pickUpTime: pickUpTime,
     returnTime: returnTime,
     returnDate: returnDate,
     location: location,
-    carDetails: []
+    carDetails: [carSelectedDetails] // get the card details
     };
   
+   // console.log("inside create booking - 3")
     const insertInfo = await bookingCollection.insertOne(newBooking);
           if (!insertInfo.acknowledged || !insertInfo.insertedId){
             throw 'Could not add booking details';
           }
+         // console.log('insertedCar..',insertInfo)
+ return {insertedCar: true};
     
 }
 const getBookingById = async (bookingId) => {

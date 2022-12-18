@@ -62,7 +62,7 @@ app.use((req, res, next) => {
 });
 
 app.post("/send", (req, res) => {
- console.log("inside app.js .. send..", req.body);
+ console.log("inside app.js .. /send..", req.body);
 
   const output = `
     <p>You have  a new email</p>

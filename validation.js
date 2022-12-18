@@ -1,3 +1,5 @@
+const {ObjectId} = require('mongodb');
+
 function checkString(str, variableName) {
     if (typeof str !== "string") {
         throw `${variableName || 'provided variable'} must be a string`;

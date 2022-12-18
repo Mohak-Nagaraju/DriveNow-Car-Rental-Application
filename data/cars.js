@@ -129,6 +129,7 @@ if(availability != "yes" && availability != "no"){
   
   };
   const getCarLocation = async (location) => {
+    location = location.toLowerCase();
     location = location.trim();
    validation.checkString(location);
    if(location.length < 2 || location.length > 20)
@@ -136,9 +137,10 @@ if(availability != "yes" && availability != "no"){
           throw `Error: Invalid Input for location.`;
         }
     const carCollection = await cars();
-    const particularUser = await carCollection.find({currentLocation: {$eq:location}});
-    //console.log(particularUser);
-    if (particularUser === null) throw 'Error: No Car with that location';
+
+    const particularUser = await carCollection.find({currentLocation: {$eq:location}}).toArray();
+    //console.log('inside getCarlocation... ',particularUser.length);
+    if (particularUser.length === 0) throw `No Car with location: ${location}. Please select newarby location: Newport,Hoboken,Jersey City, Journal Square`;
     //particularMovie._id = particularMovie._id.toString();
     return particularUser;
   
