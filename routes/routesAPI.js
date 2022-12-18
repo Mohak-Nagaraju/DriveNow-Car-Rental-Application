@@ -161,7 +161,9 @@ router
       console.log("checking id",result.insertedUserId);
       //when created succesfully, should return - return { insertedUser: true };
       if (result.insertedUser) {
-        res.status(200).redirect("/"); //redirect to login
+        //req.session.email = result.email;
+        // res.status(200).redirect("/"); //redirect to login
+        res.status(200).redirect("/sendEmail");  //it is actually /send route
         return;
       } else {
         return res.status(500).json({ error: "Internal Server Error" });
@@ -173,6 +175,23 @@ router
       });
     }
   });
+
+
+  router
+  .route("/sendEmail")
+  .get(async (req, res) => {
+    //if (req.session.email) {
+      // might have to check if booking is done successfull or not
+      console.log("inside if .. emai -", req.session.email);
+      res.render("sendEmailPage", {
+        title: "Email Communication",
+      });
+      return;
+    //}
+    // res.status(403).render("forbiddenAccess", {
+    //   title: "Forbidden",
+    // });
+  })
 
 router.route("/login").post(async (req, res) => {
   if (req.session.email){
@@ -346,10 +365,6 @@ if(pickUpLocation.length < 2 || pickUpLocation.length > 20)
         let cars = await carData.getCarLocation(req.session.pickUpLocation);
         if(!cars) throw 'Error: No Car with that location';
         req.session.booking = "false";
-        
-        cars.push({ src: "public/images/suv.jpg", name: "Suv" });
-        cars.push({ src: "public/images/sedan.jpg", name: "Sedan" });
-        cars.push({ src: "public/images/bmw.jpg", name: "bmv" });
         return  res.render("viewCars", {title: "Select Car", car : cars});
        
 

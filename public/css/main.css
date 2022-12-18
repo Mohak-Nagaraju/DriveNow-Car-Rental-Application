@@ -112,6 +112,12 @@ div {
   text-align: center;
 }
 
+#login-form .login-form-msg {
+  color: green;
+  text-align: center;
+  text-shadow: green;
+}
+
 #login-form label {
   color: #0b3c5d;
 }
@@ -213,6 +219,7 @@ div {
   text-align: center;
 }
 
-#payment-form h4{
+#payment-form h4 {
   text-align: left;
 }
+
