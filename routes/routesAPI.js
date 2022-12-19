@@ -354,7 +354,7 @@ router
           if (pickUpTimeSplit[1] >= returnTimeSplit[1]) {
             return res.status(403).render("booking", {
               title: "Booking Details",
-              error: `Error: Cannot select return time (${returnTime}) before the pickup time (${pickUpTime})`,
+              error: `Error: Cannot select return time (${returnTime}) before or same as the pickup time (${pickUpTime})`,
             });
           }
         }
@@ -476,24 +476,28 @@ router
 
     req.session.cost = total;
 
+    if (carSelectedDetails.availability === "no") {
+      return res.status(500).render("error", {
+        title: "Payment thru Wallet",
+        error: 'Error: Can not book an unavailable car.',
+        temp: 'true'
+      });
+    }
+
     if (xss(req.session.paymentSelected) === "creditCard") {
-      return res
-        .status(200)
-        .render("paymentPage", {
-          title: "Payment thru Credit Card",
-          totalCost: total,
-        });
+      return res.status(200).render("paymentPage", {
+        title: "Payment thru Credit Card",
+        totalCost: total,
+      });
     } else {
       try {
         let userDetails = await userData.getUserByEmail(xss(req.session.email));
         if (userDetails.walletAmount < req.session.cost) {
-          return res
-            .status(500)
-            .render("walletError", {
-              title: "Error",
-              total: req.session.cost,
-              wallet: userDetails.walletAmount,
-            });
+          return res.status(500).render("walletError", {
+            title: "Error",
+            total: req.session.cost,
+            wallet: userDetails.walletAmount,
+          });
         }
         return res.status(200).render("walletPayment", {
           title: "Payment thru Wallet",
