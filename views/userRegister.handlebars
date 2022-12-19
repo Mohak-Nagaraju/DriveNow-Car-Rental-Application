@@ -6,7 +6,7 @@
       method="POST"
       action="/register"
     >
-      <h2>{{title}}</h2>
+      <h1>{{title}}</h1>
       <img src="../public/car.png" alt="Renting a car" />
 
       <label for="email">Email</label>
@@ -72,7 +72,7 @@
 
       <label for="lincenceNumber">Lincence Number</label>
       <input
-        type="password"
+        {{!-- type="password" --}}
         placeholder="Please enter 15 digit lincence number"
         id="lincenceNumber"
         name="lincenceNumber"

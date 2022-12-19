@@ -3,12 +3,12 @@
     id="wallet-form"
     class="main-content"
     method="POST"
-    action="/protected/payment"
+    action="/protected/walletMoneyUpdateSuccess"
   >
-    <h2>{{title}}</h2>
+    <h1>{{title}}</h1>
 
     <p> Available Wallet balance: {{walletBalance}}</p>
-    <p>Total Calculated cost :</p>
+    <p>Total Calculated cost : {{totalCost}}</p>
     <p> Click here to make the payment</p>
 
     <button type="submit">Submit</button>
@@ -17,7 +17,7 @@
       <p class="error">{{error}}</p>
     {{/if}}
 
-    <a href="/logout">Click here to Logout</a>
+    <a href="/protected/logout">Click here to Logout</a>
 
   </form>
 </div>

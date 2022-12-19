@@ -1,66 +1,41 @@
-<form id="payment-form" class="main-content" method="POST" action="/protected/booking">
-<h2>{{title}}</h2>
-<img src="../public/car.png" alt="Booking a car" />
-<div class="main-block">
-   <table style="padding: 15px;">
-    <thead>
-            <tr>
-                <td colspan="4" style="text-align: center;"></td>
-            </tr>
-        </thead>
-   </table>
-            <h3> Enter Booking details</h3>
-              <tbody>
-                 <tr>
-                <td>
-                  pickUpDate: 
-                </td>
-                <td>
-                    <input type="date"  name "pickUpDate" 
-                   ><br><br>
-                </td>
-            </tr>
-             <tr>
-                <td>
-                  returnDate: 
-                </td>
-                <td>
-                    <input type="date"  name "returnDate" 
-                   ><br><br>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                  pickUpTime: 
-                </td>
-                <td>
-                    <input type="time"  name "pickUpTime" 
-                    ><br><br>
-                </td>
-            </tr>
-            <tr>
-              <td>
-                  returnTime: 
-                </td>
-                <td>
-                    <input type="time"  name "returnTime" 
-                    ><br><br>
-                </td>
-            </tr>
-             <tr>
-              <td>
-                  pickUpLocation: 
-                </td>
-                <td>
-                    <input type="text"  name "pickUpLocation" 
-                    placeholder=""><br><br>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="4"><button onclick="Submit">Submit</button></td>            
-            </tr>
-            </tbody>
-     <p><a href="/protected/logout">Click here to logout</a></p>
-     <p><a href="/protected/welcome">Click here to go to dashboard</a></p>
-     <p><a href ="/protected/viewCars">Click here to view car details</a></p>
-</form>
+<div id="booking-div">
+  <div id="booking-form-div">
+
+    <form
+      id="booking-form"
+      class="main-content"
+      method="POST"
+      action="/protected/booking"
+    >
+      <img src="../public/car.png" alt="Renting a car" />
+
+      <h4>{{title}}</h4>
+
+      <label for="pickUpDate">Pick-Up Date</label>
+      <input type="date" name="pickUpDate" id="pickUpDate" />
+
+      <label for="pickUpTime">Pick-Up Time</label>
+      <input type="time" name="pickUpTime" id="pickUpTime" />
+
+      <label for="returnDate">Return Date</label>
+      <input type="date" name="returnDate" id="returnDate" />
+
+      <label for="returnTime">Return Time</label>
+      <input type="time" name="returnTime" id="returnTime" />
+
+      <label for="pickUpLocation">Location</label>
+      <input type="text" name="pickUpLocation" id="pickUpLocation" />
+
+      <button type="submit">Submit</button>
+
+      <a href="/protected/welcome">Click here to go to dashboard</a>
+        <a href="/protected/logout">Click here to Logout</a>
+
+
+      {{#if error}}
+        <p class="error">{{{error}}}</p>
+      {{/if}}
+    </form>
+
+  </div>
+</div>

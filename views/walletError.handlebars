@@ -1,11 +1,8 @@
 <div id="error-div" class="main-content">
-  <h1>{{title}}</h1>
-  <img src="../public/car.png" alt="Renting a car" />
+  <h2>{{title}}</h2>
 
-  <p class="error">{{error}}</p>
-  {{#if temp}}
-    <a href="/protected/booking">Booking</a>
-  {{/if}}
+
+  <p class="error">"Your Wallet Balance i.e., {{wallet}} is less than the Total Cost {{total}}. Please add money to your wallet first!.</p>
 
   <a href="/protected/logout">Click here to Logout</a>
   <a href="/protected/welcome">Click here to go to dashboard/welcome page</a>

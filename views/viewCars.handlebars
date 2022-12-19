@@ -1,6 +1,7 @@
 <div id="viewCar-div">
   <div id="viewCar-form-div" class="main-content">
-    <h2>{{title}}</h2>
+    <h1>{{title}}</h1>
+    <img src="../public/car.png" alt="Renting a car" />
     <p>
       Below options display the car details, please select the car and the
       payment type.
@@ -19,30 +20,30 @@
  <div class="main-block">
     <ul>
         {{#each car}}
-
-<div class="col-md-4">
-      <div class="text-success" style="font-size: large;
+           <div class="text-success" style="font-size: large;
             font-weight: 700;">{{this.name}}</div>
-         <img src="{{this.src}}">
-       {{!--car.push({ src: "../../public/images/suv.jpg", name: "Suv" });
+         <img src="{{this.src}}"
+         {{!--car.push({ src: "../../public/images/suv.jpg", name: "Suv" });
          car.push({ src: "../../public/images/sedan.jpg", name: "Sedan" });
          car.push({ src: "../../public/images/bmw.jpg", name: "Bmv" });--}}
-      
-        <li>
-            <!-- Mohak:- see which anchor tag works between the 2 below-->
-         <!-- <a class="link" target="_blank" href="/protected/payment/{{this.id}}">Car Type: {{this.carType}}  Car brand: {{this.brand}} Car Model: {{this.model}} Car location: {{this.currentLocation}} Car rating: {{this.rating}} cost per hour: {{this.costPerHour}} availability: {{this.availability}}</a>-->
-           <a class="link" target="_blank" href="/protected/payment">Car Type: {{this.carType}}  Car brand: {{this.brand}} Car Model: {{this.model}} Car location: {{this.currentLocation}} Car rating: {{this.rating}} cost per hour: {{this.costPerHour}} availability: {{this.availability}}</a>
-        </li>
-        </div>
-        {{/each}}
-    </ul>
-    
-     {{/if}}
- </div>
-   
-<br>
+            </option>
 
+          {{/each}}
 
+        </select>
+        <p> Please select payemnt type:</p>
+        <select name="paymentSelect" id="paymentSelect">
+          <option value="default"> Please select</option>
+          <option value="creditCard"> Card Card</option>
+          <option value="wallet">Wallet</option>
 
+        </select>
+        {{!-- <a class="link" target="_blank" href="/protected/payment">{{this.carType}}</a> --}}
 
+        <button type="submit">SignUp</button>`
+      </form>
+    {{/if}}
 
+    {{#if error}}
+      <p class="error">{{error}}</p>
+    {{/if}}

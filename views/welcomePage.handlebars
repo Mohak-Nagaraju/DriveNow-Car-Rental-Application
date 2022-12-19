@@ -1,8 +1,24 @@
-<div>
-  <h2>Welcome {{firstName}} {{lastName}}!</h2>
+<div id="welcome-div">
+  <div id="welcome-div-content" class="main-content">
+    <h1>Welcome to DriveNow Car Rental Services!</h1>
+    {{msg}}
 
-  <p><a href="/protected/payment">Click here for payment</a></p>
+    <p>Our services are Available in New Port, Hoboken, Jersey City and Journal Square</p>
 
-  <p><a href="/protected/logout">Click here to Logout</a></p>
+    <p>{{firstName}}
+      {{lastName}}, please click the option to book a car with us.
+    <a href="/protected/booking">Book a Car</a> </p>
 
-  <p><a href="/protected/booking">Click here to book car</a></p>
+    <p>You can add money to your wallet
+      <a href="/protected/walletMoneyUpdate">Add Money to Wallet</a>
+    </p>
+
+    {{! <a href="/protected/payment">Click here for payment</a> }}
+
+    <a href="/protected/logout">Click here to Logout</a>
+
+    {{#if success}}
+      <p class="error">{{success}}</p>
+    {{/if}}
+  </div>
+</div>

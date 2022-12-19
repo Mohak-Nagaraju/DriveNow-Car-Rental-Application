@@ -1,3 +1,6 @@
+const mongoCollections = require("../config/mongoCollections");
+const users = mongoCollections.users;
+const { ObjectId } = require('mongodb');
 const express = require("express");
 const router = express.Router();
 let userData = require("../data/users");
@@ -340,12 +343,7 @@ router
       }
 
       if (pickUpDate === returnDate) {
-        // console.log("return pickup date is same...");
-        // console.log("picup tim..", pickUpTime);
-        // console.log("return tim..", returnTime);
-
-        // console.log("split pick up time..", pickUpTime.split(":"));
-        // console.log("split return  time..", returnTime.split(":"));
+      
 
         let pickUpTimeSplit = pickUpTime.split(":");
         let returnTimeSplit = returnTime.split(":");
@@ -405,26 +403,63 @@ router
     //console.log("carSelectedDetails...", req.body);
     req.session.carSelectedId = xss(req.body.carSelect);
     req.session.paymentSelected = xss(req.body.paymentSelect);
+    
+    let carSelectedDetails = await carData.getCarById(
+      xss(req.session.carSelectedId)
+    );
+
+   
     if (!xss(req.body.carSelect)) {
       return res.status(400).render("viewCars", {
         title: "Please select a Car to book",
         error: error.message ? error.message : error,
       });
     }
-    let carSelectedDetails = await carData.getCarById(
-      xss(req.session.carSelectedId)
-    );
+    
+    let costPerHour = carSelectedDetails.costPerHour;
+    let pickUpTimeSplit = req.session.pickUpTime.split(":"); //[h,m]
+    let returnTimeSplit = req.session.returnTime.split(":");
+    let pickUpDate = req.session.pickUpDate.split("-");
+    let returnDate = req.session.returnDate.split("-");
+    if(pickUpDate[2] === returnDate[2]){
+      if(pickUpTimeSplit[1] < returnTimeSplit[1]){
+        let hours = Math.abs((parseFloat(pickUpTimeSplit[0])) - (parseFloat(returnTimeSplit[0]))) + 1;
+         let cost = costPerHour.slice(1);
+          var total = (Number(cost) * hours);
+     
+    }
+    else{
+      let hours = Math.abs((parseFloat(pickUpTimeSplit[0])) - (parseFloat(returnTimeSplit[0])));
+  let cost = costPerHour.slice(1);
+  var total = (Number(cost) * hours);
+   
+    }
+    }
+    else{
+      let diff =  Number(returnDate[2]) - Number(pickUpDate[2]) ;
+      let cost = costPerHour.slice(1);
+      var total = (Number(cost) * diff * 24);    
+     
+    }
+    
+  
+     req.session.cost = total;
+
 
     if (xss(req.session.paymentSelected) === "creditCard") {
       return res
         .status(200)
-        .render("paymentPage", { title: "Payment thru Credit Card" });
+        .render("paymentPage", { title: "Payment thru Credit Card" , totalCost: total});
     } else {
       try {
         let userDetails = await userData.getUserByEmail(xss(req.session.email));
+        if(userDetails.walletAmount < req.session.cost){
+          return res.status(500).render("walletError", {title: "Error", total: req.session.cost, wallet: userDetails.walletAmount});
+        }
         return res.status(200).render("walletPayment", {
           title: "Payment thru Wallet",
           walletBalance: userDetails.walletAmount,
+          totalCost: total
         });
       } catch (error) {
         // to do - parul have to decide where to catch this error
@@ -456,9 +491,111 @@ router
     });
   })
   .post(async (req, res) => {
+    let cardNumber = xss(req.body.cardNumber);
+    let name = xss(req.body.cardName);
+    let cvv = xss(req.body.cardCvv);
+    let expriy = xss(req.body.cardExpiry);
+    //let amount = xss(req.body.moneyAdded);
+
+    // console.log('cardNumber..',cardNumber)
+    // console.log('name..',name)
+    // console.log('cvv..',cvv)
+    // console.log('ex..',expriy)
+    // console.log('am..',amount)
+
+
+    if (!cardNumber || !name || !cvv || !expriy) {
+      return res.status(400).render("viewCars", {
+        title: "Wallet",
+        error: "Please enter all the values to add money to wallet",
+      });
+    }
+
+    if(name.trim().length === 0 || typeof name !== 'string'){
+      return res.status(400).render("walletMoneyUpdatePage", {
+        title: "Wallet",
+        error: "Please enter valid name",
+      });
+    }
+    let nameSpecChar = validationForm.checkSpecialCharWithNumber(name);
+    if(nameSpecChar === true){
+      return res.status(400).render("walletMoneyUpdatePage", {
+        title: "Wallet",
+        error: "Please enter valid name",
+      });
+    }
+
+    if (
+      cardNumber.trim().length === 0 ||
+      cardNumber.trim().length !== 16 ||
+      typeof cardNumber !== "string"
+    ) {
+      return res.status(400).render("walletMoneyUpdatePage", {
+        title: "Wallet",
+        error: "Please enter valid card number",
+      });
+    }
+    // //if(cardNumber.trim().replace())
+    // let validCardNumber = cardNumber
+    //   .trim()      
+    //   .replace(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?/]+/gi, "");
+    if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?/]+/g.test(cardNumber)) {
+      //throw "Error: City must not contain any special chars or numbers";
+      return res.status(400).render("walletMoneyUpdatePage", {
+        title: "Wallet",
+        error: "Please enter valid card number with no special char",
+      });
+    }
+
+    if (/\s/g.test(cardNumber)) {
+      return res.status(400).render("walletMoneyUpdatePage", {
+        title: "Wallet",
+        error: "Please enter valid card number with no spaces",
+      });
+    }
+
+    //cvv validation
+   // let regex = new RegExp(/^[0-9]{3,4}$/);
+    
+    if(cvv.trim().length === 0 || cvv.trim().length>3 || typeof cvv !== 'string' || cvv<0){
+      return res.status(400).render("walletMoneyUpdatePage", {
+        title: "Wallet",
+        error: "Please enter valid 3 digit cvv",
+      });
+    }
+    cvv = cvv.trim();
+    if(!(/^[0-9]{3}$/.test(cvv))){
+      return res.status(400).render("walletMoneyUpdatePage", {
+        title: "Wallet",
+        error: "Please enter valid 3 digit cvv",
+      });
+    }
+    let validCvv = cvv
+      .trim()
+      .replace(/[@#$%^&*_+\=\\`|<>\/]/gi, "");
+    if (cvv.trim() !== validCvv) {
+      //throw "Error: City must not contain any special chars or numbers";
+      return res.status(400).render("walletMoneyUpdatePage", {
+        title: "Wallet",
+        error: "Please enter valid cvv number with no special char",
+      });
+    }
+
+  if(/^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$/.test(expriy) === false ||
+  Number(expriy.charAt(3)+expriy.charAt(4)) < 22
+  ){
+    return res.status(400).render("walletMoneyUpdatePage", {
+      title: "Wallet",
+      error: `Please enter valid expiry number in the format - MM/YY - you entered - ${expriy}`,
+    });
+  }
+
+    let userDetails = await userData.getUserByEmail(xss(req.session.email));
+    req.session.userId = userDetails._id.toString();
     let bookingDetails = await bookingData.createBooking(
+      xss(userDetails._id.toString()),
       xss(req.session.carSelectedId),
-      "$30", // amountPaid - TO DO
+      xss(req.session.cost), // amountPaid - TO DO
       xss(req.session.pickUpDate),
       xss(req.session.pickUpTime),
       xss(req.session.returnTime),
@@ -483,7 +620,7 @@ router.route("/protected/welcome").get(async (req, res) => {
   if (xss(req.session.email)) {
     console.log("inside protected welcome ");
     if (req.session.moneyAdded === "true") {
-      console.log("inside protected welcome success money added");
+      //console.log("inside protected welcome success money added");
       req.session.moneyAdded = "false";
       return res.status(200).render("welcomePage", {
         firstName: xss(req.session.firstName),
@@ -533,7 +670,7 @@ router
     if (xss(req.session.email)) {
       let userDetails = await userData.getUserByEmail(xss(req.session.email));
       let availableWalletMoney = userDetails.walletAmount;
-      console.log("availableWalletMoney..", availableWalletMoney);
+      //console.log("availableWalletMoney..", availableWalletMoney);
       res.render("walletMoneyUpdatePage", {
         title: "Wallet",
         availableWalletMoney: availableWalletMoney,
@@ -555,7 +692,7 @@ router
       userDetails._id,
       moneyAdded
     );
-    console.log("updateUserWallet..", updatedWallet);
+   // console.log("updateUserWallet..", updatedWallet);
 
     req.session.moneyAdded = "true";
     //userDetails.walletAmount = moneyAdded;
@@ -567,6 +704,90 @@ router
     return res.redirect("/protected/welcome");
   });
 
+
+  router
+  .route("/protected/manageBooking")
+  .get(async (req, res) => {
+    if (xss(req.session.email)) {
+      let userDetails = await userData.getUserByEmail(xss(req.session.email));
+   userDetails._id = userDetails._id.toString();
+        try{
+        
+          var bookingDetails = await bookingData.getBookingByUserId(userDetails._id);
+          return res.render("manageBooking", {title: "Manage Booking", bookId: bookingDetails});
+          /* console.log(bookingDetails);
+          console.log(bookingDetails.carDetails);
+          console.log((bookingDetails.carDetails).carType);
+         let finalCarDetails = bookingDetails.carDetails.forEach((i)=>{
+          console.log(i._id);
+         
+            return i;
+          }
+          );
+          console.log("final carDetails",finalCarDetails);
+          var carDetails = await carData.getCarById(bookingDetails.carDetails._id.toString());
+          console.log(bookingDetails.carDetails._id); */
+          
+        }catch(e){
+          return res.render("error", {title: "Error", error: "You have no Booking currently!"});
+        }
+        
+       
+        //returnDate: bookingDetails.returnDate
+        //,});
+      
+    }
+    return res
+      .status(403)
+      .render("forbiddenAccess", { title: "Forbidden Access" });
+  })
+  .post(async (req, res) => {
+   
+  });
+  router
+  .route("/protected/walletMoneyUpdateSuccess")
+  .get(async (req, res) => {
+    if (xss(req.session.email)) {
+      let userDetails = await userData.getUserByEmail(xss(req.session.email));
+      let availableWalletMoney = Number(req.session.cost - userDetails.walletAmount);
+      //console.log("availableWalletMoney..", availableWalletMoney);
+      res.render("walletMoneyUpdatePage", {
+        title: "Wallet",
+        availableWalletMoney: availableWalletMoney,
+      });
+      return;
+    }
+    return res
+      .status(403)
+      .render("forbiddenAccess", { title: "Forbidden Access" });
+  })
+  .post(async (req, res) => {
+  //console.log('session...',req.session);
+  let userDetails = await userData.getUserByEmail(xss(req.session.email));
+  req.session.userId = userDetails._id.toString();
+  let bookingDetails = await bookingData.createBooking(
+    xss(userDetails._id.toString()),
+      xss(req.session.carSelectedId),
+      xss(req.session.cost), // amountPaid - TO DO
+      xss(req.session.pickUpDate),
+      xss(req.session.pickUpTime),
+      xss(req.session.returnTime),
+      xss(req.session.returnDate),
+      xss(req.session.pickUpLocation)
+    );
+
+    //console.log("booking detaiks...", bookingDetails);
+
+    //return res.status(200).redirect("/sendEmail");
+    res.render("successBooking", {
+      title: "Success!!",
+      pickUpDate: xss(req.session.pickUpDate),
+      pickUpTime: xss(req.session.pickUpTime),
+      returnTime: xss(req.session.returnTime),
+      returnDate: xss(req.session.returnDate),
+      pickUpLocation: xss(req.session.pickUpLocation),
+    });
+  });
 module.exports = router;
 
-//success booking email
+

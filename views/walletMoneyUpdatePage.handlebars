@@ -1,14 +1,15 @@
-<form
+<div id="walletMoneyUpdate-div">
+  <form
   id="walletAddMoney-form"
   class="main-content"
   method="POST"
   action="/protected/walletMoneyUpdate"
 >
-  <h2>{{title}}</h2>
+  <h1>{{title}}</h1>
 
   <p>Current Wallet Amount is: {{availableWalletMoney}}</p>
 
-  <h4>Add money to wallet</h4>
+  <h2>Add money to wallet</h2>
   <label for="cardNumber">Card Number</label>
   <input
     placeholder="Enter your card number"
@@ -36,15 +37,17 @@
     id="cardCvv"
     name="cardCvv"
     required
+    maxlength="3"
   />
 
   <label for="cardExpiry">Expiry</label>
   <input
     class="cc-expires"
-    placeholder="Enter the expiry"
+    placeholder="Enter the expiry- MM/YY"
     id="cardExpiry"
     name="cardExpiry"
     required
+    maxlength="5"
   />
 
   <label for="moneyAdded">Enter Amount</label>
@@ -65,3 +68,6 @@
   <a href="/protected/welcome">Go back to Dashboard</a>
 
 </form>
+</div>
+
+
