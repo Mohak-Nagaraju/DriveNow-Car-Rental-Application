@@ -8,19 +8,29 @@ const validation = require("../validation");
 //const currentD = $.current-date;
 //daysTag = require(".days");
 
-const createBooking = async (
-  carSelectedId,
-  amountPaid,
-  pickUpDate,
-  pickUpTime,
-  returnTime,
-  returnDate,
-  location
-) => {
-  //console.log("inside create booking - 1")
 
-  if (!amountPaid) {
-    throw "Please enter credit card number";
+const createBooking = async (userId, carSelectedId,amountPaid, pickUpDate, pickUpTime, returnTime, returnDate, location) => {
+  //console.log("inside create booking - 1")
+  if(!userId){
+    throw `Error: Please enter the userID`;
+  }
+  if(!carSelectedId){
+    throw `Error: Please enter the carSelectedId`;
+  }
+    if (!amountPaid) {
+        throw "Please enter credit card number";
+    }
+    if (!pickUpDate){
+        throw "please enter CVV";
+    }
+    if (!pickUpTime){
+        throw "Enter cardholder on the card";
+    }
+    if (!returnTime){
+        throw "Enter return time";
+    }
+    if (!returnDate){
+      throw "Enter return date";
   }
   if (!pickUpDate) {
     throw "please enter CVV";
@@ -34,16 +44,20 @@ const createBooking = async (
   if (!returnDate) {
     throw "Enter return date";
   }
-  if (!location) {
+  if (!location){
     throw "Enter location";
   }
 
-  validation.checkString(amountPaid, "The amountPaid");
-  validation.checkString(pickUpDate, "The pickUpDate");
-  validation.checkString(pickUpTime, "The pickUpTime");
-  validation.checkString(returnTime, "returnTime");
-  validation.checkString(returnDate, "returnDate");
-  validation.checkString(location, "location");
+  
+     validation.checkString(amountPaid, 'The amountPaid');
+     validation.checkString(pickUpDate, 'The pickUpDate');
+     validation.checkString(pickUpTime, 'The pickUpTime');
+     validation.checkString(returnTime, 'returnTime');
+     validation.checkString(returnDate, 'returnDate');
+     validation.checkString(location, 'location');
+     validation.checkId(userId, 'userId');
+     validation.checkString(carSelectedId, 'carSelectedId');
+
 
   //validating pickupDate:
   //let date = new Date();
@@ -105,8 +119,34 @@ const createBooking = async (
 };
 
 const getBookingById = async (bookingId) => {
-  bookingId = bookingId.trim();
-  validation.checkId(bookingd);
+    bookingId = bookingId.trim();
+   validation.checkId(bookingd);
+    const bookingCollection = await bookings();
+    const particularBooking = await bookingCollection.findOne({_id: ObjectId(bookingId)});
+    if (particularBooking === null) throw 'Error: No bookings with that id';
+    //particularMovie._id = particularMovie._id.toString();
+    return particularBooking;
+  
+  };
+  const getBookingByUserId = async (userId) => {
+    console.log(userId);
+    userId = userId.trim();
+ 
+   validation.checkString(userId);
+  
+    const bookingCollection = await bookings();
+    
+    const particularBooking = await bookingCollection.findOne({userId: userId});
+    if (particularBooking === null) throw 'Error: No bookings with that id';
+    //particularMovie._id = particularMovie._id.toString();
+    
+    return particularBooking;
+  
+  };
+  const deleteBookingDetails = async (bookingId) => {
+  
+    bookingId = bookingId.trim();
+    validation.checkId(bookingId);
   const bookingCollection = await bookings();
   const particularBooking = await bookingCollection.findOne({
     _id: ObjectId(bookingId),
@@ -116,24 +156,6 @@ const getBookingById = async (bookingId) => {
   return particularBooking;
 };
 
-const deleteBookingDetails = async (bookingId) => {
-  bookingId = bookingId.trim();
-  validation.checkId(bookingId);
-  const bookingCollection = await bookings();
-  const particularBooking = await bookingCollection.findOne({
-    _id: ObjectId(bookingId),
-  });
-  if (particularBooking === null) throw "Error: No bookings with that id";
-  const deletionInfo = await bookingCollection.deleteOne({
-    _id: ObjectId(bookingId),
-  });
-
-  if (deletionInfo.deletedCount === 0) {
-    throw `Could not delete booking details with id of ${id}`;
-  }
-
-  return `${particularBooking.bookingId} has been successfully deleted!`;
-};
 
 const updateBooking = async (
   amountPaid,
@@ -193,10 +215,11 @@ const getAllBookings = async () => {
   return bookingList;
 };
 
-module.exports = {
-  createBooking,
-  getBookingById,
-  deleteBookingDetails,
-  updateBooking,
-  getAllBookings,
-};
+  module.exports = {
+    createBooking,
+    getBookingById,
+    deleteBookingDetails,
+    updateBooking,
+    getAllBookings,
+    getBookingByUserId
+  };

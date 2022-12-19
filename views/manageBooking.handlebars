@@ -1,0 +1,48 @@
+<div id="bookSelect-div">
+  <div id="bookSelect-form-div" class="main-content">
+    <h2>{{title}}</h2>
+    <p>
+      Below options display the car details, please select the car and the
+      payment type.
+    </p>
+    <p>Available 'Yes' or 'No' shows wether the car is available in the location
+      or not</p>
+    <p>Select the car</p>
+    {{#if bookId}}
+      <form id="bookSelect-form" method="POST" action="/protected/updateBooking">
+
+        <label for="bookSelect"></label>
+        <select name="bookSelect" id="bookSelect">
+          <option value="default">Please select the booking to Update</option>
+          {{#each bookId}}
+            <option value={{this._id}}>
+              Pick Up Date:
+              {{this.pickUpDate}}
+              , Pick Up Time:
+              {{this.pickUpTime}}
+              
+
+            </option>
+
+          {{/each}}
+
+        </select>
+        <p> Please select payemnt type:</p>
+        <select name="paymentSelect" id="paymentSelect">
+          <option value="default"> Please select</option>
+          <option value="creditCard"> Card Card</option>
+          <option value="wallet">Wallet</option>
+
+        </select>
+        {{!-- <a class="link" target="_blank" href="/protected/payment">{{this.carType}}</a> --}}
+
+        <button type="submit">SignUp</button>`
+      </form>
+    {{/if}}
+
+    {{#if error}}
+      <p class="error">{{error}}</p>
+    {{/if}}
+
+  </div>
+</div>

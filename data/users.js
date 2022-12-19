@@ -194,6 +194,7 @@ const getUserById = async (userId) => {
 
 const getUserByEmail = async (email) => {
   email = email.trim();
+  email = email.toLowerCase();
   validation.validateEmail(email);
   const userCollection = await users();
   const particularUser = await userCollection.findOne({
