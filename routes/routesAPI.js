@@ -160,17 +160,15 @@ router
   });
 
 router.route("/sendEmail").get(async (req, res) => {
-  if (xss(req.session.email)) {
+  //if (xss(req.session.email)) {
     // might have to check if booking is done successfull or not
     // console.log("inside sendEmail.. email -", req.session.email);
     res.render("sendEmailPage", {
       title: "Email Communication",
     });
     return;
-  }
-  return res
-    .status(403)
-    .render("forbiddenAccess", { title: "Forbidden Access" });
+ // }
+  
 });
 
 router.route("/login").post(async (req, res) => {
@@ -721,6 +719,104 @@ router
       .render("forbiddenAccess", { title: "Forbidden Access" });
   })
   .post(async (req, res) => {
+    let cardNumber = xss(req.body.cardNumber);
+    let name = xss(req.body.cardName);
+    let cvv = xss(req.body.cardCvv);
+    let expriy = xss(req.body.cardExpiry);
+    //let amount = xss(req.body.moneyAdded);
+
+    // console.log('cardNumber..',cardNumber)
+    // console.log('name..',name)
+    // console.log('cvv..',cvv)
+    // console.log('ex..',expriy)
+    // console.log('am..',amount)
+
+
+    if (!cardNumber || !name || !cvv || !expriy) {
+      return res.status(400).render("viewCars", {
+        title: "Wallet",
+        error: "Please enter all the values to add money to wallet",
+      });
+    }
+
+    if(name.trim().length === 0 || typeof name !== 'string'){
+      return res.status(400).render("walletMoneyUpdatePage", {
+        title: "Wallet",
+        error: "Please enter valid name",
+      });
+    }
+    let nameSpecChar = validationForm.checkSpecialCharWithNumber(name);
+    if(nameSpecChar === true){
+      return res.status(400).render("walletMoneyUpdatePage", {
+        title: "Wallet",
+        error: "Please enter valid name",
+      });
+    }
+
+    if (
+      cardNumber.trim().length === 0 ||
+      cardNumber.trim().length !== 16 ||
+      typeof cardNumber !== "string"
+    ) {
+      return res.status(400).render("walletMoneyUpdatePage", {
+        title: "Wallet",
+        error: "Please enter valid card number",
+      });
+    }
+    // //if(cardNumber.trim().replace())
+    // let validCardNumber = cardNumber
+    //   .trim()      
+    //   .replace(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?/]+/gi, "");
+    if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?/]+/g.test(cardNumber)) {
+      //throw "Error: City must not contain any special chars or numbers";
+      return res.status(400).render("walletMoneyUpdatePage", {
+        title: "Wallet",
+        error: "Please enter valid card number with no special char",
+      });
+    }
+
+    if (/\s/g.test(cardNumber)) {
+      return res.status(400).render("walletMoneyUpdatePage", {
+        title: "Wallet",
+        error: "Please enter valid card number with no spaces",
+      });
+    }
+
+    //cvv validation
+   // let regex = new RegExp(/^[0-9]{3,4}$/);
+    
+    if(cvv.trim().length === 0 || cvv.trim().length>3 || typeof cvv !== 'string' || cvv<0){
+      return res.status(400).render("walletMoneyUpdatePage", {
+        title: "Wallet",
+        error: "Please enter valid 3 digit cvv",
+      });
+    }
+    cvv = cvv.trim();
+    if(!(/^[0-9]{3}$/.test(cvv))){
+      return res.status(400).render("walletMoneyUpdatePage", {
+        title: "Wallet",
+        error: "Please enter valid 3 digit cvv",
+      });
+    }
+    let validCvv = cvv
+      .trim()
+      .replace(/[@#$%^&*_+\=\\`|<>\/]/gi, "");
+    if (/[@#$%^&*_+\=\\`|<>\/]/g.test(cvv)) {
+      //throw "Error: City must not contain any special chars or numbers";
+      return res.status(400).render("walletMoneyUpdatePage", {
+        title: "Wallet",
+        error: "Please enter valid cvv number with no special char",
+      });
+    }
+
+  if(/^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$/.test(expriy) === false ||
+  Number(expriy.charAt(3)+expriy.charAt(4)) < 22
+  ){
+    return res.status(400).render("walletMoneyUpdatePage", {
+      title: "Wallet",
+      error: `Please enter valid expiry number in the format - MM/YY - you entered - ${expriy}`,
+    });
+  }
     //money added value
     let moneyAdded = xss(req.body.moneyAdded);
 

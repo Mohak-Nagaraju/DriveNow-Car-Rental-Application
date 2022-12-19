@@ -107,7 +107,7 @@ app.post("/send", (req, res) => {
     console.log("Message sent: %s", info.messageId);
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 
-    res.render("userLogin", {
+    return res.render("userLogin", {
       msg: `Email has been sent to : ${toEmail} for further communication.`,
     });
   });
