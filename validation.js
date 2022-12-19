@@ -70,6 +70,10 @@ function checkSpace(string) {
         return false;
       }
   }
+  function convertToHours(mintes) {
+    const hours = Math.floor(mintes / 60);
+    return { hours};
+  }
   module.exports={
     checkString,
     trimming,
@@ -79,5 +83,6 @@ function checkSpace(string) {
     checkId,
     checkSpace,
     passwordValidate,
-    checkNumber
+    checkNumber,
+    convertToHours
   };
