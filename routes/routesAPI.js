@@ -737,7 +737,7 @@ router
     // console.log('am..',amount)
 
     if (!cardNumber || !name || !cvv || !expriy) {
-      return res.status(400).render("viewCars", {
+      return res.status(400).render("walletMoneyUpdatePage", {
         title: "Wallet",
         error: "Please enter all the values to add money to wallet",
       });
@@ -887,7 +887,6 @@ router
   })
   .post(async (req, res) => {
     if (xss(req.session.email)) {
-      
     }
 
   });
