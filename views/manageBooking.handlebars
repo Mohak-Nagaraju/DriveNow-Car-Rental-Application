@@ -7,7 +7,7 @@
     <p>You can also provide rating of the car you booked</p>
     <p>Select the Booking</p>
     {{#if bookId}}
-      <form id="bookSelect-form" method="POST" action="/protected/updateBooking">
+      <form id="bookSelect-form" method="POST" action="/protected/manageBooking">
 {{#each bookId}}
         <label for="bookSelect">
         <select name="bookSelect" id="bookSelect">
@@ -17,8 +17,14 @@
               Pick Up Date:
               {{this.pickUpDate}}
               , Pick Up Time:
-              {{this.pickUpTime}}
-              
+              {{this.pickUpTime}},
+              {{#each carDetails}}
+              Car Type:
+              {{this.carType}}
+              , Car brand:
+              {{this.brand}}, Car Model:
+              {{this.model}}
+              {{/each}}
 
             </option>
 </label>
@@ -26,9 +32,9 @@
 
         </select>
          {{/each}}
-        <p> Please select payemnt type:</p>
+        <p> Please select the action you want to perform:</p>
         <label for="bookingChange">
-        <select name="paymentSelect" id="paymentSelect">
+        <select name="bookingChange" id="bookingChange">
           <option value="default"> Please select</option>
           <option value="updateBooking"> Update Booking</option>
           <option value="cancelBooking">Cancel Booking</option>
