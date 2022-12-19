@@ -161,7 +161,6 @@ const createUser = async (
     age: age,
     password: passwordHash,
     lincenceNumber: licenceHash,
-    cardDetails: [],
     walletAmount: 0,
   };
 
