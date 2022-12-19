@@ -32,21 +32,11 @@ const createBooking = async (userId, carSelectedId,amountPaid, pickUpDate, pickU
     if (!returnDate){
       throw "Enter return date";
   }
-  if (!pickUpDate) {
-    throw "please enter CVV";
-  }
-  if (!pickUpTime) {
-    throw "Enter cardholder on the card";
-  }
-  if (!returnTime) {
-    throw "Enter return time";
-  }
-  if (!returnDate) {
-    throw "Enter return date";
-  }
+
   if (!location){
     throw "Enter location";
-  }
+}
+
 
   
      validation.checkString(amountPaid, 'The amountPaid');
@@ -95,6 +85,7 @@ const createBooking = async (userId, carSelectedId,amountPaid, pickUpDate, pickU
   //console.log("carSelectedDetails..",carSelectedDetails);
 
   let newBooking = {
+    userId: userId,
     amountPaid: amountPaid,
     pickUpDate: pickUpDate,
     pickUpTime: pickUpTime,
@@ -136,7 +127,7 @@ const getBookingById = async (bookingId) => {
   
     const bookingCollection = await bookings();
     
-    const particularBooking = await bookingCollection.findOne({userId: userId});
+    const particularBooking = await bookingCollection.find({userId: {$eq:userId}}).toArray();
     if (particularBooking === null) throw 'Error: No bookings with that id';
     //particularMovie._id = particularMovie._id.toString();
     

@@ -404,22 +404,8 @@ router
             error: error.message ? error.message : error,
           });
         }
-        // if (!cars) {
-        //   console.log("inside no car found by location", cars);
-        //   return res.status(400).render("error", {
-        //     title: "Issue with the car availaibility",
-        //     error: error.message ? error.message : error,
-        //   });
-        // }
-        // //throw `Error: No Car with the location: ${req.session.pickUpLocation}`;
-        // // console.log("car data..", cars);
-
-        // return res
-        //   .status(200)
-        //   .render("viewCars", { title: "Select Car", car: cars });
-
-        //go to payment --> store the selected car id( from where we are routing we have to send the car_id) to that page
-      } else {
+      } 
+      else {
         return res.status(403).render("error", {
           title: "Issue with Booking deatils",
           error:
@@ -886,18 +872,6 @@ router
           title: "Manage Booking",
           bookId: bookingDetails,
         });
-        /* console.log(bookingDetails);
-          console.log(bookingDetails.carDetails);
-          console.log((bookingDetails.carDetails).carType);
-         let finalCarDetails = bookingDetails.carDetails.forEach((i)=>{
-          console.log(i._id);
-         
-            return i;
-          }
-          );
-          console.log("final carDetails",finalCarDetails);
-          var carDetails = await carData.getCarById(bookingDetails.carDetails._id.toString());
-          console.log(bookingDetails.carDetails._id); */
       } catch (e) {
         return res.render("error", {
           title: "Error",
@@ -905,60 +879,15 @@ router
         });
       }
 
-      //returnDate: bookingDetails.returnDate
-      //,});
+
     }
     return res
       .status(403)
       .render("forbiddenAccess", { title: "Forbidden Access" });
   })
-  .post(async (req, res) => {});
-// router
-//   .route("/protected/walletMoneyUpdateSuccess")
-//   .get(async (req, res) => {
-//     if (xss(req.session.email)) {
-//       let userDetails = await userData.getUserByEmail(xss(req.session.email));
-//       let availableWalletMoney = Number(
-//         req.session.cost - userDetails.walletAmount
-//       );
-//       //console.log("availableWalletMoney..", availableWalletMoney);
-//       res.render("walletMoneyUpdatePage", {
-//         title: "Wallet",
-//         availableWalletMoney: availableWalletMoney,
-//       });
-//       return;
-//     }
-//     return res
-//       .status(403)
-//       .render("forbiddenAccess", { title: "Forbidden Access" });
-//   })
-//   .post(async (req, res) => {
-//     //console.log('session...',req.session);
-//     let userDetails = await userData.getUserByEmail(xss(req.session.email));
-//     req.session.userId = userDetails._id.toString();
-//     let bookingDetails = await bookingData.createBooking(
-//       xss(userDetails._id.toString()),
-//       xss(req.session.carSelectedId),
-//       xss(req.session.cost), // amountPaid - TO DO
-//       xss(req.session.pickUpDate),
-//       xss(req.session.pickUpTime),
-//       xss(req.session.returnTime),
-//       xss(req.session.returnDate),
-//       xss(req.session.pickUpLocation)
-//     );
+  .post(async (req, res) => {
 
-//     //console.log("booking detaiks...", bookingDetails);
-
-//     //return res.status(200).redirect("/sendEmail");
-//     res.render("successBooking", {
-//       title: "Success!!",
-//       pickUpDate: xss(req.session.pickUpDate),
-//       pickUpTime: xss(req.session.pickUpTime),
-//       returnTime: xss(req.session.returnTime),
-//       returnDate: xss(req.session.returnDate),
-//       pickUpLocation: xss(req.session.pickUpLocation),
-//     });
-//   });
+  });
 
 router
   .route("/protected/walletMoneyUpdateSuccess")
@@ -966,7 +895,7 @@ router
     if (xss(req.session.email)) {
       let userDetails = await userData.getUserByEmail(xss(req.session.email));
       let availableWalletMoney = req.session.cost - userDetails.walletAmount;
-      console.log("availableWalletMoney..", availableWalletMoney);
+     
       res.render("walletMoneyUpdatePage", {
         title: "Wallet",
         availableWalletMoney: availableWalletMoney,
@@ -985,7 +914,7 @@ router
   pastWalletAmount = parseFloat(pastWalletAmount);
  
 let totalWalletAmount = pastWalletAmount - req.session.cost;
-console.log('walletAmount..2',totalWalletAmount.toString())
+
 
   const updatedUser = {
     walletAmount: totalWalletAmount.toString(),

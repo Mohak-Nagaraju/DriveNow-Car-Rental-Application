@@ -2,19 +2,17 @@
   <div id="bookSelect-form-div" class="main-content">
     <h2>{{title}}</h2>
     <p>
-      Below options display the car details, please select the car and the
-      payment type.
+      Below options display the Booking details, please select the Booking which you want to modify
     </p>
-    <p>Available 'Yes' or 'No' shows wether the car is available in the location
-      or not</p>
-    <p>Select the car</p>
+    <p>You can also provide rating of the car you booked</p>
+    <p>Select the Booking</p>
     {{#if bookId}}
       <form id="bookSelect-form" method="POST" action="/protected/updateBooking">
-
-        <label for="bookSelect"></label>
+{{#each bookId}}
+        <label for="bookSelect">
         <select name="bookSelect" id="bookSelect">
           <option value="default">Please select the booking to Update</option>
-          {{#each bookId}}
+          
             <option value={{this._id}}>
               Pick Up Date:
               {{this.pickUpDate}}
@@ -23,20 +21,24 @@
               
 
             </option>
-
-          {{/each}}
+</label>
+         
 
         </select>
+         {{/each}}
         <p> Please select payemnt type:</p>
+        <label for="bookingChange">
         <select name="paymentSelect" id="paymentSelect">
           <option value="default"> Please select</option>
-          <option value="creditCard"> Credit Card</option>
-          <option value="wallet">Wallet</option>
+          <option value="updateBooking"> Update Booking</option>
+          <option value="cancelBooking">Cancel Booking</option>
+          <option value="giveRating">Rate the car</option>
 
         </select>
+        </label>
         {{!-- <a class="link" target="_blank" href="/protected/payment">{{this.carType}}</a> --}}
 
-        <button type="submit">SignUp</button>`
+        <button type="submit">Submit</button>
       </form>
     {{/if}}
 
