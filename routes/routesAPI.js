@@ -887,8 +887,36 @@ router
   })
   .post(async (req, res) => {
     if (xss(req.session.email)) {
+    req.session.bookSelectId = xss(req.body.bookSelect);
+    req.session.bookingChange = xss(req.body.bookingChange);
+    
+
+    let bookingSelectedDetails = await bookingData.getBookingById(
+      xss(req.session.bookSelectId.toString())
+    );
+
+    if (!xss(req.body.bookSelect)) {
+      return res.status(400).render("manageBooking", {
+        title: "Please select a booking to make changes",
+        error: error.message ? error.message : error,
+      });
     }
 
+    if (xss(req.session.bookingChange) === "updateBooking") {
+      return res.status(200).render("updateBooking", {
+        title: "Update Booking",
+      });
+    } else if(xss(req.session.bookingChange) === "giveRating"){
+      return res.status(200).render("carRating", {
+        title: "Give Rating ",
+      });
+    }
+    else{
+      return res.status(200).render("cancelBooking", {
+        title: "Cancel Booking",
+      });
+    }
+  }
   });
 
 router
@@ -950,6 +978,188 @@ let totalWalletAmount = pastWalletAmount - req.session.cost;
     });
   });
 
+  router
+  .route("/protected/updateBooking")
+  .post(async (req, res) => {
+    if (xss(req.session.email)) {
+      let pickUpDate = xss(req.body.pickUpDate);
+      let pickUpTime = xss(req.body.pickUpTime);
+      let returnTime = xss(req.body.returnTime);
+      let returnDate = xss(req.body.returnDate);
+  
 
+      if (
+        !pickUpDate ||
+        !pickUpTime ||
+        !returnTime ||
+        !returnDate 
+      ) {
+        return res.status(400).render("updateBooking", {
+          title: "updateBooking",
+          error: "Please enter all the values to update Booking",
+        });
+      }
+
+      try {
+        validationForm.checkString(pickUpDate);
+        validationForm.checkString(pickUpTime);
+        validationForm.checkString(returnDate);
+        validationForm.checkString(returnTime);
+  
+      } catch (error) {
+        return res.status(400).render("updateBooking", {
+          title: "updateBooking",
+          error: error.message ? error.message : error,
+        });
+      }
+
+      validationForm.trimming(pickUpDate);
+      validationForm.trimming(pickUpTime);
+      validationForm.trimming(returnDate);
+      validationForm.trimming(returnTime);
+    
+
+      if (
+        pickUpDate.length === 0 ||
+        pickUpTime.length === 0 ||
+        returnDate.length === 0 ||
+        returnTime.length === 0 
+       
+      ) {
+        return res.status(400).render("updateBooking", {
+          title: "updateBooking",
+          error: error.message ? error.message : error,
+        });
+      }
+
+      //let s = "2021-12-16"
+      split = pickUpDate.split("-");
+      const today = new Date();
+      const year = today.getFullYear();
+      let month = today.getMonth() + 1;
+      let day = today.getDate();
+      if (split[2] < day || split[1] < month || split[0] < year) {
+        return res.status(403).render("updateBooking", {
+          title: "updateBooking",
+          error: "Error: Cannot select PickUp Date in the past",
+        });
+      }
+
+      split2 = returnDate.split("-");
+      if (
+        split2[2] < split[2] ||
+        split2[1] < split[1] ||
+        split2[0] < split[0]
+      ) {
+        return res.status(403).render("updateBooking", {
+          title: "updateBooking",
+          error: `Error: Cannot select Return Date (${returnDate}) before the PickUp date (${pickUpDate})`,
+        });
+      }
+
+      if (pickUpDate === returnDate) {
+        let pickUpTimeSplit = pickUpTime.split(":");
+        let returnTimeSplit = returnTime.split(":");
+
+        if (pickUpTimeSplit[0] >= returnTimeSplit[0]) {
+          if (pickUpTimeSplit[1] >= returnTimeSplit[1]) {
+            return res.status(403).render("updateBooking", {
+              title: "updateBooking",
+              error: `Error: Cannot select return time (${returnTime}) before or same as the pickup time (${pickUpTime})`,
+            });
+          }
+        }
+      }
+
+
+
+      req.session.updatepickUpDate = pickUpDate;
+      req.session.updatepickUpTime = pickUpTime;
+      req.session.updatereturnTime = returnTime;
+      req.session.updatereturnDate = returnDate;
+  
+      
+      if(req.session.pickUpDate === req.session.updatepickUpDate && 
+        req.session.returnDate === req.session.updatereturnDate && 
+        req.session.updatepickUpTime === req.session.pickUpTime && 
+        req.session.updatereturnTime === req.session.returnTime )
+        {
+          return res.status(403).render("updateBooking", {
+            title: "updateBooking",
+            error: `Error: Cannot enter the same details as previous booking` 
+
+      });
+    }
+    if(req.session.pickUpDate === req.session.updatepickUpDate){
+      if(req.session.updatepickUpTime === req.session.pickUpTime && 
+        req.session.updatereturnTime === req.session.returnTime){
+          return res.status(403).render("updateBooking", {
+            title: "updateBooking",
+            error: `Error: Cannot have the same pickUp and returnTime as previous booking` });
+        }
+    }
+    if(req.session.returnDate === req.session.updatereturnDate){
+      if(req.session.updatepickUpTime === req.session.pickUpTime && 
+        req.session.updatereturnTime === req.session.returnTime){
+          return res.status(403).render("updateBooking", {
+            title: "updateBooking",
+            error: `Error: Cannot have the same pickUp and returnTime as previous booking` });
+        }
+    }
+    let bookdetails = await bookingData.getBookingById(req.session.bookSelectId.toString());
+   
+    let carSelectedDetails = await carData.getCarById(
+      xss(bookdetails.carDetails[0]._id.toString())
+    );
+
+    let costPerHour = carSelectedDetails.costPerHour;
+    let pickUpTimeSplit = req.session.updatepickUpTime.split(":"); //[h,m]
+    let returnTimeSplit = req.session.updatereturnTime.split(":");
+    let pickDate = req.session.updatepickUpDate.split("-");
+    let retDate = req.session.updatereturnDate.split("-");
+    if (pickDate[2] === retDate[2]) {
+      if (pickUpTimeSplit[1] < returnTimeSplit[1]) {
+        let hours =
+          Math.abs(
+            parseFloat(pickUpTimeSplit[0]) - parseFloat(returnTimeSplit[0])
+          ) + 1;
+        let cost = costPerHour.slice(1);
+        var updatedtotal = Number(cost) * hours;
+      } else {
+        let hours = Math.abs(
+          parseFloat(pickUpTimeSplit[0]) - parseFloat(returnTimeSplit[0])
+        );
+        let cost = costPerHour.slice(1);
+        var updatedtotal = Number(cost) * hours;
+      }
+    } else {
+      let diff = Number(retDate[2]) - Number(pickDate[2]);
+      let cost = costPerHour.slice(1);
+      var updatedtotal = Number(cost) * diff * 24;
+    }
+
+    req.session.updatecost = updatedtotal.toString();
+    req.session.updatepickUpDate = pickUpDate;
+    req.session.updatepickUpTime = pickUpTime;
+    req.session.updatereturnTime = returnTime;
+    req.session.updatereturnDate = returnDate;
+  
+try{
+  let updateBooking = await bookingData.updateBooking(req.session.bookSelectId.toString(),req.session.updatecost,req.session.updatepickUpDate, req.session.updatepickUpTime,req.session.updatereturnTime,req.session.updatereturnDate );
+}catch(e){
+  return res.status(403).render("updateBooking", {
+    title: "updateBooking",
+    error: e });
+  
+}
+return res.render("updateSucess", {
+  title: "Success!!",
+  pickUpDate: xss(req.session.updatepickUpDate),
+  pickUpTime: xss(req.session.updatepickUpTime),
+  returnTime: xss(req.session.updatereturnTime),
+  returnDate: xss(req.session.updatereturnDate),
+});
+  }
+  });
 
 module.exports = router;

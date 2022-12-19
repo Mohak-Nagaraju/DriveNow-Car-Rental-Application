@@ -1,0 +1,36 @@
+<div id="booking-div">
+  <div id="booking-form-div">
+
+    <form
+      id="booking-form"
+      class="main-content"
+      method="POST"
+      action="/protected/updateBooking"
+    >
+      <h1>{{title}}</h1>
+      <img src="../public/car.png" alt="Renting a car" />
+
+      <label for="pickUpDate">Pick-Up Date</label>
+      <input type="date" name="pickUpDate" id="pickUpDate" />
+
+      <label for="pickUpTime">Pick-Up Time</label>
+      <input type="time" name="pickUpTime" id="pickUpTime" />
+
+      <label for="returnDate">Return Date</label>
+      <input type="date" name="returnDate" id="returnDate" />
+
+      <label for="returnTime">Return Time</label>
+      <input type="time" name="returnTime" id="returnTime" />
+
+      <button type="submit">Submit</button>
+  </form>
+      <a href="/protected/welcome">Click here to go to dashboard</a>
+      <a href="/protected/logout">Click here to Logout</a>
+
+      {{#if error}}
+        <p class="error">{{{error}}}</p>
+      {{/if}}
+    </form>
+
+  </div>
+</div>

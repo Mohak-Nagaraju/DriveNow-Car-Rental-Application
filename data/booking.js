@@ -18,7 +18,7 @@ const createBooking = async (userId, carSelectedId,amountPaid, pickUpDate, pickU
     throw `Error: Please enter the carSelectedId`;
   }
     if (!amountPaid) {
-        throw "Please enter credit card number";
+        throw "Please enter amount";
     }
     if (!pickUpDate){
         throw "please enter CVV";
@@ -110,9 +110,11 @@ const createBooking = async (userId, carSelectedId,amountPaid, pickUpDate, pickU
 };
 
 const getBookingById = async (bookingId) => {
+  
     bookingId = bookingId.trim();
-   validation.checkId(bookingd);
+   validation.checkId(bookingId);
     const bookingCollection = await bookings();
+  
     const particularBooking = await bookingCollection.findOne({_id: ObjectId(bookingId)});
     if (particularBooking === null) throw 'Error: No bookings with that id';
     //particularMovie._id = particularMovie._id.toString();
@@ -120,7 +122,7 @@ const getBookingById = async (bookingId) => {
   
   };
   const getBookingByUserId = async (userId) => {
-    console.log(userId);
+    
     userId = userId.trim();
  
    validation.checkString(userId);
@@ -149,6 +151,7 @@ const getBookingById = async (bookingId) => {
 
 
 const updateBooking = async (
+  bookingId,
   amountPaid,
   pickUpDate,
   pickUpTime,
@@ -194,6 +197,7 @@ const updateBooking = async (
   if (updatedInfo.modifiedCount === 0) {
     throw "could not update bookings successfully";
   }
+  //return {Update: "done"};
 };
 const getAllBookings = async () => {
   const bookingCollection = await bookings();

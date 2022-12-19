@@ -8,30 +8,32 @@
     <p>Select the Booking</p>
     {{#if bookId}}
       <form id="bookSelect-form" method="POST" action="/protected/manageBooking">
-{{#each bookId}}
+
         <label for="bookSelect">
         <select name="bookSelect" id="bookSelect">
-          <option value="default">Please select the booking to Update</option>
           
+          <option value="default">Please select the booking to Update</option>
+          {{#each bookId}}
             <option value={{this._id}}>
               Pick Up Date:
               {{this.pickUpDate}}
               , Pick Up Time:
               {{this.pickUpTime}},
-              {{#each carDetails}}
+              <!--{{#each carDetails}}-->
               Car Type:
               {{this.carType}}
               , Car brand:
               {{this.brand}}, Car Model:
               {{this.model}}
-              {{/each}}
+              <!--{{/each}}-->
 
             </option>
+            {{/each}}
 </label>
          
 
         </select>
-         {{/each}}
+         
         <p> Please select the action you want to perform:</p>
         <label for="bookingChange">
         <select name="bookingChange" id="bookingChange">
