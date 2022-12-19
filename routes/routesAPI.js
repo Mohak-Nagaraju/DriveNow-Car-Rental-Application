@@ -465,24 +465,20 @@ router
         let hours = Math.abs((parseFloat(pickUpTimeSplit[0])) - (parseFloat(returnTimeSplit[0]))) + 1;
          let cost = costPerHour.slice(1);
           var total = (Number(cost) * hours);
-           console.log("if hours= ",hours);      
+     
     }
     else{
       let hours = Math.abs((parseFloat(pickUpTimeSplit[0])) - (parseFloat(returnTimeSplit[0])));
   let cost = costPerHour.slice(1);
   var total = (Number(cost) * hours);
-    console.log("Else hours= ",hours);
-    console.log("Else pickUpTimeSplit[0]= ",pickUpTimeSplit[0]);
-    console.log("Else returnTimeSplit[0]= ",returnTimeSplit[0]);
+   
     }
     }
     else{
       let diff =  Number(returnDate[2]) - Number(pickUpDate[2]) ;
       let cost = costPerHour.slice(1);
       var total = (Number(cost) * diff * 24);    
-      console.log("diff",diff);
-      console.log("pickUpDate",Number(pickUpDate[2]));
-      console.log("returnDate",Number(returnDate[2]));
+     
     }
     
   
@@ -663,7 +659,7 @@ router.route("/protected/welcome").get(async (req, res) => {
   if (xss(req.session.email)) {
     console.log("inside protected welcome ");
     if (req.session.moneyAdded === "true") {
-      console.log("inside protected welcome success money added");
+      //console.log("inside protected welcome success money added");
       req.session.moneyAdded = "false";
       return res.status(200).render("welcomePage", {
         firstName: xss(req.session.firstName),
@@ -713,7 +709,7 @@ router
     if (xss(req.session.email)) {
       let userDetails = await userData.getUserByEmail(xss(req.session.email));
       let availableWalletMoney = userDetails.walletAmount;
-      console.log("availableWalletMoney..", availableWalletMoney);
+      //console.log("availableWalletMoney..", availableWalletMoney);
       res.render("walletMoneyUpdatePage", {
         title: "Wallet",
         availableWalletMoney: availableWalletMoney,
@@ -735,7 +731,7 @@ router
       userDetails._id,
       moneyAdded
     );
-    console.log("updateUserWallet..", updatedWallet);
+   // console.log("updateUserWallet..", updatedWallet);
 
     req.session.moneyAdded = "true";
     //userDetails.walletAmount = moneyAdded;
@@ -793,7 +789,7 @@ router
     if (xss(req.session.email)) {
       let userDetails = await userData.getUserByEmail(xss(req.session.email));
       let availableWalletMoney = Number(req.session.cost - userDetails.walletAmount);
-      console.log("availableWalletMoney..", availableWalletMoney);
+      //console.log("availableWalletMoney..", availableWalletMoney);
       res.render("walletMoneyUpdatePage", {
         title: "Wallet",
         availableWalletMoney: availableWalletMoney,
