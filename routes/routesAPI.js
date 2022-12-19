@@ -911,9 +911,64 @@ router
         title: "Give Rating ",
       });
     }
-    else{
+    else if(xss(req.session.bookingChange) === "cancelBooking"){
+      let picktime = bookingSelectedDetails.pickUpTime;
+      let pickDate = bookingSelectedDetails.pickUpDate;
+      let retDate = bookingSelectedDetails.returnDate;
+      let retTime = bookingSelectedDetails.returnTime ;
+      let pickuptime = bookingSelectedDetails.pickUpTime;
+      let pickupDate = bookingSelectedDetails.pickUpDate;
+      pickupDate = pickupDate.split("-");
+      pickupDate = pickupDate[2].toString();
+      var CurrentTime = new Date().toLocaleTimeString('en-US', { hour12: false, 
+        hour: "numeric", 
+        minute: "numeric"}).toString();
+        CurrentTime = CurrentTime.split(":");
+        CurrentTime = Number(CurrentTime[0]);
+        pickuptime = pickuptime.split(":");
+        pickuptime = Number(pickuptime[0]);
+        let timeDiff = Math.abs(CurrentTime - pickuptime);
+
+        var CurrentDate = new Date().getDate().toString();
+        
+    
+       
+        if(timeDiff <= 1 && CurrentDate === pickupDate){
+          return res.status(400).render("manageBooking", {
+            title: "Cannot cancel booking 1hr prior to pickup Time",
+            error: "Cannot cancel booking 1hr prior to pickup Time"
+          });
+        }
+
+        let carSelectedDetails = await carData.getCarById(
+          xss(bookingSelectedDetails.carDetails[0]._id.toString())
+        );
+        
+        try{
+          let deleteBooking = await bookingData.deleteBookingDetails(req.session.bookSelectId.toString());
+        }catch(e){
+          return res.status(400).render("manageBooking", {
+            title: "Error",
+            error: e,
+          });
+
+        } 
+        try{
+          let updateCar = await carData.updateCarAvailabilty(carSelectedDetails._id.toString());
+        }catch(e){
+          return res.status(400).render("manageBooking", {
+            title: "Error",
+            error: e,
+          });
+
+        }          
+      
       return res.status(200).render("cancelBooking", {
         title: "Cancel Booking",
+        pickUpTime: picktime,
+        pickUpDate: pickDate,
+        returnDate: retDate,
+        returnTime: retTime
       });
     }
   }

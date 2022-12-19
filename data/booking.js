@@ -142,11 +142,15 @@ const getBookingById = async (bookingId) => {
     validation.checkId(bookingId);
   const bookingCollection = await bookings();
   const particularBooking = await bookingCollection.findOne({
-    _id: ObjectId(bookingId),
+    _id: ObjectId(bookingId)
   });
   if (particularBooking === null) throw "Error: No bookings with that id";
   //particularMovie._id = particularMovie._id.toString();
-  return particularBooking;
+  const deletionInfo = await bookingCollection.deleteOne({_id: ObjectId(bookingId)});
+  if (deletionInfo.deletedCount === 0) {
+    throw `Could not delete movie with id of ${id}`;
+  }
+  //return `${particularMovie.title} has been successfully deleted!`;  
 };
 
 
