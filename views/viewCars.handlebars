@@ -2,14 +2,20 @@
   <div id="viewCar-form-div" class="main-content">
     <h1>{{title}}</h1>
     <img src="../public/car.png" alt="Renting a car" />
-    <p>
-      Below options display the car details, please select the car and the
-      payment type.
-    </p>
-    <p>Available 'Yes' or 'No' shows wether the car is available in the location
-      or not</p>
-    <p>Select the car</p>
+
+    {{#if temp}}
+      <a href="/protected/welcome">Click here to go to dashboard</a>
+      <a href="/protected/logout">Click here to Logout</a>
+    {{/if}}
+
     {{#if car}}
+      <p>
+        Below options display the car details, please select the car and the
+        payment type.
+      </p>
+      <p>Available 'Yes' or 'No' shows wether the car is available in the
+        location or not</p>
+      <p>Select the car</p>
       <form id="viewCar-form" method="POST" action="/protected/viewCars">
 
         <label for="carSelect"></label>
@@ -34,7 +40,7 @@
         <p> Please select payemnt type:</p>
         <select name="paymentSelect" id="paymentSelect">
           <option value="default"> Please select</option>
-          <option value="creditCard"> Card Card</option>
+          <option value="creditCard"> Credit Card</option>
           <option value="wallet">Wallet</option>
 
         </select>
