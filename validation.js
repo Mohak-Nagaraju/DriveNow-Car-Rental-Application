@@ -74,6 +74,10 @@ function checkSpace(string) {
     const hours = Math.floor(mintes / 60);
     return { hours};
   }
+  function roundedToFixed(input){
+    var rounded = Math.pow(10, 1);
+    return (Math.round(input * rounded) / rounded).toFixed(1);
+  }
   module.exports={
     checkString,
     trimming,
@@ -84,5 +88,6 @@ function checkSpace(string) {
     checkSpace,
     passwordValidate,
     checkNumber,
-    convertToHours
+    convertToHours,
+    roundedToFixed
   };

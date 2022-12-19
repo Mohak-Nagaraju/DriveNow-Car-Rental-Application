@@ -162,7 +162,7 @@ if(availability != "yes" && availability != "no"){
     availability: "yes",
   };
 
-console.log("carId", carId);
+
   const updatedInfo = await carCollection.updateOne(
     { _id: ObjectId(carId) },
     { $set: updatedUser }
@@ -174,11 +174,86 @@ console.log("carId", carId);
   
   };
 
+
+
+
+  const updateCarRating = async (carId,rating) => {
+    carId = carId.trim();
+   validation.checkId(carId);
+    const carCollection = await cars();
+   if(!carId){
+    throw "Error: Please enter the carId";
+   }
+   if(!rating){
+    throw "Error: Please enter the rating";
+   }
+   rating = rating.toString().trim();
+  
+   if((parseFloat(rating)) === NaN) throw `Error: rating is not a number`;
+ 
+ let splitRating = rating.split("");
+
+   if(splitRating[1] === '.'){
+     if(splitRating.length !== 3)throw `Error: rating should be upto only one decimal place like 2.3`;
+   } 
+ 
+ 
+ 
+   if(splitRating[1] === '.'){
+     if(splitRating[0] < '1' || splitRating[0] > '5')throw `Error: rating should be between 1 and 5`;
+   } 
+ 
+ 
+   if(splitRating[1] === '.'){
+     if(splitRating[0] === '5'){
+       if(splitRating[2] !== '0') throw `Error: rating of 5 cannot have decimal values greater than or less than 0`;
+
+     }
+   } 
+ 
+ 
+   if(splitRating[1] === '.'){
+     if(splitRating[0] >= '1' || splitRating[0] <= '5' ){
+       
+       if(splitRating[2] >= 10) throw `Error: rating should be between 1.0 to 4.9`;
+
+     }
+   } 
+   
+  rating = parseFloat(rating);
+ 
+   if(rating < 1 || rating > 5) throw `Error: rating should be between 1 and 5`;
+
+
+   const particularUsers = await getCarById(carId);
+  if (particularUsers === null) throw "Error: No car with that id";
+  let overallRating = parseFloat(particularUsers.rating) + rating;  
+  overallRating = validation.roundedToFixed(overallRating);
+
+
+
+  const updatedUsers = {
+    rating: overallRating,
+  };
+
+
+  const updatedInfos = await carCollection.updateOne(
+    { _id: ObjectId(carId) },
+    { $set: updatedUsers }
+  );
+  if (updatedInfos.modifiedCount === 0) {
+    throw "could not update user successfully";
+  }
+ 
+  
+  };
+
   module.exports = {
     createCar,
     getCarById,
     getAllCars,
     getCarLocation,
-    updateCarAvailabilty
+    updateCarAvailabilty,
+    updateCarRating
     
   };

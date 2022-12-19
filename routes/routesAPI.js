@@ -11,6 +11,7 @@ let bookingData = require("../data/booking");
 let validationForm = require("../validation");
 const xss = require("xss");
 
+
 //root route - Login Page
 router.route("/").get(async (req, res) => {
   if (xss(req.session.email)) {
@@ -887,9 +888,14 @@ router
       let userDetails = await userData.getUserByEmail(xss(req.session.email));
       userDetails._id = userDetails._id.toString();
       try {
-        var bookingDetails = await bookingData.getBookingByUserId(
-          userDetails._id
-        );
+        var bookingDetails = await bookingData.getBookingByUserId(userDetails._id);
+        
+        if(bookingDetails.length === 0){
+          return res.render("error", {
+            title: "Error",
+            error: "You have no Booking currently!",
+          });
+        }
         return res.render("manageBooking", {
           title: "Manage Booking",
           bookId: bookingDetails,
@@ -900,6 +906,7 @@ router
           error: "You have no Booking currently!",
         });
       }
+      
     }
     return res
       .status(403)
@@ -959,6 +966,16 @@ router
             error: "Cannot cancel booking 1hr prior to pickup Time"
           });
         }
+
+        /* if(CurrentDate !== pickupDate){
+          if(timeDiff <= 1){
+            return res.status(400).render("manageBooking", {
+              title: "Cannot cancel booking 1hr prior to pickup Time",
+              error: "Cannot cancel booking 1hr prior to pickup Time"
+            });
+          }
+
+        } */
 
         let carSelectedDetails = await carData.getCarById(
           xss(bookingSelectedDetails.carDetails[0]._id.toString())
@@ -1236,5 +1253,89 @@ return res.render("updateSucess", {
   }
   });
 
+  router
+  .route("/protected/carRating")
+  .post(async (req, res) => {
+    if (xss(req.session.email)) {
+      let rating = req.body.carRating;
+      if(!rating){
+        return res
+      .status(403)
+      .render("carRating", { title: "carRating", error: "Error: Please enter the rating from 1 - 5" });
+      }
+      rating = rating.toString().trim();
+
+    if((parseFloat(rating)) === NaN){
+      return res
+      .status(403)
+      .render("carRating", { title: "carRating", error: "Error: rating is not a number" });
+    }
+  
+  let splitRating = rating.split("");
+
+    if(splitRating[1] === '.'){
+      if(splitRating.length !== 3){
+        return res
+      .status(403)
+      .render("carRating", { title: "carRating", error: "Error: rating should be upto only one decimal place like 2.3" });
+      }
+    }  
+  
+    if(splitRating[1] === '.'){
+      if(splitRating[0] < '1' || splitRating[0] > '5'){
+        return res
+        .status(403)
+        .render("carRating", { title: "carRating", error: "Error: rating should be between 1 and 5" });
+      }
+    } 
+  
+  
+    if(splitRating[1] === '.'){
+      if(splitRating[0] === '5'){
+        if(splitRating[2] !== '0') {
+          return res
+        .status(403)
+        .render("carRating", { title: "carRating", error: "Error: rating of 5 cannot have decimal values greater than or less than 0" });
+        }
+
+      }
+    } 
+  
+  
+    if(splitRating[1] === '.'){
+      if(splitRating[0] >= '1' || splitRating[0] <= '5' ){
+        
+        if(splitRating[2] >= 10){
+          return res
+        .status(403)
+        .render("carRating", { title: "carRating", error: "Error: rating should be between 1.0 to 4.9" });
+        }
+
+      }
+    } 
+    
+   rating = parseFloat(rating);
+  
+    if(rating < 1 || rating > 5){
+      return res
+        .status(403)
+        .render("carRating", { title: "carRating", error: "Error: rating should be between 1 and 5" });
+    }
+    let bookingSelectedDetails = await bookingData.getBookingById(
+      xss(req.session.bookSelectId.toString())
+    );
+    let carSelectedDetails = await carData.getCarById(
+      xss(bookingSelectedDetails.carDetails[0]._id.toString())
+    );
+    try{
+      let carRating = await carData.updateCarRating(carSelectedDetails._id.toString(),rating);
+    }catch(e){
+      return res
+      .status(403)
+      .render("carRating", { title: "carRating", error: e });
+    }
+    return res.render("successRating",{title:"Success!!"});
+  }
+  });
 
 module.exports = router;
