@@ -58,7 +58,7 @@ cars=[];
 cars.push({ src: "../../public/images/suv.jpg", name: "Suv" });
  cars.push({ src: "../../public/images/sedan.jpg", name: "Sedan" });
  cars.push({ src: "../../public/images/bmw.jpg", name: "Bmv" });
-})
+});
 
 app.use((req, res, next) => {
   console.log("Current Timestamp: ", new Date().toUTCString());
