@@ -886,6 +886,9 @@ router
       .render("forbiddenAccess", { title: "Forbidden Access" });
   })
   .post(async (req, res) => {
+    if (xss(req.session.email)) {
+      
+    }
 
   });
 
