@@ -1,7 +1,36 @@
-<div id="logout-page" class="main-content-logout">
+{{!-- <div id="logout-page" class="main-content-logout">
   <h1>{{title}}</h1>
   <img src="../public/car.png" alt="Renting a car" />
 
   <p>Thank you for using DriveNow Car Rentals</p>
  <a href="/">Login Again</a>
-</div>
+</div> --}}
+
+{{#if temp}}
+  <div id="logout-page" class="main-content-logout">
+    <h1>{{title}}</h1>
+    <img src="../public/car.png" alt="Renting a car" />
+    <p>Thank you for using DriveNow Car Rentals</p>
+
+    <a href="/">Login Again</a>
+  </div>
+
+{{else}}
+  <div id="logout-page" class="main-content-logout">
+
+    <h1>{{title}}</h1>
+    <img src="../public/car.png" alt="Renting a car" />
+    <p>
+      Are you sure you want to logout of the application?
+    </p>
+    <form id="logout-form" method="POST" action="/protected">
+      <button
+        class="btn btn-danger"
+        id="logout-page"
+        type="submit"
+      >Logout</button>
+    </form>
+
+  </div>
+
+{{/if}}

@@ -35,20 +35,22 @@ app.set("view engine", "handlebars");
 //         next();
 //     }
 // })
-app.use('/protected/welcome', (req, res, next) => {
+app.use("/protected/welcome", (req, res, next) => {
   //console.log(req.session.id);
   if (!req.session.email) {
-      return res.status(403).render("forbiddenAccess", {title: "Not logged in" });
+    return res
+      .status(403)
+      .render("forbiddenAccess", { title: "Not logged in" });
   } else {
-      next();
+    next();
   }
 });
-app.use('/login', (req, res, next) => {
+app.use("/login", (req, res, next) => {
   if (req.session.email) {
-    return res.redirect('/protected/welcome');
+    return res.redirect("/protected/welcome");
   } else {
     //here I',m just manually setting the req.method to post since it's usually coming from a form
-    req.method = 'POST';
+    req.method = "POST";
     next();
   }
 });
@@ -62,9 +64,8 @@ app.use((req, res, next) => {
 });
 
 app.post("/send", (req, res) => {
- //console.log("inside app.js .. /send..", req.body);
- //console.log("inside app.js .. /send. session.", req.session);
-
+  //console.log("inside app.js .. /send..", req.body);
+  //console.log("inside app.js .. /send. session.", req.session);
 
   const output = `
     <p>You have  a new email</p>
@@ -73,7 +74,58 @@ app.post("/send", (req, res) => {
     </ul>
     `;
 
-    // This is taken from - https://nodemailer.com/about/
+  // This is taken from - https://nodemailer.com/about/
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: "webProgramming546@gmail.com", // admin mail id to send confimraion booking
+      pass: "bveggegzdnaiucxt", // password - Test1234567*
+      // Will need to change the 2 step verification number ????
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
+  let toEmail = req.session.email;
+  // setup email data with unicode symbols
+  let mailOptions = {
+    from: '"Test Web 546" <webProgramming546@gmail.com>', // sender address
+    //to: "parumahajan24@gmail.com", // list of receivers {{req.session.email}}
+    to: toEmail, // list of receivers {{req.session.email}}
+    subject: "Node test Request", // Subject line
+    text: "Hello world?", // plain text body
+    html: output, // html body
+  };
+
+  // send mail with defined transport object
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return console.log(error);
+    }
+    console.log("Message sent: %s", info.messageId);
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+
+    return res.render("userLogin", {
+      msg: `Email has been sent to : ${toEmail} for further communication.`,
+    });
+  });
+});
+
+app.post("/protected/send", (req, res) => {
+  // console.log("inside app.js .. /send..", req.body);
+  //console.log("inside app.js .. /send. session.", req.session);
+
+  const output = `
+     <p>You have  a new email</p>
+     <p>Thank you for using DriveNow Car Rental. </p>
+     <p>To check your booking or update the booking, login into DriveNow web application.</p>
+     </ul>
+     `;
+
+  // This is taken from - https://nodemailer.com/about/
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -107,64 +159,13 @@ app.post("/send", (req, res) => {
     console.log("Message sent: %s", info.messageId);
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 
-    return res.render("userLogin", {
-      msg: `Email has been sent to : ${toEmail} for further communication.`,
+    res.render("welcomePage", {
+      success: `Email has been sent to : ${toEmail} for further communication And Booking is made.`,
+      firstName: xss(req.session.firstName),
+      lastName: xss(req.session.lastName),
     });
   });
 });
-
-
-app.post("/protected/send", (req, res) => {
-  // console.log("inside app.js .. /send..", req.body);
-  //console.log("inside app.js .. /send. session.", req.session);
- 
- 
-   const output = `
-     <p>You have  a new email</p>
-     <p>Thank you for using DriveNow Car Rental. </p>
-     <p>To check your booking or update the booking, login into DriveNow web application.</p>
-     </ul>
-     `;
- 
-     // This is taken from - https://nodemailer.com/about/
-   // create reusable transporter object using the default SMTP transport
-   let transporter = nodemailer.createTransport({
-     host: "smtp.gmail.com",
-     port: 587,
-     secure: false, // true for 465, false for other ports
-     auth: {
-       user: "webProgramming546@gmail.com", // admin mail id to send confimraion booking
-       pass: "bveggegzdnaiucxt", // password - Test1234567*
-       // Will need to change the 2 step verification number ????
-     },
-     tls: {
-       rejectUnauthorized: false,
-     },
-   });
-   let toEmail = req.body.email;
-   // setup email data with unicode symbols
-   let mailOptions = {
-     from: '"Test Web 546" <webProgramming546@gmail.com>', // sender address
-     //to: "parumahajan24@gmail.com", // list of receivers {{req.session.email}}
-     to: toEmail, // list of receivers {{req.session.email}}
-     subject: "Node test Request", // Subject line
-     text: "Hello world?", // plain text body
-     html: output, // html body
-   };
- 
-   // send mail with defined transport object
-   transporter.sendMail(mailOptions, (error, info) => {
-     if (error) {
-       return console.log(error);
-     }
-     console.log("Message sent: %s", info.messageId);
-     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
- 
-     res.render("welcomePage", {
-      success: `Email has been sent to : ${toEmail} for further communication And Booking is made.`,
-     });
-   });
- });
 
 configRoutes(app);
 
