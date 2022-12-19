@@ -54,8 +54,8 @@ app.use('/login', (req, res, next) => {
 });
 
 app.get("/protected/viewCars", (req, res) => {
-cars=[];
-cars.push({ src: "../../public/images/suv.jpg", name: "Suv" });
+ cars=[];
+ cars.push({ src: "../../public/images/suv.jpg", name: "Suv" });
  cars.push({ src: "../../public/images/sedan.jpg", name: "Sedan" });
  cars.push({ src: "../../public/images/bmw.jpg", name: "Bmv" });
 });

@@ -1,53 +1,95 @@
 <form id="payment-form" class="main-content" method="POST" action="/protected/payment">
-{{!--<form id="payment-form" class="main-content" method="POST" action="/protected/payment"></form>--}}
 <h2>{{title}}</h2>
-
-  <h4>Select payment option</h4>
-  <label for="cardNumber">Card Number</label>
-  <input
-    placeholder="Enter your card number"
-    id="cardNumber"
-    name="cardNumber"
-    required
-    type="tel"
-     pattern="\d*" 
-     maxlength="16"
-  />
-
-  <label for="cardName">Name</label>
-  <input
-    placeholder="Enter name on the card"
-    id="cardName"
-    name="cardName"
-    required
-  />
-
-  <label for="cardCvv">CVV</label>
-  <input
-  class="cc-cvc"
-   type="password"
-    placeholder="Enter 3 digit CVV"
-    id="cardCvv"
-    name="cardCvv"
-    required
-  />
-
-  <label for="cardExpiry">Expiry</label>
-  <input
-  class="cc-expires"
-    placeholder="Enter Expiry"
-    id="cardExpiry"
-    name="cardExpiry"
-    required
-  />
-
-  <button type="submit">Login</button>
-
-  {{#if error}}
-    <p class="error">{{error}}</p>
-  {{/if}}
-
-  <a href="/logout">Click here to Logout</a>
-  <a href="/logout">Go back to booking - right now goes back to logout</a>
-
-</form>
+<img src="../public/car.png" alt="Payment Gateway" />
+<div class="main-block">
+   <table style="padding: 15px;">
+    <thead>
+            <tr>
+                <td colspan="4" style="text-align: center;"></td>
+            </tr>
+        </thead>
+   </table>
+               <h3> Enter Card details for Payment</h3> 
+              <tbody>
+                <tr>
+                    <td>
+                         <label>Wallet/Card</label>
+                    <select placeholder="MM">
+                        <option value="1">CreditCard</option>
+                        <option value="2">Wallet</option>
+                    </td>
+                </tr>
+                <tr>
+                 <div class="container">
+                  <p><a href="/protected/Success">Click here to logout
+            <tr>
+                <td colspan="4"><button onclick="Submit">Submit</button></td>            
+            </tr>
+        </a>
+        </p>
+              <h3>Credit Card details</h3>
+          <tr>
+                <td>
+             Card Number : 
+                </td>
+                <td>
+                    <input type="number"  placeholder="xxxx-xxxx-xxxx-xxxx" 
+                    pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}"><br><br>
+                </td>
+            </tr>
+             <tr>
+                <td>
+         Name on Card : 
+                </td>
+                 <td>
+                    <input type="text" id="cname" name="cardname" placeholder="Poorvi Raut"><br><br>
+                </td>
+                
+             <tr>
+             <td>
+         Expiry Date: 
+                </td>
+                <td>
+                 <label>Month</label>
+                  <select placeholder="MM">
+                        <option value="1">01</option>
+                        <option value="2">02</option>
+                        <option value="3">03</option>
+                        <option value="4">04</option>
+                        <option value="5">05</option>
+                        <option value="6">06</option>
+                        <option value="7">07</option>
+                        <option value="8">08</option>
+                        <option value="9">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                      </select>
+                </td>
+                </tr>
+                <td>
+                 <label>Year</label>
+                    <select placeholder="YY">
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                      </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+            CVV : 
+                </td>
+                <td>
+                    <input type="password"  placeholder="xxx" 
+                    pattern="[0-9]{3}"><br><br>
+                </td>
+            </tr>
+              </tbody>
+           <tr>
+                <td colspan="4"><button onclick="Submit">Submit</button></td>            
+            </tr>
+     <p><a href="/protected/logout">Click here to logout</a></p>
+ </form>
