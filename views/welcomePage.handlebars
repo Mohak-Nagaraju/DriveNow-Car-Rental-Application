@@ -1,25 +1,33 @@
 <div id="welcome-div">
   <div id="welcome-div-content" class="main-content">
-     <img src="../public/car.png" alt="Renting a car/>
+    <h1>{{title}}</h1>
     <h1>Welcome to DriveNow Car Rental Services!</h1>
     {{msg}}
-
-    <p>Our services are Available in New Port, Hoboken, Jersey City and Journal Square</p>
-
-    <p>{{firstName}}
-      {{lastName}}, please click the option to book a car with us.
-    <a href="/protected/booking">Book a Car</a> </p>
-
-    <p>You can add money to your wallet
-      <a href="/protected/walletMoneyUpdate">Add Money to Wallet</a>
-    </p>
-
-    {{! <a href="/protected/payment">Click here for payment</a> }}
-
-    <a href="/protected/logout">Click here to Logout</a>
+    <img src="../public/car.png" alt="Renting a car" />
 
     {{#if success}}
       <p class="error">{{success}}</p>
     {{/if}}
+
+    <p>Our services are Available in New Port, Hoboken, Jersey City and Journal
+      Square</p>
+
+    <p>{{firstName}}
+      {{lastName}}, please click the option to book a car with us:
+      <a href="/protected/booking">Book a Car</a>
+    </p>
+
+    <p>You can add money to your wallet:
+      <a href="/protected/walletMoneyUpdate">Add Money to Wallet</a>
+    </p>
+
+    <p>You can modify your booking here
+      <a href="/protected/manageBooking">Manage Booking</a>
+    </p>
+
+    {{! <a href="/protected/payment">Click here for payment</a> }}
+
+    <a id="welcome-div-content-a" href="/protected/logout">Click here to Logout</a>
+
   </div>
 </div>

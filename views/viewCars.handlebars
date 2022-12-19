@@ -3,6 +3,36 @@
     <h1>{{title}}</h1>
     <img src="../public/car.png" alt="Renting a car" />
 
+    <style>
+* {
+  box-sizing: border-box;
+}
+
+.column {
+  float: left;
+  width: 33.33%;
+  padding: 5px;
+}
+
+/* Clearfix (clear floats) */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+</style>
+  <div class="row">
+  <div class="column">
+    <img src="../public/images/bmw.jpg" alt="Bmv" style="width:100%">
+  </div>
+  <div class="column">
+    <img src="../public/images/sedan.jpg" alt="Sedan" style="width:100%">
+  </div>
+  <div class="column">
+    <img src="../public/images/suv.jpg" alt="Suv" style="width:100%">
+  </div>
+</div>
+
     {{#if temp}}
       <a href="/protected/welcome">Click here to go to dashboard</a>
       <a href="/protected/logout">Click here to Logout</a>
@@ -18,20 +48,27 @@
       <p>Select the car</p>
       <form id="viewCar-form" method="POST" action="/protected/viewCars">
 
-<h1>{{ title }}</h1>
+        <label for="carSelect"></label>
+        <select name="carSelect" id="carSelect">
+          <option value="default">Please select the car</option>
+          {{#each car}}
 
-<p>The cars based on your entered location is:</p>
-<!--<h2 class="color-primary">{{searchPersonName}}</h2>-->
- {{#if people}}
- <div class="main-block">
-    <ul>
-        {{#each car}}
-           <div class="text-success" style="font-size: large;
+           {{!--<div class="text-success" style="font-size: large;
             font-weight: 700;">{{this.name}}</div>
          <img src="{{this.src}}"
-         {{!--car.push({ src: "../../public/images/suv.jpg", name: "Suv" });
-         car.push({ src: "../../public/images/sedan.jpg", name: "Sedan" });
-         car.push({ src: "../../public/images/bmw.jpg", name: "Bmv" });--}}
+         --car.push({ src='../public/images/suv.jpg', name: "Suv" });
+         car.push({ src="../public/images/sedan.jpg" , name: "Sedan" });
+         car.push({ src='../public/images/bmw.jpg', name: "Bmv" })--}}
+            <option value={{this._id}}>
+              Car Type:
+              {{this.carType}}
+              , Car brand:
+              {{this.brand}}, Car Model:
+              {{this.model}}, Car Rating:
+              {{this.rating}}, Cost per Hour:
+              {{this.costPerHour}}, Availability of car:
+              {{this.availability}}
+
             </option>
 
           {{/each}}
@@ -47,11 +84,13 @@
         </select>
         </label>
         {{!-- <a class="link" target="_blank" href="/protected/payment">{{this.carType}}</a> --}}
-
-        <button type="submit">SignUp</button>`
+        <button type="submit">Submit</button>`
       </form>
     {{/if}}
 
     {{#if error}}
       <p class="error">{{error}}</p>
     {{/if}}
+
+  </div>
+</div>

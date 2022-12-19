@@ -1,5 +1,44 @@
 <div id="success-div" class="main-content">
   <h1>{{title}}</h1>
+ <style>
+* {
+  box-sizing: border-box;
+}
+
+.column {
+  float: left;
+  width: 33.33%;
+  padding: 5px;
+}
+
+/* Clearfix (clear floats) */
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+</style>
+  <div class="row">
+  <div class="column">
+    <img src="../public/images/bmw.jpg" alt="Bmv" style="width:100%">
+  </div>
+  <div class="column">
+    <img src="../public/images/sedan.jpg" alt="Sedan" style="width:100%">
+  </div>
+  <div class="column">
+    <img src="../public/images/suv.jpg" alt="Suv" style="width:100%">
+  </div>
+</div>
+     {{!-- <div class="text-success" style="font-size: large;
+            font-weight: 700;">{{this.name}}
+         <img src="{{this.src}}"
+         car=[];
+         car.push({ src='../public/images/suv.jpg', name: "Suv" });
+         car.push({ src="../public/images/sedan.jpg" , name: "Sedan" });
+         car.push({ src='/public/images/bmw.jpg', name: "Bmv" });     
+</div>--}}
+
+
 
   {{! <a href="/protected/payment">Click here for payment</a> }}
   <h3>Congratulations!! Booking has been successfully made</h3>
@@ -30,6 +69,7 @@
 
   <form id="email-send-form" method="Post" action="send">
     {{!-- {{msg}} --}}
+    
     <p>Enter email for further communications:</p>
     <label for="email">Email</label>
     <input
