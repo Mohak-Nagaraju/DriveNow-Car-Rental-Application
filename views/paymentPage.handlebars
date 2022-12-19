@@ -1,7 +1,7 @@
 <form id="payment-form" class="main-content" method="POST" action="/protected/payment">
-  <h2>{{title}}</h2>
+  <h1>{{title}}</h1>
+   <img src="../public/car.png" alt="Renting a car" />
 
-  <h4>Select payment option</h4>
   <label for="cardNumber">Card Number</label>
   <input
     placeholder="Enter your card number"
@@ -40,13 +40,13 @@
     required
   />
 
-  <button type="submit">Login</button>
+  <button type="submit">Submit</button>
 
   {{#if error}}
     <p class="error">{{error}}</p>
   {{/if}}
 
   <a href="/logout">Click here to Logout</a>
-  <a href="/logout">Go back to booking - right now goes back to logout</a>
+   <a href="/protected/welcome">Click here to go to dashboard</a>
 
 </form>

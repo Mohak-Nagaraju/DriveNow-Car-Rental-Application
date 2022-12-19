@@ -35,8 +35,7 @@ function checkAge(age, valName) {
 
   //TO-DO: check for age 10.0???
 
-  console.log("age after parseFloat..", parseFloat(age));
-  console.log("age after modulus..", (age %1));
+  
   if (age === NaN) throw `Error: Age must be a number`;
   if (age % 1 !== 0) throw `Error: Age must not contain decimals`;
   if(age<1 || age >100) throw `Error: Enter a valid input for Age`
@@ -86,7 +85,7 @@ function checkState(state, valName) {
 
 function checkLincenceNumber(lincenceNumber, valName) {
   lincenceNumber = checkString(lincenceNumber, valName);
-  console.log("lincenceNumber.length..",lincenceNumber.length)
+  //console.log("lincenceNumber.length..",lincenceNumber.length)
   if(lincenceNumber.length !== 15) throw `Error: Licence Number should be 15 char long`;
   if (/\s/g.test(lincenceNumber))
     throw `Error: Licence Number must not contain space`;

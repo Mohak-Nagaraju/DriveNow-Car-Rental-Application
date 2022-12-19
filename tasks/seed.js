@@ -21,6 +21,9 @@ const main = async () => {
   const car3 = await cars.createCar('hatchback', 'Hoboken', 'Honda', 'Civic','$30','no');
   //const carLocation = await cars.getCarLocation( 'Hoboken');
 
+  //6-7 cars with diff location - todo
+  //create booking - todo
+
 
  
   //const parul = await users.createUser('Parul     ', 'Mahajan', 'parul123@aol.com', 'OthEr','Hoboken','NJ','25','Test123@', 'ABC123456789123');

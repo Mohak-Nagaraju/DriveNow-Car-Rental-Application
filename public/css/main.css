@@ -4,7 +4,7 @@ body {
   font-family: "Lato", sans-serif;
 }
 
-h2 {
+h1 {
   color: #1f618d;
   text-align: center;
   margin-top: 5%;
@@ -21,25 +21,11 @@ main {
   width: 300px;
 }
 
-.main-content {
-  background: rgb(209, 227, 236);
-  padding: 0 30px;
-  justify-content: center;
-  min-height: 350px;
-  margin-top: 15%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 15px;
-  box-shadow: 5px 5px 15px 5px #1f618d;
-  border-radius: 8px;
-  width: 100%;
-}
 
 div {
   height: 30px;
 }
-#forbidden-page h3 {
+#forbidden-page h1 {
   color: #1f618d;
   text-align: center;
   margin-top: 15%;
@@ -54,7 +40,7 @@ div {
   /* text-align: center;
   margin-bottom: auto; */
   background: #1f618d;
-  height: 70%;
+  height: 10%;
   cursor: pointer;
   border: none;
   color: white;
@@ -86,12 +72,20 @@ div {
   margin-bottom: 7%
 }
 
-#login-form input {
+#login-form input, #booking-form-div input, #walletMoneyUpdate-div input , #payment-form input{
   height: 30px;
   border-radius: 5px;
   border: 2px solid #5499c7;
   padding-left: 5px;
 }
+
+#viewCar-form-div select{
+  height: 30px;
+  border-radius: 5px;
+  border: 2px solid #5499c7;
+  padding-left: 5px;
+}
+
 
 #signup-form input {
   height: 30px;
@@ -110,6 +104,41 @@ div {
 #login-form p {
   color: #0b3c5d;
   text-align: center;
+}
+
+#viewCar-form-div p{
+  color: #0b3c5d;
+  text-align: center;
+}
+
+/* #viewCar-form-div{
+  width: %
+} */
+
+.main-content {
+  background: rgb(209, 227, 236);
+  padding: 0 30px;
+  justify-content: center;
+  min-height: 700px;
+  margin-top: 15%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+  box-shadow: 5px 5px 15px 5px #1f618d;
+  border-radius: 8px;
+  width: 100%;
+}
+
+#welcome-div-content p{
+  color: #0b3c5d;
+  text-align: center;
+  margin-bottom: 5px;
+
+}
+
+#welcome-div{
+  height:100px
 }
 
 #login-form .login-form-msg {
@@ -131,6 +160,14 @@ div {
   color: #0b3c5d;
 }
 
+#booking-form-div{
+  color: #0b3c5d;
+}
+
+#walletMoneyUpdate-div label{
+  color: #0b3c5d;
+}
+
 /* #signup-form  option > #default {
     text-align: center; 
     color: gray !important;
@@ -148,7 +185,7 @@ div {
 }
 
 #signup-form button,
-#login-form button {
+#login-form button, #booking-form-div button, #walletMoneyUpdate-div button,#payment-form button, #viewCar-form-div button{
   background: #1f618d;
   height: 30px;
   cursor: pointer;
@@ -157,6 +194,17 @@ div {
   outline: none;
   border-radius: 7px;
 }
+
+/* #viewCar-form-div button{
+  background: #1f618d;
+  height: 30px;
+  cursor: pointer;
+  border: none;
+  color: white;
+  outline: none;
+  border-radius: 7px;
+  margin-left: 10px;
+} */
 
 /* The alert message box */
 /* .alert {
@@ -217,7 +265,34 @@ div {
   border-radius: 3px;
   margin-bottom: 10%;
   text-align: center;
+  border-radius: 10px;
 }
+#error-div a
+{
+  background: #1f618d;
+  height: 6%;
+  cursor: pointer;
+  border: none;
+  color: white;
+  border-radius: 3px;
+  margin-bottom: 10%;
+  text-align: center;
+  border-radius: 10px;
+
+}
+#error-div img, #viewCar-form-div img{
+  margin-bottom: 70px;
+
+}
+
+#welcome-div-content-a, #booking-form-div a, #walletMoneyUpdate-div a, #payment-form a{
+  text-align: center;
+}
+
+#welcome-div-content img {
+  margin-bottom: 70px
+}
+#welcome-div-content
 
 #payment-form h4 {
   text-align: left;
