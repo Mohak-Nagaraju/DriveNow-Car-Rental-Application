@@ -60,10 +60,10 @@ returnD = rYear + "/" + rMonth + "/" + rDay
 
 
      const bookingCollection = await bookings();
-     const booking = await bookingCollection.findOne({ amountPaid: amountPaid });
-      if (booking) {
-            throw `Error: Email is already present or in use.`;
-      }
+    //  const booking = await bookingCollection.findOne({ amountPaid: amountPaid });
+    //   if (booking) {
+    //         throw `Error: Email is already present or in use.`;
+    //   }
       
 let newBooking = {
     
