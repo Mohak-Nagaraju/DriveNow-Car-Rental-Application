@@ -3,6 +3,10 @@
 # useful commands 
 For Seeding the Database: npm run seed
 
+# Each contribution
+
+We faced Git merge push/pull issues, due to which we had to create two branches ( like parul and parulNew , mohak and mohakNew, etc). Please consider thos ecommits as well
+
 
 # DriveNow Car Rental - 
 At DriveNow, we make it possible for you to pick the car based on the 
