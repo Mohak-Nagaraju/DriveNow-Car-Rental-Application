@@ -68,8 +68,7 @@ app.post("/send", (req, res) => {
   //console.log("inside app.js .. /send. session.", req.session);
 
   const output = `
-    <p>You have  a new email</p>
-    <p>Thank you for using DriveNow Car Rental. </p>
+    <p>Thank you for registering with DriveNow Car Rental. </p>
     <p>To check your booking or update the booking, login into DriveNow web application.</p>
     </ul>
     `;
@@ -95,7 +94,7 @@ app.post("/send", (req, res) => {
     from: '"Test Web 546" <webProgramming546@gmail.com>', // sender address
     //to: "parumahajan24@gmail.com", // list of receivers {{req.session.email}}
     to: toEmail, // list of receivers {{req.session.email}}
-    subject: "Node test Request", // Subject line
+    subject: "DriveNow Car Rental", // Subject line
     text: "Hello world?", // plain text body
     html: output, // html body
   };
@@ -119,7 +118,6 @@ app.post("/protected/send", (req, res) => {
   //console.log("inside app.js .. /send. session.", req.session);
 
   const output = `
-     <p>You have  a new email</p>
      <p>Thank you for using DriveNow Car Rental. </p>
      <p>To check your booking or update the booking, login into DriveNow web application.</p>
      </ul>
@@ -146,7 +144,7 @@ app.post("/protected/send", (req, res) => {
     from: '"Test Web 546" <webProgramming546@gmail.com>', // sender address
     //to: "parumahajan24@gmail.com", // list of receivers {{req.session.email}}
     to: toEmail, // list of receivers {{req.session.email}}
-    subject: "Node test Request", // Subject line
+    subject: "DriveNow Car Rental", // Subject line
     text: "Hello world?", // plain text body
     html: output, // html body
   };
