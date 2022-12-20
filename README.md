@@ -3,6 +3,10 @@
 # useful commands 
 For Seeding the Database: npm run seed
 
+*Run 'npm install' to install -all of the necessary packages.
+
+*Finally, run 'npm start'! The website is at: http://localhost:3000
+
 # Each contribution
 
 We faced Git merge push/pull issues, due to which we had to create two branches ( like parul and parulNew , mohak and mohakNew, etc). Please consider thos ecommits as well
