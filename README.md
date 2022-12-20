@@ -7,6 +7,8 @@ For Seeding the Database: npm run seed
 
 *Finally, run 'npm start'! The website is at: http://localhost:3000
 
+Seeding data part has been done. Correct seed side file is in zipped code, due to issue with pull request ( were facing fast forwarding wrror) could not push the final seed ino gitHub
+
 # Each contribution
 
 We faced Git merge push/pull issues, due to which we had to create two branches ( like parul and parulNew , mohak and mohakNew, etc). Please consider thos ecommits as well
