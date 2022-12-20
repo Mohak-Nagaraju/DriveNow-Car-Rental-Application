@@ -398,26 +398,11 @@ router
             error: error.message ? error.message : error,
           });
         }
-        // if (!cars) {
-        //   console.log("inside no car found by location", cars);
-        //   return res.status(400).render("error", {
-        //     title: "Issue with the car availaibility",
-        //     error: error.message ? error.message : error,
-        //   });
-        // }
-        // //throw `Error: No Car with the location: ${req.session.pickUpLocation}`;
-        // // console.log("car data..", cars);
-
-        // return res
-        //   .status(200)
-        //   .render("viewCars", { title: "Select Car", car: cars });
-
-        //go to payment --> store the selected car id( from where we are routing we have to send the car_id) to that page
       } else {
         return res.status(403).render("error", {
           title: "Issue with Booking deatils",
           error:
-            "Cannot access Car Information/selection page until you have entered the Boooking details",
+            "Cannot access Car Selection page until you have entered the Boooking details",
         });
       }
     } else {
@@ -469,12 +454,13 @@ router
     }
 
     req.session.cost = total;
+    req.session.cars = "true";
 
     if (carSelectedDetails.availability === "no") {
       return res.status(500).render("error", {
         title: "Payment thru Wallet",
-        error: 'Error: Can not book an unavailable car.',
-        temp: 'true'
+        error: "Error: Can not book an unavailable car.",
+        temp: "true",
       });
     }
 
@@ -518,152 +504,156 @@ router
   .route("/protected/payment")
   .get(async (req, res) => {
     if (xss(req.session.email)) {
-      // might have to check if booking is done successfull or not
-      // console.log("inside if .. emai -", req.body);
-      res.render("paymentPage", { title: "Payment" });
-      return;
+      if(xss(req.session.cars) === 'true'){
+        if (xss(req.session.booking) === "true") {
+          res.render("paymentPage", { title: "Payment" });
+          return;
+        }
+      }else{
+        return res.status(403).render("error", {
+          title: "Unauthorized Payment",
+          error:
+            "Cannot access Payment page until you have a car selected",
+        });
+      }
     }
-    return res.render("userLogin", {
-      title: "Enter details to login",
-    });
+    return res
+      .status(403)
+      .render("forbiddenAccess", { title: "Forbidden Access" });
   })
   .post(async (req, res) => {
-    let cardNumber = xss(req.body.cardNumber);
-    let name = xss(req.body.cardName);
-    let cvv = xss(req.body.cardCvv);
-    let expriy = xss(req.body.cardExpiry);
-    //let amount = xss(req.body.moneyAdded);
+      let cardNumber = xss(req.body.cardNumber);
+      let name = xss(req.body.cardName);
+      let cvv = xss(req.body.cardCvv);
+      let expriy = xss(req.body.cardExpiry);
+      //let amount = xss(req.body.moneyAdded);
 
-    // console.log('cardNumber..',cardNumber)
-    // console.log('name..',name)
-    // console.log('cvv..',cvv)
-    // console.log('ex..',expriy)
-    // console.log('am..',amount)
+      if (!cardNumber || !name || !cvv || !expriy) {
+        return res.status(400).render("viewCars", {
+          title: "Wallet",
+          error: "Please enter all the values to add money to wallet",
+          temp: "true",
+        });
+      }
 
-    if (!cardNumber || !name || !cvv || !expriy) {
-      return res.status(400).render("viewCars", {
-        title: "Wallet",
-        error: "Please enter all the values to add money to wallet",
-        temp: 'true'
-      });
-    }
+      if (name.trim().length === 0 || typeof name !== "string") {
+        return res.status(400).render("viewCars", {
+          title: "Payment thru Credit Card",
+          error: "Please enter valid name",
+          temp: "true",
+        });
+      }
+      let nameSpecChar = validationForm.checkSpecialCharWithNumber(name);
+      if (nameSpecChar === true) {
+        return res.status(400).render("paymentPage", {
+          title: "Payment thru Credit Card",
+          error: "Please enter valid name",
+          temp: "true",
+          totalCost: req.session.cost
+        });
+      }
 
-    if (name.trim().length === 0 || typeof name !== "string") {
-      return res.status(400).render("viewCars", {
-        title: "Payment thru Credit Card",
-        error: "Please enter valid name",
-        temp: 'true'
-      });
-    }
-    let nameSpecChar = validationForm.checkSpecialCharWithNumber(name);
-    if (nameSpecChar === true) {
-      return res.status(400).render("viewCars", {
-        title: "Payment thru Credit Card",
-        error: "Please enter valid name",
-        temp: 'true'
-      });
-    }
+      if (
+        cardNumber.trim().length === 0 ||
+        cardNumber.trim().length !== 16 ||
+        typeof cardNumber !== "string"
+      ) {
+        return res.status(400).render("viewCars", {
+          title: "Payment thru Credit Card",
+          error: "Please enter valid card number",
+          temp: "true",
+        });
+      }
 
-    if (
-      cardNumber.trim().length === 0 ||
-      cardNumber.trim().length !== 16 ||
-      typeof cardNumber !== "string"
-    ) {
-      return res.status(400).render("viewCars", {
-        title: "Payment thru Credit Card",
-        error: "Please enter valid card number",
-        temp: 'true'
-      });
-    }
-    // //if(cardNumber.trim().replace())
-    // let validCardNumber = cardNumber
-    //   .trim()
-    //   .replace(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?/]+/gi, "");
-    if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?/]+/g.test(cardNumber)) {
-      //throw "Error: City must not contain any special chars or numbers";
-      return res.status(400).render("viewCars", {
-        title: "Payment thru Credit Card",
-        error: "Please enter valid card number with no special char",
-        temp: 'true'
-      });
-    }
+      if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?/]+/g.test(cardNumber)) {
+        //throw "Error: City must not contain any special chars or numbers";
+        return res.status(400).render("viewCars", {
+          title: "Payment thru Credit Card",
+          error: "Please enter valid card number with no special char",
+          temp: "true",
+        });
+      }
 
-    if (/\s/g.test(cardNumber)) {
-      return res.status(400).render("viewCars", {
-        title: "Payment thru Credit Card",
-        error: "Please enter valid card number with no spaces",
-        temp: 'true'
-      });
-    }
+      if (/\s/g.test(cardNumber)) {
+        return res.status(400).render("viewCars", {
+          title: "Payment thru Credit Card",
+          error: "Please enter valid card number with no spaces",
+          temp: "true",
+        });
+      }
 
-    //cvv validation
-    // let regex = new RegExp(/^[0-9]{3,4}$/);
+      //cvv validation
+      // let regex = new RegExp(/^[0-9]{3,4}$/);
 
-    if (
-      cvv.trim().length === 0 ||
-      cvv.trim().length > 3 ||
-      typeof cvv !== "string" ||
-      cvv < 0
-    ) {
-      return res.status(400).render("viewCars", {
-        title: "Payment thru Credit Card",
-        error: "Please enter valid 3 digit cvv",
-        temp: 'true'
-      });
-    }
-    cvv = cvv.trim();
-    if (!/^[0-9]{3}$/.test(cvv)) {
-      return res.status(400).render("viewCars", {
-        title: "Payment thru Credit Card",
-        error: "Please enter valid 3 digit cvv",
-        temp: 'true'
-      });
-    }
-    let validCvv = cvv.trim().replace(/[@#$%^&*_+\=\\`|<>\/]/gi, "");
-    if (cvv.trim() !== validCvv) {
-      //throw "Error: City must not contain any special chars or numbers";
-      return res.status(400).render("viewCars", {
-        title: "Payment thru Credit Card",
-        error: "Please enter valid cvv number with no special char",
-        temp: 'true'
-      });
-    }
+      if (
+        cvv.trim().length === 0 ||
+        cvv.trim().length > 3 ||
+        typeof cvv !== "string" ||
+        cvv < 0
+      ) {
+        return res.status(400).render("viewCars", {
+          title: "Payment thru Credit Card",
+          error: "Please enter valid 3 digit cvv",
+          temp: "true",
+        });
+      }
+      cvv = cvv.trim();
+      if (!/^[0-9]{3}$/.test(cvv)) {
+        return res.status(400).render("viewCars", {
+          title: "Payment thru Credit Card",
+          error: "Please enter valid 3 digit cvv",
+          temp: "true",
+        });
+      }
+      //let validCvv = cvv.trim().replace(/[@#$%^&*_+\=\\`|<>\/]/gi, "");
 
-    if (
-      /^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$/.test(expriy) === false ||
-      Number(expriy.charAt(3) + expriy.charAt(4)) < 22
-    ) {
-      return res.status(400).render("viewCars", {
-        title: "Payment thru Credit Card",
-        error: `Please enter valid expiry number in the format - MM/YY - you entered - ${expriy}`,
-        temp: 'true'
+      if (/[@#$%^&*_+\=\\`|<>\/]/g.test(cvv)) {
+        //throw "Error: City must not contain any special chars or numbers";
+        return res.status(400).render("viewCars", {
+          title: "Payment thru Credit Card",
+          error: "Please enter valid cvv number with no special char",
+          temp: "true",
+        });
+      }
+
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      let year = yyyy.toString().slice(2);
+
+      if (
+        /^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$/.test(expriy) === false ||
+        Number(expriy.charAt(3) + expriy.charAt(4)) < year
+      ) {
+        return res.status(400).render("viewCars", {
+          title: "Payment thru Credit Card",
+          error: `Please enter valid expiry number in the format - MM/YY - you entered - ${expriy}`,
+          temp: "true",
+        });
+      }
+
+      let userDetails = await userData.getUserByEmail(xss(req.session.email));
+      req.session.userId = userDetails._id.toString();
+      let bookingDetails = await bookingData.createBooking(
+        xss(userDetails._id.toString()),
+        xss(req.session.carSelectedId),
+        xss(req.session.cost), // amountPaid - TO DO
+        xss(req.session.pickUpDate),
+        xss(req.session.pickUpTime),
+        xss(req.session.returnTime),
+        xss(req.session.returnDate),
+        xss(req.session.pickUpLocation)
+      );
+
+      //return res.status(200).redirect("/sendEmail");
+      return res.render("successBooking", {
+        title: "Success!!",
+        pickUpDate: xss(req.session.pickUpDate),
+        pickUpTime: xss(req.session.pickUpTime),
+        returnTime: xss(req.session.returnTime),
+        returnDate: xss(req.session.returnDate),
+        pickUpLocation: xss(req.session.pickUpLocation),
       });
-    }
-
-    let userDetails = await userData.getUserByEmail(xss(req.session.email));
-    req.session.userId = userDetails._id.toString();
-    let bookingDetails = await bookingData.createBooking(
-      xss(userDetails._id.toString()),
-      xss(req.session.carSelectedId),
-      xss(req.session.cost), // amountPaid - TO DO
-      xss(req.session.pickUpDate),
-      xss(req.session.pickUpTime),
-      xss(req.session.returnTime),
-      xss(req.session.returnDate),
-      xss(req.session.pickUpLocation)
-    );
-
-    // put eveything in session
-    //console.log("booking detaiks...", bookingDetails);
-    //return res.status(200).redirect("/sendEmail");
-    return res.render("successBooking", {
-      title: "Success!!",
-      pickUpDate: xss(req.session.pickUpDate),
-      pickUpTime: xss(req.session.pickUpTime),
-      returnTime: xss(req.session.returnTime),
-      returnDate: xss(req.session.returnDate),
-      pickUpLocation: xss(req.session.pickUpLocation),
-    });
+    
   });
 
 router.route("/protected/welcome").get(async (req, res) => {
@@ -673,12 +663,14 @@ router.route("/protected/welcome").get(async (req, res) => {
       //console.log("inside protected welcome success money added");
       req.session.moneyAdded = "false";
       return res.status(200).render("welcomePage", {
+        title: "Welcome",
         firstName: xss(req.session.firstName),
         lastName: xss(req.session.lastName),
         success: "Money Added to wallet",
       });
     } else {
       return res.status(200).render("welcomePage", {
+        title: "Welcome",
         firstName: xss(req.session.firstName),
         lastName: xss(req.session.lastName),
       });
@@ -702,15 +694,31 @@ router.route("/protected/welcome").get(async (req, res) => {
 }); */
 
 router.route("/protected/logout").get(async (req, res) => {
+  //if (xss(req.session.email)) {
+  console.log("inside logout");
+  req.session.destroy();
+  res.render("logout", {
+    title: "Logged Out",
+    temp: "false",
+  });
+
+  //return res.redirect('/protected/logoutConfirm');
+  // } else {
+  // whhere should it go? - TO DO
+  // }
+});
+
+router.route("/protected/logoutConfirm").get(async (req, res) => {
   //code here for GET
   if (xss(req.session.email)) {
     req.session.destroy();
     res.render("logout", {
-      title: "Logged Out",
+      title: "Log Out",
     });
     return;
   } else {
-    // whhere should it go? - TO DO
+    return res.redirect("/protected/logout");
+    // whhere should it go? - TO DO - that is not in session
   }
 });
 
@@ -745,7 +753,7 @@ router
     // console.log('am..',amount)
 
     if (!cardNumber || !name || !cvv || !expriy) {
-      return res.status(400).render("viewCars", {
+      return res.status(400).render("walletMoneyUpdatePage", {
         title: "Wallet",
         error: "Please enter all the values to add money to wallet",
       });
@@ -886,15 +894,98 @@ router
           error: "You have no Booking currently!",
         });
       }
-
-
     }
     return res
       .status(403)
       .render("forbiddenAccess", { title: "Forbidden Access" });
   })
   .post(async (req, res) => {
+    if (xss(req.session.email)) {
+    req.session.bookSelectId = xss(req.body.bookSelect);
+    req.session.bookingChange = xss(req.body.bookingChange);
+    
 
+    let bookingSelectedDetails = await bookingData.getBookingById(
+      xss(req.session.bookSelectId.toString())
+    );
+
+    if (!xss(req.body.bookSelect)) {
+      return res.status(400).render("manageBooking", {
+        title: "Please select a booking to make changes",
+        error: error.message ? error.message : error,
+      });
+    }
+
+    if (xss(req.session.bookingChange) === "updateBooking") {
+      return res.status(200).render("updateBooking", {
+        title: "Update Booking",
+      });
+    } else if(xss(req.session.bookingChange) === "giveRating"){
+      return res.status(200).render("carRating", {
+        title: "Give Rating ",
+      });
+    }
+     else if(xss(req.session.bookingChange) === "cancelBooking"){
+      let picktime = bookingSelectedDetails.pickUpTime;
+      let pickDate = bookingSelectedDetails.pickUpDate;
+      let retDate = bookingSelectedDetails.returnDate;
+      let retTime = bookingSelectedDetails.returnTime ;
+      let pickuptime = bookingSelectedDetails.pickUpTime;
+      let pickupDate = bookingSelectedDetails.pickUpDate;
+      pickupDate = pickupDate.split("-");
+      pickupDate = pickupDate[2].toString();
+      var CurrentTime = new Date().toLocaleTimeString('en-US', { hour12: false, 
+        hour: "numeric", 
+        minute: "numeric"}).toString();
+        CurrentTime = CurrentTime.split(":");
+        CurrentTime = Number(CurrentTime[0]);
+        pickuptime = pickuptime.split(":");
+        pickuptime = Number(pickuptime[0]);
+        let timeDiff = Math.abs(CurrentTime - pickuptime);
+
+        var CurrentDate = new Date().getDate().toString();
+        
+    
+       
+        if(timeDiff <= 1 && CurrentDate === pickupDate){
+          return res.status(400).render("manageBooking", {
+            title: "Cannot cancel booking 1hr prior to pickup Time",
+            error: "Cannot cancel booking 1hr prior to pickup Time"
+          });
+        }
+
+        let carSelectedDetails = await carData.getCarById(
+          xss(bookingSelectedDetails.carDetails[0]._id.toString())
+        );
+        
+        try{
+          let deleteBooking = await bookingData.deleteBookingDetails(req.session.bookSelectId.toString());
+        }catch(e){
+          return res.status(400).render("manageBooking", {
+            title: "Error",
+            error: e,
+          });
+
+        } 
+        try{
+          let updateCar = await carData.updateCarAvailabilty(carSelectedDetails._id.toString());
+        }catch(e){
+          return res.status(400).render("manageBooking", {
+            title: "Error",
+            error: e,
+          });
+
+        }          
+      
+      return res.status(200).render("cancelBooking", {
+        title: "Cancel Booking",
+        pickUpTime: picktime,
+        pickUpDate: pickDate,
+        returnDate: retDate,
+        returnTime: retTime
+      });
+    }
+  }
   });
 
 router
@@ -903,7 +994,7 @@ router
     if (xss(req.session.email)) {
       let userDetails = await userData.getUserByEmail(xss(req.session.email));
       let availableWalletMoney = req.session.cost - userDetails.walletAmount;
-     
+
       res.render("walletMoneyUpdatePage", {
         title: "Wallet",
         availableWalletMoney: availableWalletMoney,
@@ -915,25 +1006,24 @@ router
       .render("forbiddenAccess", { title: "Forbidden Access" });
   })
   .post(async (req, res) => {
-  //console.log('session...',req.session);
-  let userDetails = await userData.getUserByEmail(xss(req.session.email));
-  req.session.userId = userDetails._id.toString();
-  let pastWalletAmount = userDetails.walletAmount;
-  pastWalletAmount = parseFloat(pastWalletAmount);
- 
-let totalWalletAmount = pastWalletAmount - req.session.cost;
+    //console.log('session...',req.session);
+    let userDetails = await userData.getUserByEmail(xss(req.session.email));
+    req.session.userId = userDetails._id.toString();
+    let pastWalletAmount = userDetails.walletAmount;
+    pastWalletAmount = parseFloat(pastWalletAmount);
 
+    let totalWalletAmount = pastWalletAmount - req.session.cost;
 
-  const updatedUser = {
-    walletAmount: totalWalletAmount.toString(),
-  };
-  const userCollection = await users();
-  const updatedInfo = await userCollection.updateOne(
-    { _id: ObjectId(req.session.userId) },
-    { $set: updatedUser }
-  );
-  let bookingDetails = await bookingData.createBooking(
-    xss(userDetails._id.toString()),
+    const updatedUser = {
+      walletAmount: totalWalletAmount.toString(),
+    };
+    const userCollection = await users();
+    const updatedInfo = await userCollection.updateOne(
+      { _id: ObjectId(req.session.userId) },
+      { $set: updatedUser }
+    );
+    let bookingDetails = await bookingData.createBooking(
+      xss(userDetails._id.toString()),
       xss(req.session.carSelectedId),
       xss(req.session.cost), // amountPaid - TO DO
       xss(req.session.pickUpDate),
@@ -956,6 +1046,189 @@ let totalWalletAmount = pastWalletAmount - req.session.cost;
     });
   });
 
+  router
+  .route("/protected/updateBooking")
+  .post(async (req, res) => {
+    if (xss(req.session.email)) {
+      let pickUpDate = xss(req.body.pickUpDate);
+      let pickUpTime = xss(req.body.pickUpTime);
+      let returnTime = xss(req.body.returnTime);
+      let returnDate = xss(req.body.returnDate);
+  
+
+      if (
+        !pickUpDate ||
+        !pickUpTime ||
+        !returnTime ||
+        !returnDate 
+      ) {
+        return res.status(400).render("updateBooking", {
+          title: "updateBooking",
+          error: "Please enter all the values to update Booking",
+        });
+      }
+
+      try {
+        validationForm.checkString(pickUpDate);
+        validationForm.checkString(pickUpTime);
+        validationForm.checkString(returnDate);
+        validationForm.checkString(returnTime);
+  
+      } catch (error) {
+        return res.status(400).render("updateBooking", {
+          title: "updateBooking",
+          error: error.message ? error.message : error,
+        });
+      }
+
+      validationForm.trimming(pickUpDate);
+      validationForm.trimming(pickUpTime);
+      validationForm.trimming(returnDate);
+      validationForm.trimming(returnTime);
+    
+
+      if (
+        pickUpDate.length === 0 ||
+        pickUpTime.length === 0 ||
+        returnDate.length === 0 ||
+        returnTime.length === 0 
+       
+      ) {
+        return res.status(400).render("updateBooking", {
+          title: "updateBooking",
+          error: error.message ? error.message : error,
+        });
+      }
+
+      //let s = "2021-12-16"
+      split = pickUpDate.split("-");
+      const today = new Date();
+      const year = today.getFullYear();
+      let month = today.getMonth() + 1;
+      let day = today.getDate();
+      if (split[2] < day || split[1] < month || split[0] < year) {
+        return res.status(403).render("updateBooking", {
+          title: "updateBooking",
+          error: "Error: Cannot select PickUp Date in the past",
+        });
+      }
+
+      split2 = returnDate.split("-");
+      if (
+        split2[2] < split[2] ||
+        split2[1] < split[1] ||
+        split2[0] < split[0]
+      ) {
+        return res.status(403).render("updateBooking", {
+          title: "updateBooking",
+          error: `Error: Cannot select Return Date (${returnDate}) before the PickUp date (${pickUpDate})`,
+        });
+      }
+
+      if (pickUpDate === returnDate) {
+        let pickUpTimeSplit = pickUpTime.split(":");
+        let returnTimeSplit = returnTime.split(":");
+
+        if (pickUpTimeSplit[0] >= returnTimeSplit[0]) {
+          if (pickUpTimeSplit[1] >= returnTimeSplit[1]) {
+            return res.status(403).render("updateBooking", {
+              title: "updateBooking",
+              error: `Error: Cannot select return time (${returnTime}) before or same as the pickup time (${pickUpTime})`,
+            });
+          }
+        }
+      }
+
+
+
+      req.session.updatepickUpDate = pickUpDate;
+      req.session.updatepickUpTime = pickUpTime;
+      req.session.updatereturnTime = returnTime;
+      req.session.updatereturnDate = returnDate;
+  
+      
+      if(req.session.pickUpDate === req.session.updatepickUpDate && 
+        req.session.returnDate === req.session.updatereturnDate && 
+        req.session.updatepickUpTime === req.session.pickUpTime && 
+        req.session.updatereturnTime === req.session.returnTime )
+        {
+          return res.status(403).render("updateBooking", {
+            title: "updateBooking",
+            error: `Error: Cannot enter the same details as previous booking` 
+
+      });
+    }
+    if(req.session.pickUpDate === req.session.updatepickUpDate){
+      if(req.session.updatepickUpTime === req.session.pickUpTime && 
+        req.session.updatereturnTime === req.session.returnTime){
+          return res.status(403).render("updateBooking", {
+            title: "updateBooking",
+            error: `Error: Cannot have the same pickUp and returnTime as previous booking` });
+        }
+    }
+    if(req.session.returnDate === req.session.updatereturnDate){
+      if(req.session.updatepickUpTime === req.session.pickUpTime && 
+        req.session.updatereturnTime === req.session.returnTime){
+          return res.status(403).render("updateBooking", {
+            title: "updateBooking",
+            error: `Error: Cannot have the same pickUp and returnTime as previous booking` });
+        }
+    }
+    let bookdetails = await bookingData.getBookingById(req.session.bookSelectId.toString());
+   
+    let carSelectedDetails = await carData.getCarById(
+      xss(bookdetails.carDetails[0]._id.toString())
+    );
+
+    let costPerHour = carSelectedDetails.costPerHour;
+    let pickUpTimeSplit = req.session.updatepickUpTime.split(":"); //[h,m]
+    let returnTimeSplit = req.session.updatereturnTime.split(":");
+    let pickDate = req.session.updatepickUpDate.split("-");
+    let retDate = req.session.updatereturnDate.split("-");
+    if (pickDate[2] === retDate[2]) {
+      if (pickUpTimeSplit[1] < returnTimeSplit[1]) {
+        let hours =
+          Math.abs(
+            parseFloat(pickUpTimeSplit[0]) - parseFloat(returnTimeSplit[0])
+          ) + 1;
+        let cost = costPerHour.slice(1);
+        var updatedtotal = Number(cost) * hours;
+      } else {
+        let hours = Math.abs(
+          parseFloat(pickUpTimeSplit[0]) - parseFloat(returnTimeSplit[0])
+        );
+        let cost = costPerHour.slice(1);
+        var updatedtotal = Number(cost) * hours;
+      }
+    } else {
+      let diff = Number(retDate[2]) - Number(pickDate[2]);
+      let cost = costPerHour.slice(1);
+      var updatedtotal = Number(cost) * diff * 24;
+    }
+
+    req.session.updatecost = updatedtotal.toString();
+    req.session.updatepickUpDate = pickUpDate;
+    req.session.updatepickUpTime = pickUpTime;
+    req.session.updatereturnTime = returnTime;
+    req.session.updatereturnDate = returnDate;
+  
+try{
+  let updateBooking = await bookingData.updateBooking(req.session.bookSelectId.toString(),req.session.updatecost,req.session.updatepickUpDate, req.session.updatepickUpTime,req.session.updatereturnTime,req.session.updatereturnDate );
+}catch(e){
+  return res.status(403).render("updateBooking", {
+    title: "updateBooking",
+    error: e });
+  
+}
+return res.render("updateSucess", {
+  title: "Success!!",
+  pickUpDate: xss(req.session.updatepickUpDate),
+  pickUpTime: xss(req.session.updatepickUpTime),
+  returnTime: xss(req.session.updatereturnTime),
+  returnDate: xss(req.session.updatereturnDate),
+});
+  }
+  });
 
 
 module.exports = router;

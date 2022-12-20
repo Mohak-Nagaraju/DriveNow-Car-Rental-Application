@@ -145,11 +145,39 @@ if(availability != "yes" && availability != "no"){
     return particularUser;
   
   };
+  const updateCarAvailabilty = async (carId) => {
+    carId = carId.trim();
+   validation.checkId(carId);
+    const carCollection = await cars();
+   if(!carId){
+    throw "Error: Please enter the carId";
+   }
+   const particularUser = await getCarById(carId);
+  if (particularUser === null) throw "Error: No car with that id";
+ 
+
+
+  const updatedUser = {
+    availability: "yes",
+  };
+
+console.log("carId", carId);
+  const updatedInfo = await carCollection.updateOne(
+    { _id: ObjectId(carId) },
+    { $set: updatedUser }
+  );
+  if (updatedInfo.modifiedCount === 0) {
+    throw "could not update user successfully";
+  }
+ 
+  
+  };
 
   module.exports = {
     createCar,
     getCarById,
     getAllCars,
-    getCarLocation
+    getCarLocation,
+    updateCarAvailabilty
     
   };

@@ -5,8 +5,7 @@ function checkEmail(email) {
     throw `Error: Email can not be just empty spaces`;
 
   const emailCorrectPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-  if (!emailCorrectPattern.test(email))
-    throw "Error: Invalid email address";
+  if (!emailCorrectPattern.test(email)) throw "Error: Invalid email address";
 
   return email;
 }
@@ -35,16 +34,15 @@ function checkAge(age, valName) {
 
   //TO-DO: check for age 10.0???
 
-  
   if (age === NaN) throw `Error: Age must be a number`;
   if (age % 1 !== 0) throw `Error: Age must not contain decimals`;
-  if(age<1 || age >100) throw `Error: Enter a valid input for Age`
+  if (age < 1 || age > 100) throw `Error: Enter a valid input for Age`;
   return age;
 }
 
 function checkGender(gender, valName) {
   gender = checkString(gender, valName);
-  gender  = gender.toLowerCase();
+  gender = gender.toLowerCase();
   if (
     gender != "female" &&
     gender != "male" &&
@@ -86,10 +84,11 @@ function checkState(state, valName) {
 function checkLincenceNumber(lincenceNumber, valName) {
   lincenceNumber = checkString(lincenceNumber, valName);
   //console.log("lincenceNumber.length..",lincenceNumber.length)
-  if(lincenceNumber.length !== 15) throw `Error: Licence Number should be 15 char long`;
+  if (lincenceNumber.length !== 15)
+    throw `Error: Licence Number should be 15 char long`;
   if (/\s/g.test(lincenceNumber))
     throw `Error: Licence Number must not contain space`;
- 
+
   return lincenceNumber;
 }
 
@@ -99,6 +98,26 @@ function checkLincenceNumber(lincenceNumber, valName) {
 
   const loginForm = $("#login-form");
   const registerForm = $("#signup-form");
+
+  /*
+    AJAX form to logout user 
+    */
+  $("#logout-form").submit(function (event) {
+    event.preventDefault();
+
+    var requestConfig = {
+      method: "GET",
+      url: "/protected/logout",
+    };
+
+    
+    $.ajax(requestConfig).then(function (responseMessage) {
+      console.log('responseMessage',responseMessage)
+      $("html").html(responseMessage);
+    });
+    
+    //req.session.destroy();
+  });
 
   //login form validation
   $(loginForm).submit(function (event) {
@@ -155,11 +174,8 @@ function checkLincenceNumber(lincenceNumber, valName) {
     }
   });
 
-
   //booking validtions 
-
   //payemnt validation - card validation
-
   /*function checkCardNumber(cardNumber)
   {
     if (typeof email != "Number") throw `Error: ${cardNumber} must be a Number`;

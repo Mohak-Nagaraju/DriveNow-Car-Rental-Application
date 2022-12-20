@@ -1,0 +1,27 @@
+<div id="booking-div">
+  <div id="booking-form-div">
+
+    <form
+      id="booking-form"
+      class="main-content"
+      method="POST"
+      action="/protected/carRating"
+    >
+      <h1>{{title}}</h1>
+      <img src="../public/car.png" alt="Renting a car" />
+
+      <label for="carRating">Rate your car from 1 to 5</label>
+      <input type="text" name="carRating" id="carRating" />
+
+      <button type="submit">Submit</button>
+
+      <a href="/protected/welcome">Click here to go to dashboard</a>
+      <a href="/protected/logout">Click here to Logout</a>
+
+      {{#if error}}
+        <p class="error">{{{error}}}</p>
+      {{/if}}
+    </form>
+
+  </div>
+</div>

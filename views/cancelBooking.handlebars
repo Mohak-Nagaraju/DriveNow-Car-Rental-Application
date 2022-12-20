@@ -1,0 +1,50 @@
+<div id="success-div" class="main-content">
+  <h1>{{title}}</h1>
+
+  {{! <a href="/protected/payment">Click here for payment</a> }}
+  <h3>Your Booking is cancelled!</h3>
+
+  <p>Booking Details:</p>
+  <li>
+    Pickup Date :
+    {{pickUpDate}}
+  </li>
+  <li>
+    Pickup Time :
+    {{pickUpTime}}
+  </li>
+  <li>
+    Return Date :
+    {{returnDate}}
+  </li>
+  <li>
+    Return Time :
+    {{returnTime}}
+  </li>
+  
+
+  {{! ask for sending confirmation email ??}}
+
+  <form id="email-send-form" method="Post" action="send">
+    {{!-- {{msg}} --}}
+    <p>Enter email for further communications:</p>
+    <label for="email">Email</label>
+    <input
+      placeholder="name@example.com"
+      name="email"
+      id="email"
+      required
+      pattern="[^ @]*@[^ @]*"
+    />
+    <button type="submit">Submit</button>
+
+  </form>
+
+  <a href="/protected/welcome">Click here to go to dashboard</a>
+  <a href="/protected/logout">Click here to Logout</a>
+
+  {{#if success}}
+    <p class="error">{{success}}</p>
+  {{/if}}
+
+</div>

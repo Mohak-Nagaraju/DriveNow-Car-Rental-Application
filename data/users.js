@@ -459,7 +459,7 @@ const updateUserWallet = async (
   pastWalletAmount = parseFloat(pastWalletAmount);
   walletAmount = parseFloat(walletAmount);
 let totalWalletAmount = pastWalletAmount + walletAmount;
-console.log('walletAmount..2',totalWalletAmount.toString())
+
 
   const updatedUser = {
     walletAmount: totalWalletAmount.toString(),

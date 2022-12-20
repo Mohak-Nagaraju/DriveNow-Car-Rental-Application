@@ -5,11 +5,11 @@
       id="booking-form"
       class="main-content"
       method="POST"
-      action="/protected/booking"
+      action="/protected/updateBooking"
     >
       <h1>{{title}}</h1>
-      
-  <img src="../public/car.png" alt="Renting a car" />
+      <img src="../public/car.png" alt="Renting a car" />
+
       <label for="pickUpDate">Pick-Up Date</label>
       <input type="date" name="pickUpDate" id="pickUpDate" />
 
@@ -22,13 +22,10 @@
       <label for="returnTime">Return Time</label>
       <input type="time" name="returnTime" id="returnTime" />
 
-      <label for="pickUpLocation">Location</label>
-      <input type="text" name="pickUpLocation" id="pickUpLocation" />
-
       <button type="submit">Submit</button>
-
+  </form>
       <a href="/protected/welcome">Click here to go to dashboard</a>
-      <a href="/protected/logoutConfirm">Click here to Logout</a>
+      <a href="/protected/logout">Click here to Logout</a>
 
       {{#if error}}
         <p class="error">{{{error}}}</p>
