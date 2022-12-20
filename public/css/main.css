@@ -195,6 +195,19 @@ div {
   border-radius: 7px;
 }
 
+#logout-form button{
+  background: #1f618d;
+  height: 25px;
+  width: 297px;
+  cursor: pointer;
+  border: none;
+  color: white;
+  outline: none;
+  border-radius: 7px;
+  margin-left: 14px
+
+}
+
 /* #viewCar-form-div button{
   background: #1f618d;
   height: 30px;
