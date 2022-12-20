@@ -182,7 +182,7 @@ const getUserById = async (userId) => {
   userId = userId.trim();
   validation.checkId(userId);
   const userCollection = await users();
-  console.log(userCollection);
+  //console.log(userCollection);
   const particularUser = await userCollection.findOne({
     _id: ObjectId(userId),
   });

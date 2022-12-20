@@ -112,7 +112,7 @@ function checkLincenceNumber(lincenceNumber, valName) {
 
     
     $.ajax(requestConfig).then(function (responseMessage) {
-      console.log('responseMessage',responseMessage)
+      //console.log('responseMessage',responseMessage)
       $("html").html(responseMessage);
     });
     
@@ -131,7 +131,7 @@ function checkLincenceNumber(lincenceNumber, valName) {
       $(this).unbind();
       $(this).submit();
     } catch (e) {
-      console.log("error inside client validation..", e);
+      //console.log("error inside client validation..", e);
       $(".login-error-div").text(e);
       $(".login-error-div").show();
       $("#login-form").trigger("reset");

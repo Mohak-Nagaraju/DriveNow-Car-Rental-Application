@@ -536,18 +536,20 @@ router
       //let amount = xss(req.body.moneyAdded);
 
       if (!cardNumber || !name || !cvv || !expriy) {
-        return res.status(400).render("viewCars", {
+        return res.status(400).render("paymentPage", {
           title: "Wallet",
           error: "Please enter all the values to add money to wallet",
           temp: "true",
+          totalCost: req.session.cost
         });
       }
 
       if (name.trim().length === 0 || typeof name !== "string") {
-        return res.status(400).render("viewCars", {
+        return res.status(400).render("paymentPage", {
           title: "Payment thru Credit Card",
           error: "Please enter valid name",
           temp: "true",
+          totalCost: req.session.cost
         });
       }
       let nameSpecChar = validationForm.checkSpecialCharWithNumber(name);
@@ -565,27 +567,30 @@ router
         cardNumber.trim().length !== 16 ||
         typeof cardNumber !== "string"
       ) {
-        return res.status(400).render("viewCars", {
+        return res.status(400).render("paymentPage", {
           title: "Payment thru Credit Card",
           error: "Please enter valid card number",
           temp: "true",
+          totalCost: req.session.cost
         });
       }
 
       if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?/]+/g.test(cardNumber)) {
         //throw "Error: City must not contain any special chars or numbers";
-        return res.status(400).render("viewCars", {
+        return res.status(400).render("paymentPage", {
           title: "Payment thru Credit Card",
           error: "Please enter valid card number with no special char",
           temp: "true",
+          totalCost: req.session.cost
         });
       }
 
       if (/\s/g.test(cardNumber)) {
-        return res.status(400).render("viewCars", {
+        return res.status(400).render("paymentPage", {
           title: "Payment thru Credit Card",
           error: "Please enter valid card number with no spaces",
           temp: "true",
+          totalCost: req.session.cost
         });
       }
 
@@ -598,28 +603,31 @@ router
         typeof cvv !== "string" ||
         cvv < 0
       ) {
-        return res.status(400).render("viewCars", {
+        return res.status(400).render("paymentPage", {
           title: "Payment thru Credit Card",
           error: "Please enter valid 3 digit cvv",
           temp: "true",
+          totalCost: req.session.cost
         });
       }
       cvv = cvv.trim();
       if (!/^[0-9]{3}$/.test(cvv)) {
-        return res.status(400).render("viewCars", {
+        return res.status(400).render("paymentPage", {
           title: "Payment thru Credit Card",
           error: "Please enter valid 3 digit cvv",
           temp: "true",
+          totalCost: req.session.cost
         });
       }
       //let validCvv = cvv.trim().replace(/[@#$%^&*_+\=\\`|<>\/]/gi, "");
 
       if (/[@#$%^&*_+\=\\`|<>\/]/g.test(cvv)) {
         //throw "Error: City must not contain any special chars or numbers";
-        return res.status(400).render("viewCars", {
+        return res.status(400).render("paymentPage", {
           title: "Payment thru Credit Card",
           error: "Please enter valid cvv number with no special char",
           temp: "true",
+          totalCost: req.session.cost
         });
       }
 
@@ -631,10 +639,11 @@ router
         /^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$/.test(expriy) === false ||
         Number(expriy.charAt(3) + expriy.charAt(4)) < year
       ) {
-        return res.status(400).render("viewCars", {
+        return res.status(400).render("paymentPage", {
           title: "Payment thru Credit Card",
           error: `Please enter valid expiry number in the format - MM/YY - you entered - ${expriy}`,
           temp: "true",
+          totalCost: req.session.cost
         });
       }
 
@@ -665,7 +674,7 @@ router
 
 router.route("/protected/welcome").get(async (req, res) => {
   if (xss(req.session.email)) {
-    console.log("inside protected welcome ");
+   // console.log("inside protected welcome ");
     if (req.session.moneyAdded === "true") {
       //console.log("inside protected welcome success money added");
       req.session.moneyAdded = "false";
@@ -702,7 +711,7 @@ router.route("/protected/welcome").get(async (req, res) => {
 
 router.route("/protected/logout").get(async (req, res) => {
   //if (xss(req.session.email)) {
-  console.log("inside logout");
+  //console.log("inside logout");
   req.session.destroy();
   res.render("logout", {
     title: "Logged Out",

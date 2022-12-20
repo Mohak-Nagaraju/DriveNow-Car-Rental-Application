@@ -89,7 +89,7 @@ app.post("/send", (req, res) => {
       rejectUnauthorized: false,
     },
   });
-  let toEmail = req.session.email;
+  let toEmail = req.body.email;
   // setup email data with unicode symbols
   let mailOptions = {
     from: '"Test Web 546" <webProgramming546@gmail.com>', // sender address
