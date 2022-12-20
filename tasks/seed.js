@@ -3,7 +3,7 @@ const data = require('../data/');
 
 const users = data.users;
 const cars = data.cars;
-const bookings = data.booking;
+
 
 
 const main = async () => {
