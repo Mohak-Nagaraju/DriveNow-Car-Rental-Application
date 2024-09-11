@@ -1,4 +1,4 @@
-# CS546_Final_Project_Grp19 - DriveNow Car Rental
+# DriveNow-Car-Rental-Application
 *******************************
 # useful commands 
 For Seeding the Database: npm run seed
